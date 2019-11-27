@@ -14,14 +14,14 @@
         app:bl_solid_color="@color/black">
 
         <com.noober.background.view.BLImageView
+            android:id="@+id/image"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="170dp"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
             android:src="@mipmap/tab4_car"
             app:bl_corners_radius="6dp"
-            app:bl_corners_topLeftRadius="6dp"
-            app:bl_solid_color="@color/black" />
+            app:bl_solid_color="#DEDEDE" />
 
         <TextView
             android:id="@+id/title"

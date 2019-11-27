@@ -10,7 +10,6 @@ import com.blankj.utilcode.util.CollectionUtils;
 import com.hold.electrify.R;
 import com.hold.electrify.bean.CarModel;
 import com.hold.electrify.databinding.FragmentTab1Binding;
-import com.hold.electrify.http.ApiManager;
 import com.hold.electrify.ui.base.BaseFragment;
 import com.hold.electrify.ui.tab4.Tab4ViewModel;
 import com.hold.electrify.util.CommonUtil;
@@ -178,7 +177,7 @@ public class Tab1Fragment extends BaseFragment {
             if (photoIds != null && photoIds.length > 0) {
                 String[] photoUrls = new String[photoIds.length];
                 for (int i = 0; i < photoIds.length; i++) {
-                    photoUrls[i] = CommonUtil.format("{0}carModel/photo?carModelCode={1}&photoId={2}", ApiManager.BASE_URL, currentCar.getCarModelCode(), photoIds[i]);
+                    photoUrls[i] = CommonUtil.getImageUrl(currentCar.getCarModelCode(), photoIds[i]);
                 }
                 binding.banner.setBitmapUrls(photoUrls);
             } else {

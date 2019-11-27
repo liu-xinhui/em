@@ -51,6 +51,7 @@
         <activity android:name=".ui.login.LoginActivity" />
         <activity android:name=".ui.setting.SettingActivity" />
         <activity android:name=".ui.tab2.TrackListActivity" />
+        <activity android:name=".ui.tab4.CarDetailActivity" />
         <!--<activity android:name=".ui.TempActivity" />-->
     </application>
 

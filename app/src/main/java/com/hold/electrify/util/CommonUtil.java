@@ -8,6 +8,7 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.JsonParseException;
 import com.google.gson.stream.MalformedJsonException;
 import com.hold.electrify.R;
+import com.hold.electrify.http.ApiManager;
 
 import org.json.JSONException;
 
@@ -61,5 +62,9 @@ public class CommonUtil {
             str = str.replace("{" + i + "}", item.toString());
         }
         return str;
+    }
+
+    public static String getImageUrl(String carModel, String imageId) {
+        return CommonUtil.format("{0}carModel/photo?carModelCode={1}&photoId={2}", ApiManager.BASE_URL, carModel, imageId);
     }
 }

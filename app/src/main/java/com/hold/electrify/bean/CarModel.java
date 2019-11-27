@@ -1,12 +1,14 @@
 package com.hold.electrify.bean;
 
+import java.io.Serializable;
+
 import lombok.Data;
 
 /**
  * 车型
  */
 @Data
-public class CarModel {
+public class CarModel implements Serializable {
 
     //主键ID
     private String id;
