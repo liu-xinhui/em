@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#212121"
+    tools:context=".ui.login.LoginActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/login_bg" />
+
+    <com.noober.background.view.BLEditText
+        android:id="@+id/mobile"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="35dp"
+        android:layout_marginBottom="30dp"
+        android:drawableStart="@mipmap/login_mobile"
+        android:drawablePadding="10dp"
+        android:hint="请输入手机号"
+        android:inputType="number"
+        android:maxLength="11"
+        android:padding="10dp"
+        android:selectAllOnFocus="true"
+        android:text="18918296259"
+        app:bl_stroke_color="#bbb"
+        app:bl_stroke_position="bottom"
+        app:bl_stroke_width="1dp"
+        app:layout_constraintBottom_toTopOf="@+id/code"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.noober.background.view.BLEditText
+        android:id="@+id/code"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="35dp"
+        android:layout_marginBottom="40dp"
+        android:drawableStart="@mipmap/login_code"
+        android:drawablePadding="10dp"
+        android:hint="请输入验证码"
+        android:imeOptions="actionDone"
+        android:inputType="number"
+        android:maxLength="6"
+        android:padding="10dp"
+        android:paddingEnd="100dp"
+        android:selectAllOnFocus="true"
+        app:bl_stroke_color="#bbb"
+        app:bl_stroke_position="bottom"
+        app:bl_stroke_width="1dp"
+        app:layout_constraintBottom_toTopOf="@+id/login"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.noober.background.view.BLButton
+        android:id="@+id/sendCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp"
+        android:text="获取验证码"
+        android:textColor="#fff"
+        app:bl_corners_radius="4dp"
+        app:bl_pressed_drawable="#00f4ff"
+        app:bl_stroke_color="#00f4ff"
+        app:bl_stroke_width="1dp"
+        app:bl_unPressed_drawable="#1d3537"
+        app:layout_constraintBottom_toBottomOf="@id/code"
+        app:layout_constraintRight_toRightOf="@id/code" />
+
+    <com.noober.background.view.BLButton
+        android:id="@+id/login"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginHorizontal="35dp"
+        android:layout_marginBottom="10dp"
+        android:text="登录"
+        android:textColor="#fff"
+        app:bl_corners_radius="4dp"
+        app:bl_pressed_drawable="#00f4ff"
+        app:bl_stroke_color="#00f4ff"
+        app:bl_stroke_width="1dp"
+        app:bl_unPressed_drawable="#0d9fa6"
+        app:layout_constraintBottom_toTopOf="@+id/tip"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="35dp"
+        android:text="未注册的用户登录后默认注册"
+        app:layout_constraintBottom_toTopOf="@+id/skip"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.noober.background.view.BLButton
+        android:id="@+id/skip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="跳过"
+        android:textColor="#fff"
+        app:bl_corners_radius="4dp"
+        app:bl_pressed_drawable="#00f4ff"
+        app:bl_stroke_color="#00f4ff"
+        app:bl_stroke_width="1dp"
+        app:bl_unPressed_drawable="#1d3537"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.94" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

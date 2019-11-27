@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.noober.background.view.BLLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical"
+        app:bl_corners_radius="6dp"
+        app:bl_solid_color="@color/black">
+
+        <com.noober.background.view.BLImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/tab4_car"
+            app:bl_corners_radius="6dp"
+            app:bl_corners_topLeftRadius="6dp"
+            app:bl_solid_color="@color/black" />
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="15dp"
+            android:text="新科雷嘉 NEW KADJAR"
+            android:textColor="#e1fbfc"
+            android:textSize="14dp" />
+
+    </com.noober.background.view.BLLinearLayout>
+</FrameLayout>
