@@ -1,0 +1,50 @@
+<resources>
+
+    <style name="AppTheme" parent="QMUI.Compat">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="QMUITopBarStyle">@style/QTopBar</item>
+        <item name="buttonStyle">@style/QButton</item>
+        <item name="android:editTextStyle">@style/EditText.Compat</item>
+    </style>
+
+    <style name="QTopBar" parent="QMUI.TopBar">
+        <item name="qmui_topbar_bg_color">@color/colorPrimary</item>
+        <item name="qmui_topbar_title_color">@color/qmui_config_color_white</item>
+        <item name="qmui_topbar_subtitle_color">@color/qmui_config_color_white</item>
+        <item name="qmui_topbar_height">48dp</item>
+        <item name="qmui_topbar_image_btn_height">48dp</item>
+    </style>
+
+    <style name="QButton" parent="Widget.AppCompat.Button">
+        <item name="android:minHeight">20dp</item>
+    </style>
+
+    <style name="EditText.Compat" parent="EditTextBase.Compat">
+        <item name="android:textColor">#fff</item>
+        <item name="android:textColorHint">#777</item>
+        <item name="android:textCursorDrawable">@null</item>
+    </style>
+
+    <style name="QMUITextAppearance" parent="TextAppearanceBase">
+        <item name="android:textColor">@color/textD3</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColorHighlight">?attr/qmui_config_color_background_pressed</item>
+    </style>
+
+    <style name="CustomDialog" parent="android:style/Theme.Dialog">
+        <!--背景颜色及和透明程度-->
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <!--是否去除标题 -->
+        <item name="android:windowNoTitle">true</item>
+        <!--是否去除边框-->
+        <item name="android:windowFrame">@null</item>
+        <!--是否浮现在activity之上-->
+        <item name="android:windowIsFloating">true</item>
+        <!--是否模糊-->
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+</resources>

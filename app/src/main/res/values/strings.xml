@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Electrify Me</string>
+
+    <string name="title_tab1">数据面板</string>
+    <string name="title_tab2">行程追踪</string>
+    <string name="title_tab3">行程预测</string>
+    <string name="title_tab4">车辆中心</string>
+    <string name="car_model">车型</string>
+    <string name="track">追踪</string>
+    <string name="temperature">温度</string>
+</resources>

@@ -1,0 +1,90 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'androidx.navigation.safeargs'
+
+android {
+    signingConfigs {
+        release {
+            storeFile file('../hold.jks')
+            storePassword '5595382'
+            keyAlias = 'hold'
+            keyPassword '5595382'
+        }
+    }
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+    defaultConfig {
+        applicationId "com.hold.electrify"
+        minSdkVersion 22
+        targetSdkVersion 29
+        versionCode 4
+        versionName "0.0.4"
+        signingConfig signingConfigs.release
+        ndk {
+            //设置支持的SO库架构（开发者可以根据需要，选择一个或多个平台的so）
+            abiFilters "armeabi", "armeabi-v7a", "arm64-v8a", "x86", "x86_64"
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+    viewBinding {
+        enabled = true
+    }
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            outputFileName = "ElectrifyMe@${variant.versionName}.apk"
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.navigation:navigation-fragment:2.1.0'
+    implementation 'androidx.navigation:navigation-ui:2.1.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+
+    //https://github.com/JavaNoober/BackgroundLibrary
+    implementation 'com.noober.background:core:1.6.1'
+    //https://github.com/Blankj/AndroidUtilCode
+    implementation 'com.blankj:utilcodex:1.25.9'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.2'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.2.2'
+    //https://projectlombok.org/setup/gradle
+    //noinspection AnnotationProcessorOnCompilePath
+    compileOnly 'org.projectlombok:lombok:1.18.10'
+    annotationProcessor 'org.projectlombok:lombok:1.18.10'
+    implementation 'com.qmuiteam:qmui:1.4.0'
+    implementation "com.qmuiteam:arch:0.6.1"
+    //https://www.pgyer.com/doc/view/sdk_android_guide
+    implementation 'com.pgyersdk:sdk:3.0.10'
+    //https://github.com/bumptech/glide
+    implementation 'com.github.bumptech.glide:glide:4.10.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0'
+    //https://github.com/wenchaosong/Banner
+    implementation 'com.ms:Banner-androidx:2.3.20'
+    //https://github.com/youlookwhat/ByRecyclerView
+    implementation 'com.github.youlookwhat:ByRecyclerView:1.0.8'
+    //高德地图
+    //noinspection GradleDependency
+    implementation 'com.amap.api:map2d:latest.integration'
+    //noinspection GradleDependency
+    implementation 'com.amap.api:search:latest.integration'
+    //noinspection GradleDependency
+    implementation 'com.amap.api:location:latest.integration'
+}
