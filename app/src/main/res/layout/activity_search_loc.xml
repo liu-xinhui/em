@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <com.qmuiteam.qmui.widget.QMUITopBarLayout
+        android:id="@+id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.noober.background.view.BLLinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_marginBottom="13dp"
+        android:gravity="center_vertical"
+        app:bl_solid_color="@color/backgroundLite">
+
+        <com.noober.background.view.BLEditText
+            android:id="@+id/search_bar"
+            android:layout_width="0dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="13dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:hint="请输入地址"
+            android:imeOptions="actionSearch"
+            android:inputType="text"
+            android:maxLength="50"
+            android:maxLines="1"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="0dp"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:textSize="14dp"
+            app:bl_corners_radius="30dp"
+            app:bl_solid_color="@color/background" />
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingHorizontal="15dp"
+            android:text="取消"
+            android:textColor="#e1fbfc"
+            android:textSize="14dp" />
+    </com.noober.background.view.BLLinearLayout>
+
+    <com.noober.background.view.BLLinearLayout
+        android:id="@+id/history_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="15dp"
+        app:bl_solid_color="@color/backgroundLite">
+
+        <com.noober.background.view.BLView
+            android:layout_width="4dp"
+            android:layout_height="15dp"
+            app:bl_corners_radius="3dp"
+            app:bl_solid_color="@color/colorAccent" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:text="历史搜索结果"
+            android:textColor="#e1fbfc"
+            android:textSize="14dp" />
+
+        <TextView
+            android:id="@+id/history_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0条"
+            android:textColor="@color/textD3"
+            android:textSize="14dp" />
+    </com.noober.background.view.BLLinearLayout>
+
+    <View
+        android:id="@+id/history_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/gray6" />
+
+    <me.jingbin.library.ByRecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/backgroundLite"
+        tools:layoutManager="LinearLayoutManager"
+        tools:listitem="@layout/item_search_loc" />
+</LinearLayout>

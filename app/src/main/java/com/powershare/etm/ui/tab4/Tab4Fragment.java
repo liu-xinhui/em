@@ -9,9 +9,9 @@ import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.blankj.utilcode.util.SizeUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestOptions;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.CarModel;
@@ -28,7 +28,6 @@ import me.jingbin.library.adapter.BaseRecyclerAdapter;
 
 public class Tab4Fragment extends BaseFragment {
 
-    private int imageCorner = SizeUtils.dp2px(6);
     private FragmentTab4Binding binding;
     private Tab4ViewModel tab4ViewModel;
     private BaseRecyclerAdapter<CarModel> adapter;
@@ -56,9 +55,7 @@ public class Tab4Fragment extends BaseFragment {
                     ImageView imageView = (ImageView) holder.getView(R.id.image);
                     Glide.with(Tab4Fragment.this)
                             .load(CommonUtil.getImageUrl(carModel.getCarModelCode(), photoIds[0]))
-                            //.centerInside()
-                            .apply(RequestOptions.bitmapTransform(new RoundedCorners(100)))
-                            //.transition(DrawableTransitionOptions.withCrossFade())
+                            .transition(DrawableTransitionOptions.withCrossFade())
                             .into(imageView);
                 }
             }
@@ -69,13 +66,10 @@ public class Tab4Fragment extends BaseFragment {
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.setOnRefreshListener(this::getCarListData);
         binding.recyclerView.setRefreshing(true);
-        binding.recyclerView.setOnItemClickListener(new ByRecyclerView.OnItemClickListener() {
-            @Override
-            public void onClick(View v, int position) {
-                Intent intent = new Intent(activity, CarDetailActivity.class);
-                intent.putExtra("item", adapter.getData().get(position));
-                go(intent);
-            }
+        binding.recyclerView.setOnItemClickListener((v, position) -> {
+            Intent intent = new Intent(activity, CarDetailActivity.class);
+            intent.putExtra("item", adapter.getData().get(position));
+            go(intent);
         });
         this.getCarListData();
     }
