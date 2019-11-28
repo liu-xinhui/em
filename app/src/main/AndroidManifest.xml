@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.hold.electrify">
+    package="com.powershare.etm">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 获取网络状态 -->
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 网络通信-->
@@ -24,7 +24,7 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
 
     <application
-        android:name=".App"
+        android:name="com.powershare.etm.App"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -40,7 +40,7 @@
             android:value="4bdd58c5d486c08527879804be3f66e6"/>
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name="com.powershare.etm.ui.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,10 +48,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.login.LoginActivity" />
-        <activity android:name=".ui.setting.SettingActivity" />
-        <activity android:name=".ui.tab2.TrackListActivity" />
-        <activity android:name=".ui.tab4.CarDetailActivity" />
+        <activity android:name="com.powershare.etm.ui.login.LoginActivity" />
+        <activity android:name="com.powershare.etm.ui.setting.SettingActivity" />
+        <activity android:name="com.powershare.etm.ui.tab2.TrackListActivity" />
+        <activity android:name="com.powershare.etm.ui.tab4.CarDetailActivity" />
         <!--<activity android:name=".ui.TempActivity" />-->
     </application>
 

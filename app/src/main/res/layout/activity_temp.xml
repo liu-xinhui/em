@@ -6,7 +6,7 @@
     android:background="@color/background"
     android:orientation="vertical">
 
-    <com.hold.electrify.component.FrameAnimation2
+    <com.powershare.etm.component.FrameAnimation2
         android:id="@+id/surfaceView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

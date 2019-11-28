@@ -39,7 +39,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/car_title" />
 
-        <com.hold.electrify.component.CircleProgressView
+        <com.powershare.etm.component.CircleProgressView
             android:id="@+id/progress_car"
             android:layout_width="200dp"
             android:layout_height="200dp"
@@ -48,7 +48,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/car_fit" />
 
-        <com.hold.electrify.component.ImageView360
+        <com.powershare.etm.component.ImageView360
             android:id="@+id/banner"
             android:layout_width="0dp"
             android:layout_height="180dp"
@@ -117,7 +117,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/track_count" />
 
-        <com.hold.electrify.component.DragCircleProgressView
+        <com.powershare.etm.component.DragCircleProgressView
             android:id="@+id/progress_temperature"
             android:layout_width="200dp"
             android:layout_height="200dp"

@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.hold.electrify.component.ImageView360
+    <com.powershare.etm.component.ImageView360
         android:id="@+id/banner"
         android:layout_width="match_parent"
         android:layout_height="180dp"
