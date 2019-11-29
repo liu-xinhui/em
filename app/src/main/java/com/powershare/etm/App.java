@@ -10,14 +10,21 @@ import com.pgyersdk.crash.PgyerCrashObservable;
 
 public class App extends Application {
 
+    private static App app;
+
     @Override
     public void onCreate() {
         super.onCreate();
+        app = this;
         //蒲公英
         PgyCrashManager.register();
         PgyerCrashObservable.get().attach((thread, throwable) -> {
             LogUtils.e(throwable, Log.getStackTraceString(throwable));
         });
         PgyerActivityManager.set(this);
+    }
+
+    public static App getInstance() {
+        return app;
     }
 }

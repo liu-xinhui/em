@@ -232,7 +232,6 @@ public class ImageView360 extends AppCompatImageView {
                     }
                     int loadingPercent = (int) ((i / length) * 100);
                     this.callback.onChange(loadingPercent);
-                    LogUtils.d(url, loadingPercent);
                 }
                 this.callback.onChange(100);
                 isLoadingFinish = true;

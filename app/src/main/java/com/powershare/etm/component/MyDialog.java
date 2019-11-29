@@ -43,6 +43,7 @@ public class MyDialog extends AlertDialog {
                 builder.sureListener.onClick(v);
             }
         });
+        this.setCanceledOnTouchOutside(false);
         btnCancel.setOnClickListener(v -> cancel());
     }
 

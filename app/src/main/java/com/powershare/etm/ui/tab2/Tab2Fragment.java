@@ -7,14 +7,25 @@ import android.widget.SeekBar;
 
 import androidx.lifecycle.ViewModelProviders;
 
+import com.blankj.utilcode.util.LogUtils;
+import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.databinding.FragmentTab2Binding;
 import com.powershare.etm.ui.base.BaseFragment;
+import com.powershare.etm.util.CommonUtil;
+import com.powershare.etm.util.MyObserver;
+import com.powershare.etm.vm.AMapModel;
+import com.powershare.etm.vm.CarViewModel;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Tab2Fragment extends BaseFragment {
 
     private FragmentTab2Binding binding;
     private Tab2ViewModel tab2ViewModel;
+    private CarViewModel carViewModel;
+    private AMapModel tempViewModel;
 
     public static Tab2Fragment newInstance() {
         return new Tab2Fragment();
@@ -23,32 +34,21 @@ public class Tab2Fragment extends BaseFragment {
     @Override
     protected View initContentView(LayoutInflater inflater) {
         binding = FragmentTab2Binding.inflate(inflater);
-        tab2ViewModel = ViewModelProviders.of(this).get(Tab2ViewModel.class);
         return binding.getRoot();
+    }
+
+    @Override
+    protected void createViewModel() {
+        tab2ViewModel = ViewModelProviders.of(this).get(Tab2ViewModel.class);
+        carViewModel = ViewModelProviders.of(activity).get(CarViewModel.class);
+        tempViewModel = ViewModelProviders.of(activity).get(AMapModel.class);
     }
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onMounted() {
-        View.OnClickListener carSelect = view -> new QMUIBottomSheet.BottomListSheetBuilder(activity)
-                .addItem("车型1")
-                .addItem("车型2")
-                .addItem("车型3")
-                .addItem("车型4")
-                .addItem("车型5")
-                .addItem("车型6")
-                .addItem("车型7")
-                .addItem("车型8")
-                .addItem("车型9")
-                .addItem("车型10")
-                .addItem("车型11")
-                .setOnSheetItemClickListener((dialog, itemView, position, tag) -> {
-                    dialog.dismiss();
-                    binding.carModelValue.setText(tag);
-                })
-                .build()
-                .show();
-        binding.carModelSelect.setOnClickListener(carSelect);
+        //车型
+        this.getCarListData();
         //电量
         binding.carModelTempBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -76,11 +76,9 @@ public class Tab2Fragment extends BaseFragment {
                 }
             }
         });
-        /*binding.carModelTempBar.setOnTouchListener((v, me) -> {
-            v.getParent().requestDisallowInterceptTouchEvent(true);
-            return false;
-        });*/
         //温度
+        this.getTemp(false);
+        binding.tempCurrent.setOnClickListener(view -> getTemp(true));
         View.OnClickListener tempSelect = view -> {
             QMUIBottomSheet.BottomListSheetBuilder builder = new QMUIBottomSheet.BottomListSheetBuilder(activity);
             for (int i = -20; i <= 40; i++) {
@@ -92,5 +90,36 @@ public class Tab2Fragment extends BaseFragment {
             }).build().show();
         };
         binding.tempSelect.setOnClickListener(tempSelect);
+    }
+
+    private void getCarListData() {
+        List<CarModel> mCarModels = new ArrayList<>();
+        QMUIBottomSheet.BottomListSheetBuilder builder = new QMUIBottomSheet.BottomListSheetBuilder(activity)
+                .setOnSheetItemClickListener((dialog, itemView, position, tag) -> {
+                    dialog.dismiss();
+                    binding.carModelValue.setText(tag);
+                    LogUtils.json(mCarModels.get(position));
+                });
+        binding.carModelSelect.setOnClickListener(view -> builder.build().show());
+        //车辆列表数据
+        carViewModel.carList().observe(this, new MyObserver<List<CarModel>>() {
+            @Override
+            public void onSuccess(List<CarModel> carModels) {
+                mCarModels.clear();
+                mCarModels.addAll(carModels);
+                for (CarModel carModel : carModels) {
+                    builder.addItem(carModel.getName());
+                }
+            }
+        });
+    }
+
+    private void getTemp(boolean showToast) {
+        tempViewModel.temp().observe(this, temp -> {
+            binding.tempValue.setText(temp);
+            if (showToast) {
+                CommonUtil.showSuccessToast("获取温度成功");
+            }
+        });
     }
 }

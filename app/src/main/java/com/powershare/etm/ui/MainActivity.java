@@ -9,6 +9,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.blankj.utilcode.constant.PermissionConstants;
 import com.powershare.etm.R;
 import com.powershare.etm.adapter.MyPagerAdapter;
+import com.powershare.etm.component.MyDialog;
 import com.powershare.etm.databinding.ActivityMainBinding;
 import com.powershare.etm.ui.base.BaseActivity;
 import com.powershare.etm.ui.setting.SettingActivity;
@@ -16,6 +17,7 @@ import com.powershare.etm.ui.tab1.Tab1Fragment;
 import com.powershare.etm.ui.tab2.Tab2Fragment;
 import com.powershare.etm.ui.tab3.Tab3Fragment;
 import com.powershare.etm.ui.tab4.Tab4Fragment;
+import com.powershare.etm.util.LocationUtils;
 import com.powershare.etm.util.PermissionHelper;
 import com.qmuiteam.qmui.widget.QMUITabSegment;
 import com.qmuiteam.qmui.widget.QMUITopBarLayout;
@@ -52,6 +54,12 @@ public class MainActivity extends BaseActivity {
 
     private void initPermissions() {
         PermissionHelper.getPermission(() -> {
+            if (!LocationUtils.isLocationEnabled() || !LocationUtils.isGpsEnabled()) {
+                new MyDialog.Builder(this)
+                        .setContent("需要开启定位服务并且使用高精度(GPS)定位模式，APP才能正常使用")
+                        .setSureText("去设置")
+                        .setSureListener(sureBtn -> LocationUtils.openGpsSettings()).create().show();
+            }
         }, PermissionConstants.STORAGE, PermissionConstants.LOCATION);
     }
 

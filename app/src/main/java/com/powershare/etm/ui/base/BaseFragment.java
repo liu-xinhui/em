@@ -28,9 +28,15 @@ public abstract class BaseFragment extends Fragment {
     public void onViewCreated(@NotNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         activity = (BaseActivity) getActivity();
+        createViewModel();
         onMounted();
     }
 
+    //此处创建viewModel
+    protected void createViewModel() {
+    }
+
+    //此处加载数据
     protected void onMounted() {
     }
 

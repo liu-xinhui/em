@@ -10,26 +10,24 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
-import com.bumptech.glide.request.RequestOptions;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.databinding.FragmentTab4Binding;
 import com.powershare.etm.ui.base.BaseFragment;
 import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.MyObserver;
+import com.powershare.etm.vm.CarViewModel;
 
 import java.util.List;
 
-import me.jingbin.library.ByRecyclerView;
 import me.jingbin.library.adapter.BaseByViewHolder;
 import me.jingbin.library.adapter.BaseRecyclerAdapter;
 
 public class Tab4Fragment extends BaseFragment {
 
     private FragmentTab4Binding binding;
-    private Tab4ViewModel tab4ViewModel;
+    private CarViewModel carViewModel;
     private BaseRecyclerAdapter<CarModel> adapter;
 
     public static Tab4Fragment newInstance() {
@@ -39,8 +37,12 @@ public class Tab4Fragment extends BaseFragment {
     @Override
     protected View initContentView(LayoutInflater inflater) {
         binding = FragmentTab4Binding.inflate(inflater);
-        tab4ViewModel = ViewModelProviders.of(this).get(Tab4ViewModel.class);
         return binding.getRoot();
+    }
+
+    @Override
+    protected void createViewModel() {
+        carViewModel = ViewModelProviders.of(activity).get(CarViewModel.class);
     }
 
     @Override
@@ -64,19 +66,15 @@ public class Tab4Fragment extends BaseFragment {
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setAdapter(adapter);
-        binding.recyclerView.setOnRefreshListener(this::getCarListData);
+        binding.recyclerView.setOnRefreshListener(() -> carViewModel.refreshCarList());
         binding.recyclerView.setRefreshing(true);
         binding.recyclerView.setOnItemClickListener((v, position) -> {
             Intent intent = new Intent(activity, CarDetailActivity.class);
             intent.putExtra("item", adapter.getData().get(position));
             go(intent);
         });
-        this.getCarListData();
-    }
 
-    private void getCarListData() {
-        //车辆列表数据
-        tab4ViewModel.carList().observe(this, new MyObserver<List<CarModel>>() {
+        carViewModel.carList().observe(this, new MyObserver<List<CarModel>>() {
 
             @Override
             public void onSuccess(List<CarModel> carModels) {

@@ -11,10 +11,10 @@ import com.powershare.etm.R;
 import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.databinding.FragmentTab1Binding;
 import com.powershare.etm.ui.base.BaseFragment;
-import com.powershare.etm.ui.tab4.Tab4ViewModel;
 import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.util.PermissionHelper;
+import com.powershare.etm.vm.CarViewModel;
 import com.qmuiteam.qmui.widget.QMUITabSegment;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public class Tab1Fragment extends BaseFragment {
 
     private FragmentTab1Binding binding;
     private Tab1ViewModel tab1ViewModel;
-    private Tab4ViewModel tab4ViewModel;
+    private CarViewModel carViewModel;
 
     private List<CarModel> carModelList;
     private int currentCarIndex;
@@ -35,9 +35,13 @@ public class Tab1Fragment extends BaseFragment {
     @Override
     protected View initContentView(LayoutInflater inflater) {
         binding = FragmentTab1Binding.inflate(inflater);
-        tab1ViewModel = ViewModelProviders.of(this).get(Tab1ViewModel.class);
-        tab4ViewModel = ViewModelProviders.of(this).get(Tab4ViewModel.class);
         return binding.getRoot();
+    }
+
+    @Override
+    protected void createViewModel() {
+        tab1ViewModel = ViewModelProviders.of(this).get(Tab1ViewModel.class);
+        carViewModel = ViewModelProviders.of(activity).get(CarViewModel.class);
     }
 
     @Override
@@ -139,7 +143,7 @@ public class Tab1Fragment extends BaseFragment {
 
     private void getCarListData() {
         //车辆列表数据
-        tab4ViewModel.carList().observe(this, new MyObserver<List<CarModel>>() {
+        carViewModel.carList().observe(this, new MyObserver<List<CarModel>>() {
 
             @Override
             public void onSuccess(List<CarModel> carModels) {

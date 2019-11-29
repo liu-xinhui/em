@@ -11,10 +11,12 @@ import com.powershare.etm.R;
 import com.powershare.etm.bean.SearchAddress;
 import com.powershare.etm.databinding.FragmentTab3Binding;
 import com.powershare.etm.ui.base.BaseFragment;
+import com.powershare.etm.vm.CarViewModel;
 
 public class Tab3Fragment extends BaseFragment {
 
     private FragmentTab3Binding binding;
+    private CarViewModel carViewModel;
     private Tab3ViewModel tab3ViewModel;
 
     public static Tab3Fragment newInstance() {
@@ -24,8 +26,13 @@ public class Tab3Fragment extends BaseFragment {
     @Override
     protected View initContentView(LayoutInflater inflater) {
         binding = FragmentTab3Binding.inflate(inflater);
-        tab3ViewModel = ViewModelProviders.of(this).get(Tab3ViewModel.class);
         return binding.getRoot();
+    }
+
+    @Override
+    protected void createViewModel() {
+        tab3ViewModel = ViewModelProviders.of(this).get(Tab3ViewModel.class);
+        carViewModel = ViewModelProviders.of(activity).get(CarViewModel.class);
     }
 
     @Override

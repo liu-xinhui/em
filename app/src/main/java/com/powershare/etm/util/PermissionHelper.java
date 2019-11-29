@@ -45,16 +45,7 @@ public class PermissionHelper {
                 .callback(new PermissionUtils.FullCallback() {
                     @Override
                     public void onGranted(List<String> permissionsGranted) {
-                        LogUtils.json(permissionsGranted);
                         callback.onGranted();
-                        /*List<String> need = Arrays.asList(
-                                Manifest.permission.READ_EXTERNAL_STORAGE,
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                                Manifest.permission.ACCESS_COARSE_LOCATION);
-                        if (permissionsGranted.containsAll(need)) {
-                            initPagers();
-                            initTabs();
-                        }*/
                     }
 
                     @Override

@@ -32,12 +32,16 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="UnusedAttribute">
+        <!--蒲公英-->
         <meta-data
             android:name="PGYER_APPID"
             android:value="0977d14c4effce6516e97d8095f8efad" />
+        <!--高德-->
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="4bdd58c5d486c08527879804be3f66e6" />
+        <!--高德定位-->
+        <service android:name="com.amap.api.location.APSService" />
 
         <activity
             android:name=".ui.MainActivity"
@@ -52,7 +56,7 @@
         <activity android:name=".ui.setting.SettingActivity" />
         <activity android:name=".ui.tab2.TrackListActivity" />
         <activity android:name=".ui.tab4.CarDetailActivity" />
-         <activity android:name=".ui.tab3.SearchLocActivity" />
+        <activity android:name=".ui.tab3.SearchLocActivity" />
         <!--<activity android:name=".ui.TempActivity" />-->
     </application>
 
