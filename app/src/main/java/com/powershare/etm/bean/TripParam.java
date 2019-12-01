@@ -1,12 +1,14 @@
 package com.powershare.etm.bean;
 
+import java.io.Serializable;
+
 import lombok.Data;
 
 /**
  * 行程追踪参数
  */
 @Data
-public class TripParam {
+public class TripParam implements Serializable {
     //车型ID
     private String carModelId;
 

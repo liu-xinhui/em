@@ -1,6 +1,7 @@
 package com.powershare.etm.ui.tab3;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.help.Tip;
 import com.amap.api.services.route.BusRouteResult;
 import com.amap.api.services.route.DrivePath;
 import com.amap.api.services.route.DriveRouteResult;
@@ -21,16 +23,19 @@ import com.amap.api.services.route.WalkRouteResult;
 import com.blankj.utilcode.util.CollectionUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.powershare.etm.R;
+import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.bean.Location;
 import com.powershare.etm.bean.PredictCharge;
 import com.powershare.etm.bean.TripParam;
-import com.powershare.etm.bean.TripPoint;
 import com.powershare.etm.databinding.ActivityPredictBinding;
 import com.powershare.etm.ui.base.BaseActivity;
 import com.powershare.etm.ui.tab3.route.DrivingRouteOverlay;
+import com.powershare.etm.util.AMapUtil;
 import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.MyObserver;
+import com.powershare.etm.vm.CarViewModel;
 import com.powershare.etm.vm.PredictViewModel;
+import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -42,7 +47,9 @@ import static com.amap.api.services.route.RouteSearch.DRIVING_SINGLE_DEFAULT;
 public class PredictActivity extends BaseActivity {
     private ActivityPredictBinding binding;
     private PredictViewModel predictViewModel;
+    private CarViewModel carViewModel;
     private AMap aMap;
+    private TripParam tripParam;
 
     @Override
     protected View initContentView() {
@@ -95,29 +102,31 @@ public class PredictActivity extends BaseActivity {
     @Override
     protected void createViewModel() {
         predictViewModel = ViewModelProviders.of(this).get(PredictViewModel.class);
+        carViewModel = ViewModelProviders.of(this).get(CarViewModel.class);
     }
 
     @Override
     protected void onMounted() {
         initTopBar();
         //取值
-        //TripParam tripParam = getIntent().getParcelableExtra("tripParam");
-        TripParam tripParam = new TripParam();
-
-        //121.000919,31.480908
-        TripPoint start = new TripPoint();
-        start.setLongitude(121.000919);
-        start.setLatitude(31.480908);
-        tripParam.setStartPoint(start);
-        //120.768832,30.871108
-        TripPoint end = new TripPoint();
-        end.setLongitude(121.010919);
-        end.setLatitude(31.580908);
-        tripParam.setDestPoint(end);
-
-        tripParam.setWarningLevel(10);
-        tripParam.setTemperature(20);
-        tripParam.setCarModelId("426eb1d5-0c63-11ea-b5a8-fa163e419dee");
+        Intent intent = getIntent();
+        tripParam = (TripParam) intent.getSerializableExtra("tripParam");
+        //起始位置
+        Tip startTip = intent.getParcelableExtra("startTip");
+        Tip endTip = intent.getParcelableExtra("endTip");
+        if (tripParam == null || startTip == null || endTip == null) {
+            CommonUtil.showErrorToast("未知错误");
+            return;
+        }
+        binding.trackStartName.setText(startTip.getName());
+        binding.trackStartAddress.setText(startTip.getAddress());
+        binding.trackEndName.setText(endTip.getName());
+        binding.trackEndAddress.setText(endTip.getAddress());
+        //车型点击
+        getCarListData();
+        //温度点击
+        getTemp();
+        //
         this.tracePredict(tripParam);
     }
 
@@ -125,8 +134,34 @@ public class PredictActivity extends BaseActivity {
     private void tracePredict(TripParam tripParam) {
         predictViewModel.tracePredict(tripParam).observe(this, new MyObserver<PredictCharge>() {
             @Override
+            public void onStart() {
+                showLoading();
+            }
+
+            @Override
             public void onSuccess(PredictCharge predictCharge) {
+                String powerValueStart = predictCharge.getStartSoc() + "%";
+                binding.powerValueStart.setText(powerValueStart);
+                //
+                String powerValueEnd = predictCharge.getDestSoc() + "%";
+                binding.powerValueEnd.setText(powerValueEnd);
+                //
+                String powerConsumption = "行程消耗" + (predictCharge.getStartSoc() - predictCharge.getDestSoc()) + "%电量";
+                binding.powerConsumption.setText(powerConsumption);
+                //提示
+                if (CollectionUtils.isEmpty(predictCharge.getChargeLocationList())) {
+                    binding.notice.setText("恭喜您！途中无需充电~");
+                } else {
+                    String text = "途中需要充电" + predictCharge.getChargeLocationList().size() + "次~";
+                    binding.notice.setText(text);
+                }
                 mapRoute(tripParam, predictCharge);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                hideLoading();
             }
         });
     }
@@ -142,6 +177,7 @@ public class PredictActivity extends BaseActivity {
 
             @Override
             public void onDriveRouteSearched(DriveRouteResult driveRouteResult, int code) {
+                hideLoading();
                 if (code == 1000) {
                     initUi(predictCharge, driveRouteResult);
                 } else {
@@ -167,8 +203,8 @@ public class PredictActivity extends BaseActivity {
         List<Location> chargeLocationList = predictCharge.getChargeLocationList();
         List<LatLonPoint> passedByPoints = null;
         if (CollectionUtils.isNotEmpty(chargeLocationList)) {
+            passedByPoints = new ArrayList<>();
             for (Location location : chargeLocationList) {
-                passedByPoints = new ArrayList<>();
                 passedByPoints.add(new LatLonPoint(location.getLatitude(), location.getLongitude()));
             }
         }
@@ -181,10 +217,11 @@ public class PredictActivity extends BaseActivity {
 
     private void initUi(PredictCharge predictCharge, DriveRouteResult driveRouteResult) {
         //地图
+        aMap.clear();
         if (driveRouteResult != null && driveRouteResult.getPaths() != null) {
             if (driveRouteResult.getPaths().size() > 0) {
                 final DrivePath drivePath = driveRouteResult.getPaths().get(0);
-                DrivingRouteOverlay drivingRouteOverlay = new DrivingRouteOverlay(this, aMap, drivePath, driveRouteResult.getStartPos(), driveRouteResult.getTargetPos(), null);
+                DrivingRouteOverlay drivingRouteOverlay = new DrivingRouteOverlay(this, aMap, drivePath, driveRouteResult.getStartPos(), driveRouteResult.getTargetPos(), driveRouteResult.getDriveQuery().getPassedByPoints());
                 drivingRouteOverlay.setNodeIconVisibility(false);//设置节点marker是否显示
                 drivingRouteOverlay.setIsColorfulline(true);//是否用颜色展示交通拥堵情况，默认true
                 drivingRouteOverlay.removeFromMap();
@@ -193,14 +230,15 @@ public class PredictActivity extends BaseActivity {
                 int dis = (int) drivePath.getDistance();
                 int dur = (int) drivePath.getDuration();
                 List<String> items = new ArrayList<>();
-                String distance = CommonUtil.mToKm(dis);
-                String hour = CommonUtil.secondToHour(dur);
+                String distance = AMapUtil.mToKm(dis);
+                String hour = AMapUtil.secondToHour(dur);
                 items.add(distance + ",km,总里程");
-                items.add(predictCharge.getEnergy() + ",%,消耗电量");
+                items.add(predictCharge.getEnergy() + ",kwh,消耗电量");
                 items.add(hour + ",H,行驶时间");
-                items.add(CommonUtil.speed(distance, hour) + ",KM/H,平均速度");
+                items.add(AMapUtil.speed(distance, hour) + ",KM/H,平均速度");
                 items.add(predictCharge.getRmbPublich() + ",RMB,充电成本（公共充电）");
                 items.add(predictCharge.getRmbPrivate() + ",RMB,充电成本（私人充电）");
+                binding.infoContainer.removeAllViews();
                 for (String item : items) {
                     String[] itemArr = item.split(",");
                     View view = LayoutInflater.from(PredictActivity.this).inflate(R.layout.item_title_value, null);
@@ -226,4 +264,58 @@ public class PredictActivity extends BaseActivity {
         }
     }
 
+    private void getCarListData() {
+        List<CarModel> mCarModels = new ArrayList<>();
+        QMUIBottomSheet.BottomListSheetBuilder builder = new QMUIBottomSheet.BottomListSheetBuilder(this)
+                .setOnSheetItemClickListener((dialog, itemView, position, tag) -> {
+                    dialog.dismiss();
+                    tripParam.setCarModelId(mCarModels.get(position).getId());
+                    this.tracePredict(tripParam);
+                });
+        binding.car.setOnClickListener(view -> {
+            if (mCarModels.size() == 0) {
+                //车辆列表数据
+                carViewModel.carList().observe(PredictActivity.this, new MyObserver<List<CarModel>>() {
+                    @Override
+                    public void onStart() {
+                        showLoading();
+                    }
+
+                    @Override
+                    public void onSuccess(List<CarModel> carModels) {
+                        mCarModels.clear();
+                        mCarModels.addAll(carModels);
+                        for (CarModel carModel : carModels) {
+                            builder.addItem(carModel.getName());
+                        }
+                        builder.build().show();
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        hideLoading();
+                    }
+                });
+                carViewModel.refreshCarList();
+            } else {
+                builder.build().show();
+            }
+        });
+    }
+
+    private void getTemp() {
+        View.OnClickListener tempSelect = view -> {
+            QMUIBottomSheet.BottomListSheetBuilder builder = new QMUIBottomSheet.BottomListSheetBuilder(this);
+            for (int i = -20; i <= 40; i++) {
+                builder.addItem(i + "℃");
+            }
+            builder.setOnSheetItemClickListener((dialog, itemView, position, tag) -> {
+                dialog.dismiss();
+                int temp = Integer.parseInt(tag.replace("℃", ""));
+                tripParam.setTemperature(temp);
+                this.tracePredict(tripParam);
+            }).build().show();
+        };
+        binding.temp.setOnClickListener(tempSelect);
+    }
 }

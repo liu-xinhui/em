@@ -35,6 +35,7 @@ public abstract class MyObserver<T> implements Observer<ApiResult<T>> {
                     onFinish();
                 } catch (Exception e) {
                     onError(e);
+                    onFinish();
                 }
                 break;
             case ERROR:

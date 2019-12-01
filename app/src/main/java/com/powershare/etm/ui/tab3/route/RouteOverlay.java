@@ -87,7 +87,7 @@ public class RouteOverlay {
      * @since V2.1.0
      */
     protected BitmapDescriptor getStartBitmapDescriptor() {
-        return BitmapDescriptorFactory.fromResource(R.drawable.amap_start);
+        return BitmapDescriptorFactory.fromResource(R.mipmap.start);
     }
 
     /**
@@ -97,27 +97,7 @@ public class RouteOverlay {
      * @since V2.1.0
      */
     protected BitmapDescriptor getEndBitmapDescriptor() {
-        return BitmapDescriptorFactory.fromResource(R.drawable.amap_end);
-    }
-
-    /**
-     * 给公交Marker设置图标，并返回更换图标的图片。如不用默认图片，需要重写此方法。
-     *
-     * @return 更换的Marker图片。
-     * @since V2.1.0
-     */
-    protected BitmapDescriptor getBusBitmapDescriptor() {
-        return BitmapDescriptorFactory.fromResource(R.drawable.amap_bus);
-    }
-
-    /**
-     * 给步行Marker设置图标，并返回更换图标的图片。如不用默认图片，需要重写此方法。
-     *
-     * @return 更换的Marker图片。
-     * @since V2.1.0
-     */
-    protected BitmapDescriptor getWalkBitmapDescriptor() {
-        return BitmapDescriptorFactory.fromResource(R.drawable.amap_man);
+        return BitmapDescriptorFactory.fromResource(R.mipmap.end);
     }
 
     protected BitmapDescriptor getDriveBitmapDescriptor() {
@@ -125,13 +105,9 @@ public class RouteOverlay {
     }
 
     protected void addStartAndEndMarker() {
-        startMarker = mAMap.addMarker((new MarkerOptions())
-                .position(startPoint).icon(getStartBitmapDescriptor())
-                .title("\u8D77\u70B9"));
+        startMarker = mAMap.addMarker((new MarkerOptions()).position(startPoint).icon(getStartBitmapDescriptor()).title("\u8D77\u70B9"));
         // startMarker.showInfoWindow();
-
-        endMarker = mAMap.addMarker((new MarkerOptions()).position(endPoint)
-                .icon(getEndBitmapDescriptor()).title("\u7EC8\u70B9"));
+        endMarker = mAMap.addMarker((new MarkerOptions()).position(endPoint).icon(getEndBitmapDescriptor()).title("\u7EC8\u70B9"));
         // mAMap.moveCamera(CameraUpdateFactory.newLatLngZoom(startPoint,
         // getShowRouteZoom()));
     }
@@ -147,8 +123,7 @@ public class RouteOverlay {
                 return;
             try {
                 LatLngBounds bounds = getLatLngBounds();
-                mAMap.animateCamera(CameraUpdateFactory
-                        .newLatLngBounds(bounds, 50));
+                mAMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 90));
             } catch (Throwable e) {
                 e.printStackTrace();
             }
@@ -211,25 +186,7 @@ public class RouteOverlay {
         return 18f;
     }
 
-    protected int getWalkColor() {
-        return Color.parseColor("#6db74d");
-    }
-
-    /**
-     * 自定义路线颜色。
-     * return 自定义路线颜色。
-     *
-     * @since V2.2.1
-     */
-    protected int getBusColor() {
-        return Color.parseColor("#537edc");
-    }
-
     protected int getDriveColor() {
         return Color.parseColor("#537edc");
     }
-
-    // protected int getShowRouteZoom() {
-    // return 15;
-    // }
 }

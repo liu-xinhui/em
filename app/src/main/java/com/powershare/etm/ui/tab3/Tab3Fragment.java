@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.amap.api.services.help.Tip;
-import com.blankj.utilcode.util.LogUtils;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.bean.TripParam;
@@ -142,8 +141,7 @@ public class Tab3Fragment extends BaseFragment {
             }
             //温度
             String temp = binding.tempValue.getText().toString();
-            LogUtils.d(carModel, power, temp);
-
+            //构造参数
             TripParam param = new TripParam();
             param.setCarModelId(carModel.getId());
             param.setTemperature(Integer.parseInt(temp));
@@ -157,8 +155,13 @@ public class Tab3Fragment extends BaseFragment {
             TripPoint endPoint = new TripPoint();
             endPoint.setLatitude(endTip.getPoint().getLatitude());
             endPoint.setLongitude(endTip.getPoint().getLongitude());
-            param.setStartPoint(endPoint);
-            LogUtils.d(param);
+            param.setDestPoint(endPoint);
+
+            Intent intent = new Intent(activity, PredictActivity.class);
+            intent.putExtra("tripParam", param);
+            intent.putExtra("startTip", startTip);
+            intent.putExtra("endTip", endTip);
+            startActivity(intent);
         });
     }
 

@@ -17,11 +17,10 @@ import com.amap.api.services.route.DrivePath;
 import com.amap.api.services.route.DriveStep;
 import com.amap.api.services.route.TMC;
 import com.powershare.etm.R;
-import com.powershare.etm.ui.tab3.route.util.AMapUtil;
+import com.powershare.etm.util.AMapUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-
 
 /**
  * 导航路线图层类。
@@ -30,14 +29,14 @@ public class DrivingRouteOverlay extends RouteOverlay {
 
     private DrivePath drivePath;
     private List<LatLonPoint> throughPointList;
-    private List<Marker> throughPointMarkerList = new ArrayList<Marker>();
+    private List<Marker> throughPointMarkerList = new ArrayList<>();
     private boolean throughPointMarkerVisible = true;
     private List<TMC> tmcs;
     private PolylineOptions mPolylineOptions;
     private PolylineOptions mPolylineOptionscolor;
     private Context mContext;
     private boolean isColorfulline = true;
-    private float mWidth = 25;
+    private float mWidth = 13;
     private List<LatLng> mLatLngsOfPath;
 
     public void setIsColorfulline(boolean iscolorfulline) {
@@ -59,7 +58,6 @@ public class DrivingRouteOverlay extends RouteOverlay {
         startPoint = AMapUtil.convertToLatLng(start);
         endPoint = AMapUtil.convertToLatLng(end);
         this.throughPointList = throughPointList;
-
         initBitmapDescriptor();
     }
 
@@ -85,12 +83,11 @@ public class DrivingRouteOverlay extends RouteOverlay {
             if (mAMap == null) {
                 return;
             }
-
             if (mWidth == 0 || drivePath == null) {
                 return;
             }
-            mLatLngsOfPath = new ArrayList<LatLng>();
-            tmcs = new ArrayList<TMC>();
+            mLatLngsOfPath = new ArrayList<>();
+            tmcs = new ArrayList<>();
             List<DriveStep> drivePaths = drivePath.getSteps();
             mPolylineOptions.add(startPoint);
             for (int i = 0; i < drivePaths.size(); i++) {
@@ -131,9 +128,7 @@ public class DrivingRouteOverlay extends RouteOverlay {
      * 初始化线段属性
      */
     private void initPolylineOptions() {
-
         mPolylineOptions = null;
-
         mPolylineOptions = new PolylineOptions();
         mPolylineOptions.color(getDriveColor()).width(getRouteWidth());
     }
@@ -149,8 +144,6 @@ public class DrivingRouteOverlay extends RouteOverlay {
 
     /**
      * 根据不同的路段拥堵情况展示不同的颜色
-     *
-     * @param tmcSection
      */
     private void colorWayUpdate(List<TMC> tmcSection) {
         if (mAMap == null) {
@@ -163,25 +156,24 @@ public class DrivingRouteOverlay extends RouteOverlay {
         mPolylineOptionscolor = null;
         mPolylineOptionscolor = new PolylineOptions();
         mPolylineOptionscolor.width(getRouteWidth());
-        List<Integer> colorList = new ArrayList<Integer>();
-        List<BitmapDescriptor> bitmapDescriptors = new ArrayList<BitmapDescriptor>();
+        List<Integer> colorList = new ArrayList<>();
+        List<BitmapDescriptor> bitmapDescriptors = new ArrayList<>();
         List<LatLng> points = new ArrayList<>();
-        List<Integer> texIndexList = new ArrayList<Integer>();
+        List<Integer> texIndexList = new ArrayList<>();
 //        mPolylineOptionscolor.add(startPoint);
 //        mPolylineOptionscolor.add(AMapUtil.convertToLatLng(tmcSection.get(0).getPolyline().get(0)));
-
         points.add(startPoint);
         points.add(AMapUtil.convertToLatLng(tmcSection.get(0).getPolyline().get(0)));
         colorList.add(getDriveColor());
         bitmapDescriptors.add(defaultRoute);
 
-        BitmapDescriptor bitmapDescriptor = null;
+        BitmapDescriptor bitmapDescriptor;
         int textIndex = 0;
         texIndexList.add(textIndex);
         texIndexList.add(++textIndex);
         for (int i = 0; i < tmcSection.size(); i++) {
             segmentTrafficStatus = tmcSection.get(i);
-            int color = getcolor(segmentTrafficStatus.getStatus());
+            int color = getColor(segmentTrafficStatus.getStatus());
             bitmapDescriptor = getTrafficBitmapDescriptor(segmentTrafficStatus.getStatus());
             List<LatLonPoint> mployline = segmentTrafficStatus.getPolyline();
             for (int j = 0; j < mployline.size(); j++) {
@@ -191,17 +183,13 @@ public class DrivingRouteOverlay extends RouteOverlay {
                 texIndexList.add(++textIndex);
                 bitmapDescriptors.add(bitmapDescriptor);
             }
-
         }
-
-
         points.add(endPoint);
         colorList.add(getDriveColor());
         bitmapDescriptors.add(defaultRoute);
         texIndexList.add(++textIndex);
         mPolylineOptionscolor.addAll(points);
         mPolylineOptionscolor.colorValues(colorList);
-
 //        mPolylineOptionscolor.setCustomTextureIndex(texIndexList);
 //        mPolylineOptionscolor.setCustomTextureList(bitmapDescriptors);
     }
@@ -238,18 +226,18 @@ public class DrivingRouteOverlay extends RouteOverlay {
         }
     }
 
-    private int getcolor(String status) {
+    private int getColor(String status) {
         switch (status) {
             case "畅通":
-                return Color.GREEN;
+                return Color.parseColor("#67C23A");
             case "缓行":
-                return Color.YELLOW;
+                return Color.parseColor("#E6A23C");
             case "拥堵":
-                return Color.RED;
+                return Color.parseColor("#F56C6C");
             case "严重拥堵":
                 return Color.parseColor("#990033");
             default:
-                return Color.parseColor("#537edc");
+                return Color.parseColor("#409EFF");
         }
     }
 
@@ -308,15 +296,11 @@ public class DrivingRouteOverlay extends RouteOverlay {
     }
 
     private BitmapDescriptor getThroughPointBitDes() {
-        return BitmapDescriptorFactory.fromResource(R.drawable.amap_through);
+        return BitmapDescriptorFactory.fromResource(R.mipmap.charging_station);
     }
 
     /**
      * 获取两点间距离
-     *
-     * @param start
-     * @param end
-     * @return
      */
     public static int calculateDistance(LatLng start, LatLng end) {
         double x1 = start.longitude;
@@ -347,7 +331,6 @@ public class DrivingRouteOverlay extends RouteOverlay {
         double dist = Math.sqrt(v1[0] * v1[0] + v1[1] * v1[1] + v1[2] * v1[2]);
         return (int) (Math.asin(dist / 2) * 12742001.5798544);
     }
-
 
     //获取指定两点之间固定距离点
     public static LatLng getPointForDis(LatLng sPt, LatLng ePt, double dis) {

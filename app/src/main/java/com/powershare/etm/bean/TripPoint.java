@@ -1,12 +1,14 @@
 package com.powershare.etm.bean;
 
+import java.io.Serializable;
+
 import lombok.Data;
 
 /**
  * 行程中的轨迹点
  */
 @Data
-public class TripPoint {
+public class TripPoint implements Serializable {
     //主键ID
     private String id;
 

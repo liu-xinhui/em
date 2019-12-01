@@ -39,20 +39,22 @@
 
             <ImageView
                 android:id="@+id/temp"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
+                android:layout_width="55dp"
+                android:layout_height="60dp"
+                android:paddingVertical="10dp"
+                android:paddingStart="5dp"
+                android:paddingEnd="10dp"
                 android:src="@mipmap/tab_temperature"
                 app:layout_constraintBottom_toBottomOf="@id/map_container"
                 app:layout_constraintRight_toRightOf="parent" />
 
             <ImageView
                 android:id="@+id/car"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
+                android:layout_width="55dp"
+                android:layout_height="60dp"
+                android:paddingVertical="10dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="5dp"
                 android:src="@mipmap/tab_car"
                 app:layout_constraintBottom_toBottomOf="@id/map_container"
                 app:layout_constraintRight_toLeftOf="@id/temp" />
@@ -107,10 +109,11 @@
                 app:layout_constraintTop_toTopOf="@id/power_start" />
 
             <TextView
+                android:id="@+id/power_consumption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dp"
-                android:text="行程消耗79%电量"
+                android:text="行程消耗--电量"
                 android:textColor="#fff44b57"
                 android:textSize="12dp"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -122,7 +125,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="11dp"
-                android:text="100%"
+                android:text="--"
                 android:textColor="#ffe1fbfc"
                 android:textSize="14dp"
                 app:layout_constraintLeft_toLeftOf="@id/power_start"
@@ -134,7 +137,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="11dp"
-                android:text="21%"
+                android:text="--"
                 android:textColor="#ffe1fbfc"
                 android:textSize="14dp"
                 app:layout_constraintLeft_toLeftOf="@id/power_end"
@@ -187,7 +190,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="7dp"
-                android:text="环贸iapm"
+                android:text="---"
                 android:textColor="#E1FBFC"
                 app:layout_constraintBottom_toBottomOf="@id/track_start"
                 app:layout_constraintLeft_toRightOf="@id/track_start"
@@ -198,7 +201,7 @@
                 android:id="@+id/track_start_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="上海市黄浦区南京东路"
+                android:text="---"
                 app:layout_constraintLeft_toLeftOf="@+id/track_start_name"
                 app:layout_constraintTop_toBottomOf="@+id/track_start_name" />
 
@@ -217,7 +220,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="7dp"
-                android:text="科学杂志社"
+                android:text="---"
                 android:textColor="#E1FBFC"
                 app:layout_constraintBottom_toBottomOf="@id/track_end"
                 app:layout_constraintLeft_toRightOf="@id/track_end"
@@ -229,7 +232,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:text="上海市嘉定区槎溪路"
+                android:text="---"
                 app:layout_constraintLeft_toLeftOf="@id/track_end_name"
                 app:layout_constraintTop_toBottomOf="@id/track_end_name" />
 

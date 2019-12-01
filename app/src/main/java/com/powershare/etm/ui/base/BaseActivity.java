@@ -72,7 +72,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public void hideLoading() {
         if (loadingDialog != null) {
-            loadingDialog.hide();
+            loadingDialog.dismiss();
         }
     }
 }
