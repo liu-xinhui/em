@@ -178,11 +178,12 @@
             app:layout_constraintRight_toRightOf="@id/car_model_bg"
             app:layout_constraintTop_toTopOf="@id/car_model_bg" />
 
-        <ImageView
-            android:id="@+id/car_model_car"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/car"
+        <com.powershare.etm.component.ImageView360
+            android:id="@+id/banner"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="20dp"
+            android:scaleType="fitCenter"
             app:layout_constraintBottom_toBottomOf="@id/car_model_car_bg"
             app:layout_constraintLeft_toLeftOf="@id/car_model_car_bg"
             app:layout_constraintRight_toRightOf="@id/car_model_car_bg"
@@ -221,7 +222,7 @@
             app:layout_constraintTop_toTopOf="@id/car_model_value" />
 
         <SeekBar
-            android:id="@+id/car_model_temp_bar"
+            android:id="@+id/car_model_power_bar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="15dp"

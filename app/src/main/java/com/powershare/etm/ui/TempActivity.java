@@ -4,16 +4,10 @@ import android.view.View;
 
 import androidx.lifecycle.ViewModelProviders;
 
-import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.component.FrameAnimation2;
 import com.powershare.etm.databinding.ActivityTempBinding;
-import com.powershare.etm.http.ApiManager;
 import com.powershare.etm.ui.base.BaseActivity;
 import com.powershare.etm.vm.CarViewModel;
-import com.powershare.etm.util.CommonUtil;
-import com.powershare.etm.util.MyObserver;
-
-import java.util.List;
 
 public class TempActivity extends BaseActivity {
     private ActivityTempBinding binding;

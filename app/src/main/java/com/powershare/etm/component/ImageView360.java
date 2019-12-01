@@ -235,7 +235,6 @@ public class ImageView360 extends AppCompatImageView {
                 }
                 this.callback.onChange(100);
                 isLoadingFinish = true;
-                LogUtils.d("全景图片加载完成");
             }).start();
         }
     }

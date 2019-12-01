@@ -5,10 +5,13 @@ import androidx.lifecycle.LiveData;
 
 import com.powershare.etm.bean.ApiResult;
 import com.powershare.etm.bean.CarModel;
+import com.powershare.etm.bean.PredictCharge;
+import com.powershare.etm.bean.TripParam;
 import com.powershare.etm.bean.User;
 
 import java.util.List;
 
+import retrofit2.http.Body;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -25,6 +28,10 @@ public interface ApiService {
     @POST("carModel/list")
     LiveData<ApiResult<List<CarModel>>> carList();
 
+    //行程预测
+    @POST("trip/predict")
+    LiveData<ApiResult<PredictCharge>> tracePredict(@Body TripParam tripParam);
+
     //行程追踪启动
     @POST("trip/startTrace")
     LiveData<ApiResult<List<CarModel>>> startTrace();
@@ -40,4 +47,6 @@ public interface ApiService {
     //行程列表
     @POST("trip/query")
     LiveData<ApiResult<List<CarModel>>> traceQuery();
+
+
 }

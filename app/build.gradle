@@ -83,7 +83,7 @@ dependencies {
     implementation 'com.github.youlookwhat:ByRecyclerView:1.0.8'
     //高德地图
     //noinspection GradleDependency
-    implementation 'com.amap.api:map2d:latest.integration'
+    implementation 'com.amap.api:3dmap:latest.integration'
     //noinspection GradleDependency
     implementation 'com.amap.api:search:latest.integration'
     //noinspection GradleDependency

@@ -13,14 +13,10 @@ import com.amap.api.services.help.Inputtips;
 import com.amap.api.services.help.InputtipsQuery;
 import com.amap.api.services.help.Tip;
 import com.powershare.etm.R;
-import com.powershare.etm.bean.SearchAddress;
 import com.powershare.etm.databinding.ActivitySearchLocBinding;
 import com.powershare.etm.ui.base.BaseActivity;
 import com.powershare.etm.util.SearchLocHistoryHelper;
 import com.qmuiteam.qmui.widget.QMUITopBarLayout;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import me.jingbin.library.adapter.BaseByViewHolder;
 import me.jingbin.library.adapter.BaseRecyclerAdapter;
@@ -28,7 +24,7 @@ import me.jingbin.library.adapter.BaseRecyclerAdapter;
 public class SearchLocActivity extends BaseActivity {
     private ActivitySearchLocBinding binding;
     private QMUITopBarLayout mTopBar;
-    private BaseRecyclerAdapter<SearchAddress> adapter;
+    private BaseRecyclerAdapter<Tip> adapter;
     private boolean searchTextEmpty = true;
     private SearchLocHistoryHelper historyHelper = new SearchLocHistoryHelper();
     private int type;
@@ -59,9 +55,9 @@ public class SearchLocActivity extends BaseActivity {
 
     private void initList() {
         //车辆列表recyclerView
-        adapter = new BaseRecyclerAdapter<SearchAddress>(R.layout.item_search_loc) {
+        adapter = new BaseRecyclerAdapter<Tip>(R.layout.item_search_loc) {
             @Override
-            protected void bindView(BaseByViewHolder holder, SearchAddress item, int position) {
+            protected void bindView(BaseByViewHolder holder, Tip item, int position) {
                 holder.setText(R.id.name, item.getName());
                 holder.setText(R.id.address, item.getAddress());
             }
@@ -72,7 +68,7 @@ public class SearchLocActivity extends BaseActivity {
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.setOnItemClickListener((v, position) -> {
-            SearchAddress item = adapter.getData().get(position);
+            Tip item = adapter.getData().get(position);
             historyHelper.addOneHistory(item);
             Intent i = new Intent();
             i.putExtra("type", type);
@@ -113,14 +109,7 @@ public class SearchLocActivity extends BaseActivity {
                     Inputtips inputTips = new Inputtips(SearchLocActivity.this, inputQuery);
                     inputTips.setInputtipsListener((list, code) -> {
                         if (code == 1000 && !searchTextEmpty) {
-                            List<SearchAddress> data = new ArrayList<>();
-                            for (Tip tip : list) {
-                                SearchAddress address = new SearchAddress(tip.getName(), tip.getDistrict() + tip.getAddress());
-                                data.add(address);
-                            }
-                            if (!searchTextEmpty) {
-                                adapter.setNewData(data);
-                            }
+                            adapter.setNewData(list);
                         }
                     });
                     inputTips.requestInputtipsAsyn();

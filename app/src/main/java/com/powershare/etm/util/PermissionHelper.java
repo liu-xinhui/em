@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 
 import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.ActivityUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.blankj.utilcode.util.PermissionUtils.OnRationaleListener.ShouldRequest;
 

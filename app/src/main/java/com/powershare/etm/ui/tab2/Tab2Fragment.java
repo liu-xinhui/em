@@ -7,7 +7,6 @@ import android.widget.SeekBar;
 
 import androidx.lifecycle.ViewModelProviders;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.databinding.FragmentTab2Binding;
 import com.powershare.etm.ui.base.BaseFragment;
@@ -98,7 +97,8 @@ public class Tab2Fragment extends BaseFragment {
                 .setOnSheetItemClickListener((dialog, itemView, position, tag) -> {
                     dialog.dismiss();
                     binding.carModelValue.setText(tag);
-                    LogUtils.json(mCarModels.get(position));
+                    setCurrentCar(mCarModels.get(position));
+                    //LogUtils.json(mCarModels.get(position));
                 });
         binding.carModelSelect.setOnClickListener(view -> builder.build().show());
         //车辆列表数据
@@ -107,6 +107,9 @@ public class Tab2Fragment extends BaseFragment {
             public void onSuccess(List<CarModel> carModels) {
                 mCarModels.clear();
                 mCarModels.addAll(carModels);
+                if (carModels.size() > 0) {
+                    setCurrentCar(carModels.get(0));
+                }
                 for (CarModel carModel : carModels) {
                     builder.addItem(carModel.getName());
                 }
@@ -121,5 +124,18 @@ public class Tab2Fragment extends BaseFragment {
                 CommonUtil.showSuccessToast("获取温度成功");
             }
         });
+    }
+
+    private void setCurrentCar(CarModel currentCar) {
+        String[] photoIds = currentCar.getPhotoIds();
+        if (photoIds != null && photoIds.length > 0) {
+            String[] photoUrls = new String[photoIds.length];
+            for (int i = 0; i < photoIds.length; i++) {
+                photoUrls[i] = CommonUtil.getImageUrl(currentCar.getCarModelCode(), photoIds[i]);
+            }
+            binding.banner.setBitmapUrls(photoUrls);
+        } else {
+            binding.banner.setBitmapUrls(null);
+        }
     }
 }

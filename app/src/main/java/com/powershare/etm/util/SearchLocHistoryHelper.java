@@ -2,10 +2,10 @@ package com.powershare.etm.util;
 
 import android.text.TextUtils;
 
+import com.amap.api.services.help.Tip;
 import com.blankj.utilcode.util.SPUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.powershare.etm.bean.SearchAddress;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -14,7 +14,7 @@ import java.util.List;
 public class SearchLocHistoryHelper {
     private static final String key = "search_loc_history";
     private static final SPUtils SP_UTILS = SPUtils.getInstance();
-    private List<SearchAddress> list;
+    private List<Tip> list;
     private Gson gson = new Gson();
 
     public SearchLocHistoryHelper() {
@@ -22,11 +22,11 @@ public class SearchLocHistoryHelper {
     }
 
     @SuppressWarnings("all")
-    public void addOneHistory(SearchAddress address) {
+    public void addOneHistory(Tip address) {
         if (address != null && address.getName() != null) {
-            Iterator<SearchAddress> iterator = list.iterator();
+            Iterator<Tip> iterator = list.iterator();
             while (iterator.hasNext()) {
-                SearchAddress item = iterator.next();
+                Tip item = iterator.next();
                 if (address.getName().equals(item.getName())) {
                     iterator.remove();
                 }
@@ -39,17 +39,17 @@ public class SearchLocHistoryHelper {
         }
     }
 
-    public List<SearchAddress> getList() {
+    public List<Tip> getList() {
         return list == null ? new ArrayList<>() : list;
     }
 
-    private List<SearchAddress> getHistories() {
-        List<SearchAddress> data = new ArrayList<>();
+    private List<Tip> getHistories() {
+        List<Tip> data = new ArrayList<>();
         String str = SP_UTILS.getString(key);
         if (TextUtils.isEmpty(str)) {
             return data;
         }
-        List<SearchAddress> list = gson.fromJson(str, new TypeToken<List<SearchAddress>>() {
+        List<Tip> list = gson.fromJson(str, new TypeToken<List<Tip>>() {
         }.getType());
         data.addAll(list);
         return data;

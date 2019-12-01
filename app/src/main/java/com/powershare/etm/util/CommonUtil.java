@@ -15,6 +15,7 @@ import org.json.JSONException;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
+import java.text.DecimalFormat;
 import java.util.concurrent.TimeoutException;
 
 import retrofit2.HttpException;
@@ -62,6 +63,31 @@ public class CommonUtil {
             str = str.replace("{" + i + "}", item.toString());
         }
         return str;
+    }
+
+    //转换为KM
+    public static String mToKm(int lenMeter) {
+        float dis = (float) lenMeter / 1000;
+        return formatFloat(dis);
+    }
+
+    //转换为小时
+    public static String secondToHour(int second) {
+        float dis = (float) second / 3600;
+        return formatFloat(dis);
+    }
+
+    //平均速度
+    public static String speed(String distanceStr, String hourStr) {
+        float distance = Float.parseFloat(distanceStr);
+        float hour = Float.parseFloat(hourStr);
+        float dis = distance / hour;
+        return formatFloat(dis);
+    }
+
+    public static String formatFloat(float src) {
+        DecimalFormat numF = new DecimalFormat("##0.0");
+        return numF.format(src);
     }
 
     public static String getImageUrl(String carModel, String imageId) {

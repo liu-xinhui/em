@@ -29,7 +29,12 @@ public abstract class BaseActivity extends AppCompatActivity {
         QMUIStatusBarHelper.setStatusBarDarkMode(this);
         setContentView(initContentView());
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        createViewModel();
         onMounted();
+    }
+
+    //此处创建viewModel
+    protected void createViewModel() {
     }
 
     protected void onMounted() {
