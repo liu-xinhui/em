@@ -38,6 +38,15 @@
             </com.powershare.etm.component.MapContainer>
 
             <ImageView
+                android:id="@+id/full_screen"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:padding="10dp"
+                android:src="@mipmap/full_screen"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@id/map_container" />
+
+            <ImageView
                 android:id="@+id/temp"
                 android:layout_width="55dp"
                 android:layout_height="60dp"

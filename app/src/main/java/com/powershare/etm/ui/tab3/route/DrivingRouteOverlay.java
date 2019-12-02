@@ -2,7 +2,6 @@ package com.powershare.etm.ui.tab3.route;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.util.Log;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.model.BitmapDescriptor;
@@ -16,6 +15,7 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.route.DrivePath;
 import com.amap.api.services.route.DriveStep;
 import com.amap.api.services.route.TMC;
+import com.blankj.utilcode.util.LogUtils;
 import com.powershare.etm.R;
 import com.powershare.etm.util.AMapUtil;
 
@@ -211,7 +211,7 @@ public class DrivingRouteOverlay extends RouteOverlay {
     }
 
     private BitmapDescriptor getTrafficBitmapDescriptor(String status) {
-        Log.e("ggb", "==> 路况信息 is " + status);
+        LogUtils.d("==> 路况信息 is " + status);
         switch (status) {
             case "畅通":
                 return smoothTraffic;
@@ -281,15 +281,17 @@ public class DrivingRouteOverlay extends RouteOverlay {
 
     private void addThroughPointMarker() {
         if (this.throughPointList != null && this.throughPointList.size() > 0) {
-            LatLonPoint latLonPoint = null;
+            LatLonPoint latLonPoint;
             for (int i = 0; i < this.throughPointList.size(); i++) {
                 latLonPoint = this.throughPointList.get(i);
                 if (latLonPoint != null) {
-                    throughPointMarkerList.add(mAMap.addMarker((new MarkerOptions())
+                    Marker maker = mAMap.addMarker((new MarkerOptions())
                             .position(new LatLng(latLonPoint.getLatitude(), latLonPoint.getLongitude()))
                             .visible(throughPointMarkerVisible)
                             .icon(getThroughPointBitDes())
-                            .title("\u9014\u7ECF\u70B9")));
+                            .title("充电站"));
+                    maker.setObject(latLonPoint);
+                    throughPointMarkerList.add(maker);
                 }
             }
         }

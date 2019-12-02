@@ -2,11 +2,9 @@ package com.powershare.etm.ui.tab3;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.GridLayout;
-import android.widget.TextView;
 
 import androidx.lifecycle.ViewModelProviders;
 
@@ -14,24 +12,23 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.services.core.LatLonPoint;
-import com.amap.api.services.help.Tip;
 import com.amap.api.services.route.BusRouteResult;
 import com.amap.api.services.route.DrivePath;
 import com.amap.api.services.route.DriveRouteResult;
 import com.amap.api.services.route.RideRouteResult;
 import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkRouteResult;
+import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.CollectionUtils;
-import com.blankj.utilcode.util.SizeUtils;
-import com.powershare.etm.R;
+import com.blankj.utilcode.util.LogUtils;
 import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.bean.Location;
 import com.powershare.etm.bean.PredictCharge;
 import com.powershare.etm.bean.TripParam;
-import com.powershare.etm.databinding.ActivityPredictBinding;
+import com.powershare.etm.bean.TripPoint;
+import com.powershare.etm.databinding.ActivityPredictFullBinding;
 import com.powershare.etm.ui.base.BaseActivity;
 import com.powershare.etm.ui.tab3.route.DrivingRouteOverlay;
-import com.powershare.etm.util.AMapUtil;
 import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.vm.CarViewModel;
@@ -45,8 +42,8 @@ import java.util.List;
 
 import static com.amap.api.services.route.RouteSearch.DRIVING_SINGLE_DEFAULT;
 
-public class PredictActivity extends BaseActivity {
-    private ActivityPredictBinding binding;
+public class PredictFullActivity extends BaseActivity {
+    private ActivityPredictFullBinding binding;
     private PredictViewModel predictViewModel;
     private CarViewModel carViewModel;
     private AMap aMap;
@@ -54,7 +51,7 @@ public class PredictActivity extends BaseActivity {
 
     @Override
     protected View initContentView() {
-        binding = ActivityPredictBinding.inflate(getLayoutInflater());
+        binding = ActivityPredictFullBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
 
@@ -68,7 +65,10 @@ public class PredictActivity extends BaseActivity {
         uiSettings.setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
         uiSettings.setZoomControlsEnabled(false);
         uiSettings.setRotateGesturesEnabled(false);
-        binding.mapContainer.setScrollView(binding.scrollView);
+        aMap.setOnMarkerClickListener(marker -> {
+            LogUtils.d(marker.getId());
+            return false;
+        });
     }
 
     @Override
@@ -113,27 +113,52 @@ public class PredictActivity extends BaseActivity {
         //取值
         Intent intent = getIntent();
         tripParam = (TripParam) intent.getSerializableExtra("tripParam");
-        //起始位置
-        Tip startTip = intent.getParcelableExtra("startTip");
-        Tip endTip = intent.getParcelableExtra("endTip");
-        if (tripParam == null || startTip == null || endTip == null) {
-            CommonUtil.showErrorToast("未知错误");
-            return;
-        }
-        binding.trackStartName.setText(startTip.getName());
-        binding.trackStartAddress.setText(startTip.getAddress());
-        binding.trackEndName.setText(endTip.getName());
-        binding.trackEndAddress.setText(endTip.getAddress());
+        tripParam = new TripParam();
+        TripPoint tripPoint = new TripPoint();
+        //120.849857,31.631866
+        tripPoint.setLongitude(120.849857);
+        tripPoint.setLatitude(31.631866);
+        tripParam.setDestPoint(tripPoint);
+        //this.tracePredict(tripParam);
         //车型点击
         getCarListData();
         //温度点击
         getTemp();
         //全屏点击
         binding.fullScreen.setOnClickListener(view -> {
-            Intent goIntent = new Intent(PredictActivity.this, PredictFullActivity.class);
-            goIntent.putExtra("tripParam", tripParam);
+            binding.chargeInfo.setVisibility(View.GONE);
+            binding.nav.setVisibility(View.GONE);
+            binding.fullScreen.setVisibility(View.GONE);
         });
-        //this.tracePredict(tripParam);
+        //导航点击
+        binding.nav.setOnClickListener(view -> {
+            String gaode = "高德地图";
+            String baidu = "百度地图";
+            double destLat = tripParam.getDestPoint().getLatitude();
+            double destLng = tripParam.getDestPoint().getLongitude();
+            String destName = "充电桩";
+            new QMUIBottomSheet.BottomListSheetBuilder(this)
+                    .addItem(gaode)
+                    .addItem(baidu)
+                    .setOnSheetItemClickListener((dialog, itemView, position, tag) -> {
+                        dialog.dismiss();
+                        if (gaode.equals(tag)) {
+                            if (AppUtils.isAppInstalled("com.autonavi.minimap")) {
+                                Uri uri = Uri.parse("amapuri://route/plan/?dlat=" + destLat + "&dlon=" + destLng + "&dname=" + destName + "&dev=0&t=0");
+                                startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                            } else {
+                                CommonUtil.showErrorToast("未安装" + gaode);
+                            }
+                        } else {
+                            if (AppUtils.isAppInstalled("com.baidu.BaiduMap")) {
+                                Uri uri = Uri.parse("baidumap://map/direction?destination=latlng:" + destLat + "," + destLng + "|name:" + destName + "&mode=driving&coord_type=gcj02");
+                                startActivity(new Intent(Intent.ACTION_VIEW, uri));
+                            } else {
+                                CommonUtil.showErrorToast("未安装" + baidu);
+                            }
+                        }
+                    }).build().show();
+        });
     }
 
     //请求后台
@@ -146,21 +171,6 @@ public class PredictActivity extends BaseActivity {
 
             @Override
             public void onSuccess(PredictCharge predictCharge) {
-                String powerValueStart = predictCharge.getStartSoc() + "%";
-                binding.powerValueStart.setText(powerValueStart);
-                //
-                String powerValueEnd = predictCharge.getDestSoc() + "%";
-                binding.powerValueEnd.setText(powerValueEnd);
-                //
-                String powerConsumption = "行程消耗" + (predictCharge.getStartSoc() - predictCharge.getDestSoc()) + "%电量";
-                binding.powerConsumption.setText(powerConsumption);
-                //提示
-                if (CollectionUtils.isEmpty(predictCharge.getChargeLocationList())) {
-                    binding.notice.setText("恭喜您！途中无需充电~");
-                } else {
-                    String text = "途中需要充电" + predictCharge.getChargeLocationList().size() + "次~";
-                    binding.notice.setText(text);
-                }
                 mapRoute(tripParam, predictCharge);
             }
 
@@ -233,35 +243,6 @@ public class PredictActivity extends BaseActivity {
                 drivingRouteOverlay.removeFromMap();
                 drivingRouteOverlay.addToMap();
                 drivingRouteOverlay.zoomToSpan();
-                int dis = (int) drivePath.getDistance();
-                int dur = (int) drivePath.getDuration();
-                List<String> items = new ArrayList<>();
-                String distance = AMapUtil.mToKm(dis);
-                String hour = AMapUtil.secondToHour(dur);
-                items.add(distance + ",km,总里程");
-                items.add(predictCharge.getEnergy() + ",kwh,消耗电量");
-                items.add(hour + ",H,行驶时间");
-                items.add(AMapUtil.speed(distance, hour) + ",KM/H,平均速度");
-                items.add(predictCharge.getRmbPublich() + ",RMB,充电成本（公共充电）");
-                items.add(predictCharge.getRmbPrivate() + ",RMB,充电成本（私人充电）");
-                binding.infoContainer.removeAllViews();
-                for (String item : items) {
-                    String[] itemArr = item.split(",");
-                    View view = LayoutInflater.from(PredictActivity.this).inflate(R.layout.item_title_value, null);
-                    TextView value = view.findViewById(R.id.item_title_value);
-                    TextView unit = view.findViewById(R.id.item_title_value_unit);
-                    TextView title = view.findViewById(R.id.item_title);
-                    value.setText(itemArr[0]);
-                    unit.setText(itemArr[1]);
-                    title.setText(itemArr[2]);
-                    GridLayout.LayoutParams param = new GridLayout.LayoutParams();
-                    param.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.FILL, 1);
-                    param.width = 0;
-                    param.height = SizeUtils.dp2px(66);
-                    int margin = SizeUtils.dp2px(8);
-                    param.setMargins(margin, margin, margin, margin);
-                    binding.infoContainer.addView(view, param);
-                }
             } else if (driveRouteResult.getPaths() == null) {
                 CommonUtil.showErrorToast("无结果");
             }
@@ -281,7 +262,7 @@ public class PredictActivity extends BaseActivity {
         binding.car.setOnClickListener(view -> {
             if (mCarModels.size() == 0) {
                 //车辆列表数据
-                carViewModel.carList().observe(PredictActivity.this, new MyObserver<List<CarModel>>() {
+                carViewModel.carList().observe(PredictFullActivity.this, new MyObserver<List<CarModel>>() {
                     @Override
                     public void onStart() {
                         showLoading();

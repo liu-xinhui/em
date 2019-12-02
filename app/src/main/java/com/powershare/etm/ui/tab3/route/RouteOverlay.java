@@ -43,7 +43,6 @@ public class RouteOverlay {
     public void removeFromMap() {
         if (startMarker != null) {
             startMarker.remove();
-
         }
         if (endMarker != null) {
             endMarker.remove();
