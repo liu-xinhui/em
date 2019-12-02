@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.help.Tip;
@@ -64,6 +65,7 @@ public class PredictActivity extends BaseActivity {
         binding.map.onCreate(savedInstanceState);
         aMap = binding.map.getMap();
         UiSettings uiSettings = aMap.getUiSettings();
+        uiSettings.setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
         uiSettings.setZoomControlsEnabled(false);
         uiSettings.setRotateGesturesEnabled(false);
         binding.mapContainer.setScrollView(binding.scrollView);

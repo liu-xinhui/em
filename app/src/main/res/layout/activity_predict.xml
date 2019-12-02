@@ -67,7 +67,7 @@
                 android:drawableStart="@mipmap/notice_blue"
                 android:gravity="center"
                 android:paddingHorizontal="15dp"
-                android:text="恭喜您！途中无需充电~"
+                android:text="~"
                 android:textColor="@color/colorAccent"
                 app:bl_corners_radius="20dp"
                 app:bl_solid_color="@color/black"

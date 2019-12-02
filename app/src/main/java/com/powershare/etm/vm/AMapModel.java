@@ -31,7 +31,7 @@ public class AMapModel extends ViewModel {
             if (loc.getErrorCode() == 0) {
                 city = loc.getCity();
             } else {
-                CommonUtil.showErrorToast("定位失败，自动获取上海市温度");
+                //CommonUtil.showErrorToast("定位失败，自动获取上海市温度");
                 city = "上海市";
             }
             WeatherSearchQuery query = new WeatherSearchQuery(city, WeatherSearchQuery.WEATHER_TYPE_LIVE);

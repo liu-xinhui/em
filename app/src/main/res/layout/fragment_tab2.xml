@@ -13,6 +13,16 @@
         android:paddingBottom="25dp"
         tools:context=".ui.tab2.Tab2Fragment">
 
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/recent_track_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:constraint_referenced_ids="recent_track_title,recent_track_icon,recent_track_arrow,
+            recent_track_start,recent_track_start_text,recent_track_end,recent_track_end_text,
+            recent_track_dash,mileage_bg,power_bg, mileage_bg_value,mileage_bg_unit, mileage_bg_title,
+            power_bg_value,power_bg_unit,power_bg_title,recent_track_history" />
+
         <TextView
             android:id="@+id/recent_track_title"
             android:layout_width="wrap_content"
@@ -96,7 +106,7 @@
             app:layout_constraintVertical_bias="0.15" />
 
         <com.noober.background.view.BLView
-            android:id="@+id/BLView"
+            android:id="@+id/recent_track_dash"
             android:layout_width="3dp"
             android:layout_height="96dp"
             android:layout_marginStart="5dp"
@@ -205,7 +215,39 @@
             app:layout_constraintBottom_toBottomOf="@id/power_bg"
             app:layout_constraintLeft_toLeftOf="@id/power_bg"
             app:layout_constraintRight_toRightOf="@id/power_bg" />
+        <!--===============================================================================-->
+        <LinearLayout
+            android:id="@+id/track_empty_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="190dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:src="@mipmap/track_empty" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="您尚未完成任何行程"
+                android:textColor="#ffe1fbfc"
+                android:textSize="14dp" />
+
+            <TextView
+                android:layout_width="260dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="可以手动开启一段行程，在行程结束后， 您将在此处看到结果。"
+                android:textColor="#ffd3d3d3"
+                android:textSize="14sp" />
+        </LinearLayout>
+        <!--===============================================================================-->
         <com.noober.background.view.BLButton
             android:id="@+id/start_track"
             android:layout_width="match_parent"
