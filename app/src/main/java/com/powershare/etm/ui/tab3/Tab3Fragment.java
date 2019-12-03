@@ -17,7 +17,7 @@ import com.powershare.etm.databinding.FragmentTab3Binding;
 import com.powershare.etm.ui.base.BaseFragment;
 import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.MyObserver;
-import com.powershare.etm.vm.AMapModel;
+import com.powershare.etm.vm.AMapViewModel;
 import com.powershare.etm.vm.CarViewModel;
 import com.powershare.etm.vm.PredictViewModel;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
@@ -30,7 +30,7 @@ public class Tab3Fragment extends BaseFragment {
     private FragmentTab3Binding binding;
     private PredictViewModel tab3ViewModel;
     private CarViewModel carViewModel;
-    private AMapModel tempViewModel;
+    private AMapViewModel tempViewModel;
 
     public static Tab3Fragment newInstance() {
         return new Tab3Fragment();
@@ -46,7 +46,7 @@ public class Tab3Fragment extends BaseFragment {
     protected void createViewModel() {
         tab3ViewModel = ViewModelProviders.of(this).get(PredictViewModel.class);
         carViewModel = ViewModelProviders.of(activity).get(CarViewModel.class);
-        tempViewModel = ViewModelProviders.of(activity).get(AMapModel.class);
+        tempViewModel = ViewModelProviders.of(activity).get(AMapViewModel.class);
     }
 
     @Override

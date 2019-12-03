@@ -12,6 +12,10 @@ public class App extends Application {
 
     private static App app;
 
+    public static App getInstance() {
+        return app;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -22,9 +26,5 @@ public class App extends Application {
             LogUtils.e(throwable, Log.getStackTraceString(throwable));
         });
         PgyerActivityManager.set(this);
-    }
-
-    public static App getInstance() {
-        return app;
     }
 }

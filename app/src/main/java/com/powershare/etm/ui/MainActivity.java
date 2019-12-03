@@ -104,5 +104,4 @@ public class MainActivity extends BaseActivity {
         mTabSegment.setupWithViewPager(mViewPager, false);
         mTabSegment.selectTab(0);
     }
-
 }

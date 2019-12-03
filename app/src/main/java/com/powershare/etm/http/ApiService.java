@@ -48,5 +48,4 @@ public interface ApiService {
     @POST("trip/query")
     LiveData<ApiResult<List<CarModel>>> traceQuery();
 
-
 }

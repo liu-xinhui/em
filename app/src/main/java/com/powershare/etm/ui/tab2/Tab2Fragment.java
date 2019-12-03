@@ -12,7 +12,7 @@ import com.powershare.etm.databinding.FragmentTab2Binding;
 import com.powershare.etm.ui.base.BaseFragment;
 import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.MyObserver;
-import com.powershare.etm.vm.AMapModel;
+import com.powershare.etm.vm.AMapViewModel;
 import com.powershare.etm.vm.CarViewModel;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 
@@ -24,7 +24,7 @@ public class Tab2Fragment extends BaseFragment {
     private FragmentTab2Binding binding;
     private Tab2ViewModel tab2ViewModel;
     private CarViewModel carViewModel;
-    private AMapModel tempViewModel;
+    private AMapViewModel tempViewModel;
 
     public static Tab2Fragment newInstance() {
         return new Tab2Fragment();
@@ -40,7 +40,7 @@ public class Tab2Fragment extends BaseFragment {
     protected void createViewModel() {
         tab2ViewModel = ViewModelProviders.of(this).get(Tab2ViewModel.class);
         carViewModel = ViewModelProviders.of(activity).get(CarViewModel.class);
-        tempViewModel = ViewModelProviders.of(activity).get(AMapModel.class);
+        tempViewModel = ViewModelProviders.of(activity).get(AMapViewModel.class);
     }
 
     @SuppressLint("ClickableViewAccessibility")

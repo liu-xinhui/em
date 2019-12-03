@@ -128,6 +128,9 @@
 -keep class com.amap.api.navi.**{*;}
 -keep class com.autonavi.**{*;}
 
+#保活
+-keep class com.gyf.cactus.entity.* {*;}
+
 -keepclassmembers class * {
    public <init> (org.json.JSONObject);
 }

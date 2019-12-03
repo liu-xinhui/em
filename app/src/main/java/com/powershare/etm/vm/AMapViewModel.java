@@ -13,7 +13,7 @@ import com.amap.api.services.weather.WeatherSearchQuery;
 import com.powershare.etm.App;
 import com.powershare.etm.util.CommonUtil;
 
-public class AMapModel extends ViewModel {
+public class AMapViewModel extends ViewModel {
     private MutableLiveData<String> tempLiveData;
     private AMapLocationClient mLocationClient;
 
