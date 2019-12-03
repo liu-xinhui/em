@@ -66,15 +66,18 @@ public class Tab4Fragment extends BaseFragment {
         layoutManager.setOrientation(RecyclerView.VERTICAL);
         binding.recyclerView.setLayoutManager(layoutManager);
         binding.recyclerView.setAdapter(adapter);
-        binding.recyclerView.setOnRefreshListener(() -> carViewModel.refreshCarList());
+        binding.recyclerView.setOnRefreshListener(() -> getCarList(true));
         binding.recyclerView.setRefreshing(true);
         binding.recyclerView.setOnItemClickListener((v, position) -> {
             Intent intent = new Intent(activity, CarDetailActivity.class);
             intent.putExtra("item", adapter.getData().get(position));
             go(intent);
         });
+        this.getCarList(false);
+    }
 
-        carViewModel.carList().observe(this, new MyObserver<List<CarModel>>() {
+    private void getCarList(boolean network) {
+        carViewModel.carList(network).observe(this, new MyObserver<List<CarModel>>() {
 
             @Override
             public void onSuccess(List<CarModel> carModels) {

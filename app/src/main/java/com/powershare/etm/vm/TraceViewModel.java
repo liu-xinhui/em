@@ -12,33 +12,32 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.gyf.cactus.Cactus;
 import com.gyf.cactus.callback.CactusCallback;
 import com.powershare.etm.bean.ApiResult;
-import com.powershare.etm.bean.CarModel;
-import com.powershare.etm.bean.PredictCharge;
 import com.powershare.etm.bean.TripParam;
 import com.powershare.etm.http.ApiManager;
 import com.powershare.etm.http.ApiService;
-import com.powershare.etm.util.MyObserver;
 
-import java.util.List;
-
-public class TrackViewModel extends AndroidViewModel {
+public class TraceViewModel extends AndroidViewModel {
     private ApiService apiService = ApiManager.INSTANCE.getService();
     private MutableLiveData<String> trackLiveData;
     private AMapLocationClient mLocationClient;
 
-    public TrackViewModel(@NonNull Application application) {
+    public TraceViewModel(@NonNull Application application) {
         super(application);
     }
 
-    public MutableLiveData<String> track() {
+    public MutableLiveData<String> trace() {
         if (trackLiveData == null) {
             trackLiveData = new MutableLiveData<>();
         }
         return trackLiveData;
     }
 
+    public LiveData<ApiResult<Object>> startTrace(TripParam tripParam) {
+        return apiService.startTrace(tripParam);
+    }
+
     //开始追踪
-    public void startTrack() {
+    public void startAddTrace() {
         Cactus.getInstance()
                 .isDebug(true)
                 .hideNotification(false)
@@ -59,7 +58,7 @@ public class TrackViewModel extends AndroidViewModel {
     }
 
     //停止追踪
-    public void stopTrack() {
+    public void stopAddTrace() {
         Cactus.getInstance().unregister(getApplication());
         stopLocation();
     }

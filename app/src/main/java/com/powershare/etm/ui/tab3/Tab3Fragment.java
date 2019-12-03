@@ -30,7 +30,7 @@ public class Tab3Fragment extends BaseFragment {
     private FragmentTab3Binding binding;
     private PredictViewModel tab3ViewModel;
     private CarViewModel carViewModel;
-    private AMapViewModel tempViewModel;
+    private AMapViewModel mapViewModel;
 
     public static Tab3Fragment newInstance() {
         return new Tab3Fragment();
@@ -46,7 +46,7 @@ public class Tab3Fragment extends BaseFragment {
     protected void createViewModel() {
         tab3ViewModel = ViewModelProviders.of(this).get(PredictViewModel.class);
         carViewModel = ViewModelProviders.of(activity).get(CarViewModel.class);
-        tempViewModel = ViewModelProviders.of(activity).get(AMapViewModel.class);
+        mapViewModel = ViewModelProviders.of(activity).get(AMapViewModel.class);
     }
 
     @Override
@@ -88,8 +88,8 @@ public class Tab3Fragment extends BaseFragment {
             }
         });
         //温度
-        this.getTemp(false);
-        binding.tempCurrent.setOnClickListener(view -> getTemp(true));
+        this.getTemp();
+        binding.tempCurrent.setOnClickListener(view -> getTemp());
         View.OnClickListener tempSelect = view -> {
             QMUIBottomSheet.BottomListSheetBuilder builder = new QMUIBottomSheet.BottomListSheetBuilder(activity);
             for (int i = -20; i <= 40; i++) {
@@ -191,7 +191,7 @@ public class Tab3Fragment extends BaseFragment {
                 });
         binding.carModelSelect.setOnClickListener(view -> builder.build().show());
         //车辆列表数据
-        carViewModel.carList().observe(this, new MyObserver<List<CarModel>>() {
+        carViewModel.carList(false).observe(this, new MyObserver<List<CarModel>>() {
             @Override
             public void onSuccess(List<CarModel> carModels) {
                 mCarModels.clear();
@@ -206,12 +206,9 @@ public class Tab3Fragment extends BaseFragment {
         });
     }
 
-    private void getTemp(boolean showToast) {
-        tempViewModel.temp().observe(this, temp -> {
-            binding.tempValue.setText(temp);
-            if (showToast) {
-                CommonUtil.showSuccessToast("获取温度成功");
-            }
+    private void getTemp() {
+        mapViewModel.currentLoc().observe(activity, location -> {
+            mapViewModel.temp("上海").observe(activity, temp -> binding.tempValue.setText(temp));
         });
     }
 

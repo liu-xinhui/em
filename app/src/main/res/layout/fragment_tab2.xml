@@ -350,7 +350,7 @@
             app:layout_constraintTop_toTopOf="@id/car_model_value" />
 
         <SeekBar
-            android:id="@+id/car_model_temp_bar"
+            android:id="@+id/car_model_power_bar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="15dp"

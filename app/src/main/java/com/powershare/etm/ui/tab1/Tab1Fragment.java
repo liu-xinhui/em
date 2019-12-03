@@ -143,7 +143,7 @@ public class Tab1Fragment extends BaseFragment {
 
     private void getCarListData() {
         //车辆列表数据
-        carViewModel.carList().observe(this, new MyObserver<List<CarModel>>() {
+        carViewModel.carList(false).observe(this, new MyObserver<List<CarModel>>() {
 
             @Override
             public void onSuccess(List<CarModel> carModels) {

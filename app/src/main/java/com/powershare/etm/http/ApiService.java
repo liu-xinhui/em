@@ -34,7 +34,7 @@ public interface ApiService {
 
     //行程追踪启动
     @POST("trip/startTrace")
-    LiveData<ApiResult<List<CarModel>>> startTrace();
+    LiveData<ApiResult<Object>> startTrace(TripParam tripParam);
 
     //行程追踪结束
     @POST("trip/stopTrace")

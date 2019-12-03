@@ -43,6 +43,13 @@ public class ApiResult<T> {
         return resource;
     }
 
+    public static <T> ApiResult<T> success(T t) {
+        ApiResult<T> resource = new ApiResult<>();
+        resource.requestState = RequestState.SUCCESS;
+        resource.data = t;
+        return resource;
+    }
+
     public static <T> ApiResult<T> error(Throwable t) {
         ApiResult<T> resource = new ApiResult<>();
         resource.requestState = RequestState.ERROR;

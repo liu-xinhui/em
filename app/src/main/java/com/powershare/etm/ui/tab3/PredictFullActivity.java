@@ -262,7 +262,7 @@ public class PredictFullActivity extends BaseActivity {
         binding.car.setOnClickListener(view -> {
             if (mCarModels.size() == 0) {
                 //车辆列表数据
-                carViewModel.carList().observe(PredictFullActivity.this, new MyObserver<List<CarModel>>() {
+                carViewModel.carList(false).observe(PredictFullActivity.this, new MyObserver<List<CarModel>>() {
                     @Override
                     public void onStart() {
                         showLoading();
@@ -283,7 +283,6 @@ public class PredictFullActivity extends BaseActivity {
                         hideLoading();
                     }
                 });
-                carViewModel.refreshCarList();
             } else {
                 builder.build().show();
             }

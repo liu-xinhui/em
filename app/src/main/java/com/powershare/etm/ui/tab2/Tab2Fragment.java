@@ -1,19 +1,26 @@
 package com.powershare.etm.ui.tab2;
 
 import android.annotation.SuppressLint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.SeekBar;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.powershare.etm.bean.CarModel;
+import com.powershare.etm.bean.TripParam;
+import com.powershare.etm.bean.TripPoint;
 import com.powershare.etm.databinding.FragmentTab2Binding;
 import com.powershare.etm.ui.base.BaseFragment;
 import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.vm.AMapViewModel;
 import com.powershare.etm.vm.CarViewModel;
+import com.powershare.etm.vm.TraceViewModel;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 
 import java.util.ArrayList;
@@ -22,9 +29,9 @@ import java.util.List;
 public class Tab2Fragment extends BaseFragment {
 
     private FragmentTab2Binding binding;
-    private Tab2ViewModel tab2ViewModel;
+    private TraceViewModel traceViewModel;
     private CarViewModel carViewModel;
-    private AMapViewModel tempViewModel;
+    private AMapViewModel mapViewModel;
 
     public static Tab2Fragment newInstance() {
         return new Tab2Fragment();
@@ -38,9 +45,9 @@ public class Tab2Fragment extends BaseFragment {
 
     @Override
     protected void createViewModel() {
-        tab2ViewModel = ViewModelProviders.of(this).get(Tab2ViewModel.class);
+        traceViewModel = ViewModelProviders.of(this).get(TraceViewModel.class);
         carViewModel = ViewModelProviders.of(activity).get(CarViewModel.class);
-        tempViewModel = ViewModelProviders.of(activity).get(AMapViewModel.class);
+        mapViewModel = ViewModelProviders.of(activity).get(AMapViewModel.class);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -49,7 +56,7 @@ public class Tab2Fragment extends BaseFragment {
         //车型
         this.getCarListData();
         //电量
-        binding.carModelTempBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        binding.carModelPowerBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
             }
@@ -76,8 +83,8 @@ public class Tab2Fragment extends BaseFragment {
             }
         });
         //温度
-        this.getTemp(false);
-        binding.tempCurrent.setOnClickListener(view -> getTemp(true));
+        this.getTemp();
+        binding.tempCurrent.setOnClickListener(view -> getTemp());
         View.OnClickListener tempSelect = view -> {
             QMUIBottomSheet.BottomListSheetBuilder builder = new QMUIBottomSheet.BottomListSheetBuilder(activity);
             for (int i = -20; i <= 40; i++) {
@@ -89,6 +96,61 @@ public class Tab2Fragment extends BaseFragment {
             }).build().show();
         };
         binding.tempSelect.setOnClickListener(tempSelect);
+        //开启手动追踪
+        binding.startTrack.setOnClickListener(view -> {
+            //车型
+            CarModel carModel = (CarModel) binding.banner.getTag();
+            if (carModel == null) {
+                CommonUtil.showErrorToast("未选择车型");
+                return;
+            }
+            //电量
+            int powerProgress = binding.carModelPowerBar.getProgress();
+            int power = 10;
+            switch (powerProgress) {
+                case 0:
+                    power = 10;
+                    break;
+                case 25:
+                    power = 15;
+                    break;
+                case 50:
+                    power = 20;
+                    break;
+                case 75:
+                    power = 25;
+                    break;
+                case 100:
+                    power = 30;
+                    break;
+            }
+            //温度
+            String temp = binding.tempValue.getText().toString();
+            TripParam param = new TripParam();
+            param.setCarModelId(carModel.getId());
+            param.setTemperature(Integer.parseInt(temp));
+            param.setWarningLevel(power);
+            LogUtils.json(param);
+            //当前位置
+            /*mapViewModel.getCurrentLoc(aMapLocation -> {
+                TripPoint startPoint = new TripPoint();
+                startPoint.setTimestamp(System.currentTimeMillis());
+                startPoint.setLatitude(aMapLocation.getLatitude());
+                startPoint.setLongitude(aMapLocation.getLongitude());
+                startPoint.setSpeed(aMapLocation.getSpeed());
+                startPoint.setMileage(0);
+                startPoint.setAddress(aMapLocation.getAddress());
+                startPoint.setAg(aMapLocation.getBearing());
+                param.setStartPoint(startPoint);
+                LogUtils.json(param);
+                traceViewModel.startTrace(param).observe(Tab2Fragment.this, new MyObserver<Object>() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        LogUtils.json(o);
+                    }
+                });
+            });*/
+        });
     }
 
     private void getCarListData() {
@@ -98,11 +160,10 @@ public class Tab2Fragment extends BaseFragment {
                     dialog.dismiss();
                     binding.carModelValue.setText(tag);
                     setCurrentCar(mCarModels.get(position));
-                    //LogUtils.json(mCarModels.get(position));
                 });
         binding.carModelSelect.setOnClickListener(view -> builder.build().show());
         //车辆列表数据
-        carViewModel.carList().observe(this, new MyObserver<List<CarModel>>() {
+        carViewModel.carList(false).observe(this, new MyObserver<List<CarModel>>() {
             @Override
             public void onSuccess(List<CarModel> carModels) {
                 mCarModels.clear();
@@ -117,17 +178,13 @@ public class Tab2Fragment extends BaseFragment {
         });
     }
 
-    private void getTemp(boolean showToast) {
-        tempViewModel.temp().observe(this, temp -> {
-            binding.tempValue.setText(temp);
-            if (showToast) {
-                CommonUtil.showSuccessToast("获取温度成功");
-            }
-        });
+    private void getTemp() {
+        mapViewModel.currentLoc().observe(activity, location -> mapViewModel.temp(location.getCity()).observe(activity, temp -> binding.tempValue.setText(temp)));
     }
 
     private void setCurrentCar(CarModel currentCar) {
         String[] photoIds = currentCar.getPhotoIds();
+        binding.banner.setTag(currentCar);
         if (photoIds != null && photoIds.length > 0) {
             String[] photoUrls = new String[photoIds.length];
             for (int i = 0; i < photoIds.length; i++) {
