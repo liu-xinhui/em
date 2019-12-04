@@ -1,13 +1,10 @@
 package com.powershare.etm.ui.tab2;
 
 import android.annotation.SuppressLint;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.SeekBar;
 
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -130,9 +127,8 @@ public class Tab2Fragment extends BaseFragment {
             param.setCarModelId(carModel.getId());
             param.setTemperature(Integer.parseInt(temp));
             param.setWarningLevel(power);
-            LogUtils.json(param);
             //当前位置
-            /*mapViewModel.getCurrentLoc(aMapLocation -> {
+            mapViewModel.currentLoc().observe(this, aMapLocation -> {
                 TripPoint startPoint = new TripPoint();
                 startPoint.setTimestamp(System.currentTimeMillis());
                 startPoint.setLatitude(aMapLocation.getLatitude());
@@ -142,14 +138,13 @@ public class Tab2Fragment extends BaseFragment {
                 startPoint.setAddress(aMapLocation.getAddress());
                 startPoint.setAg(aMapLocation.getBearing());
                 param.setStartPoint(startPoint);
-                LogUtils.json(param);
                 traceViewModel.startTrace(param).observe(Tab2Fragment.this, new MyObserver<Object>() {
                     @Override
                     public void onSuccess(Object o) {
                         LogUtils.json(o);
                     }
                 });
-            });*/
+            });
         });
     }
 
@@ -179,7 +174,13 @@ public class Tab2Fragment extends BaseFragment {
     }
 
     private void getTemp() {
-        mapViewModel.currentLoc().observe(activity, location -> mapViewModel.temp(location.getCity()).observe(activity, temp -> binding.tempValue.setText(temp)));
+        binding.tempCurrent.showLoading();
+        mapViewModel.currentLoc().observe(activity, location -> mapViewModel.temp(location.getCity()).observe(activity, temp -> {
+            binding.tempCurrent.hideLoading();
+            if (!"none".equals(temp)) {
+                binding.tempValue.setText(temp);
+            }
+        }));
     }
 
     private void setCurrentCar(CarModel currentCar) {

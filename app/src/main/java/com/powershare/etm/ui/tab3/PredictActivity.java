@@ -133,7 +133,7 @@ public class PredictActivity extends BaseActivity {
             Intent goIntent = new Intent(PredictActivity.this, PredictFullActivity.class);
             goIntent.putExtra("tripParam", tripParam);
         });
-        //this.tracePredict(tripParam);
+        this.tracePredict(tripParam);
     }
 
     //请求后台

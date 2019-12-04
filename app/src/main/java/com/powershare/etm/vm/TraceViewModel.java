@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
+import com.blankj.utilcode.util.LogUtils;
 import com.gyf.cactus.Cactus;
 import com.gyf.cactus.callback.CactusCallback;
 import com.powershare.etm.bean.ApiResult;
@@ -33,6 +34,7 @@ public class TraceViewModel extends AndroidViewModel {
     }
 
     public LiveData<ApiResult<Object>> startTrace(TripParam tripParam) {
+        LogUtils.d(tripParam);
         return apiService.startTrace(tripParam);
     }
 

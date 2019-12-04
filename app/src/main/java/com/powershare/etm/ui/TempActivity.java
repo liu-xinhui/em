@@ -22,21 +22,5 @@ public class TempActivity extends BaseActivity {
 
     @Override
     protected void onMounted() {
-        binding.surfaceView.setOnFrameFinishedListener(new FrameAnimation2.OnFrameFinishedListener() {
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onStop() {
-                //binding.surfaceView.start();
-            }
-        });
-        getCarListData();
     }
-
-    private void getCarListData() {
-    }
-
 }

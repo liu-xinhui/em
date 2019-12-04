@@ -343,6 +343,9 @@ public class CircleProgressView extends View {
                 }
             } else {
                 for (int i = 0; i < mTotalTickCount; i++) {
+                    if (i < 10) {
+                        continue;
+                    }
                     if (i < currentBlockIndex) {
                         //已选中的刻度
                         if (isShader && mShader != null) {
@@ -356,7 +359,7 @@ public class CircleProgressView extends View {
                         mPaint.setColor(mNormalColor);
                     }
                     //绘制外边框刻度
-                    canvas.drawArc(rectF, i * (mBlockAngle + mTickSplitAngle) + mStartAngle, mBlockAngle, false, mPaint);
+                    canvas.drawArc(rectF, i * (mBlockAngle + mTickSplitAngle) + mStartAngle+90, mBlockAngle, false, mPaint);
                 }
             }
 

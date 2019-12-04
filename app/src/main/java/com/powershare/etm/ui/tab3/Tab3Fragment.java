@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.amap.api.services.help.Tip;
+import com.blankj.utilcode.util.LogUtils;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.bean.TripParam;
@@ -28,7 +29,6 @@ import java.util.List;
 public class Tab3Fragment extends BaseFragment {
 
     private FragmentTab3Binding binding;
-    private PredictViewModel tab3ViewModel;
     private CarViewModel carViewModel;
     private AMapViewModel mapViewModel;
 
@@ -44,7 +44,6 @@ public class Tab3Fragment extends BaseFragment {
 
     @Override
     protected void createViewModel() {
-        tab3ViewModel = ViewModelProviders.of(this).get(PredictViewModel.class);
         carViewModel = ViewModelProviders.of(activity).get(CarViewModel.class);
         mapViewModel = ViewModelProviders.of(activity).get(AMapViewModel.class);
     }
@@ -207,9 +206,13 @@ public class Tab3Fragment extends BaseFragment {
     }
 
     private void getTemp() {
-        mapViewModel.currentLoc().observe(activity, location -> {
-            mapViewModel.temp("上海").observe(activity, temp -> binding.tempValue.setText(temp));
-        });
+        binding.tempCurrent.showLoading();
+        mapViewModel.currentLoc().observe(activity, location -> mapViewModel.temp(location.getCity()).observe(activity, temp -> {
+            binding.tempCurrent.hideLoading();
+            if (!"none".equals(temp)) {
+                binding.tempValue.setText(temp);
+            }
+        }));
     }
 
     private void setCurrentCar(CarModel currentCar) {

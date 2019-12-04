@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.blankj.utilcode.util.LogUtils;
+
 import org.jetbrains.annotations.NotNull;
 
 
@@ -25,8 +27,8 @@ public abstract class BaseFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NotNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
         activity = (BaseActivity) getActivity();
         createViewModel();
         onMounted();

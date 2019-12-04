@@ -337,7 +337,7 @@
             app:layout_constraintLeft_toLeftOf="@id/temp_bg"
             app:layout_constraintRight_toRightOf="@id/temp_bg" />
 
-        <com.noober.background.view.BLButton
+        <com.powershare.etm.component.LoadingButton
             android:id="@+id/temp_current"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
