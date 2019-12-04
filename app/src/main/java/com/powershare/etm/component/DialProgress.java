@@ -1,322 +1,560 @@
 package com.powershare.etm.component;
 
+import android.animation.Animator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.RectF;
+import android.graphics.Shader;
 import android.graphics.SweepGradient;
-import android.graphics.Typeface;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.View;
 
 import com.blankj.utilcode.util.SizeUtils;
-import com.powershare.etm.BuildConfig;
+import com.powershare.etm.R;
 
 /**
- * 带有刻度的圆形进度条
- * Created by littlejie on 2017/2/26.
+ * https://github.com/jenly1314/CircleProgressView
  */
-
 public class DialProgress extends View {
+    /**
+     * 画笔
+     */
+    private Paint mPaint;
 
-    private static final String TAG = DialProgress.class.getSimpleName();
-    //圆心坐标
-    private Point mCenterPoint;
+    /**
+     * 文本画笔
+     */
+    private TextPaint mTextPaint;
+
+    /**
+     * 笔画描边的宽度
+     */
+    private float mStrokeWidth;
+
+    /**
+     * 开始角度(默认从12点钟方向开始)
+     */
+    private int mStartAngle = 270;
+    /**
+     * 扫描角度(一个圆)
+     */
+    private int mSweepAngle = 360;
+
+    /**
+     * 圆心坐标x
+     */
+    private float mCircleCenterX;
+    /**
+     * 圆心坐标y
+     */
+    private float mCircleCenterY;
+
+    /**
+     * 圆正常颜色
+     */
+    private int mNormalColor = 0xFFC8C8C8;
+    /**
+     * 进度颜色
+     */
+    private int mProgressColor = 0xFF4FEAAC;
+
+    /**
+     * 是否使用着色器
+     */
+    private boolean isShader = true;
+
+    /**
+     * 着色器
+     */
+    private Shader mShader;
+
+    /**
+     * 着色器颜色
+     */
+    private int[] mShaderColors = new int[]{0xBB00F4FF, 0xBB9523C5, 0xBBF44B57, 0xBB9523C5, 0xBB00F4FF};
+
+    /**
+     * 半径
+     */
     private float mRadius;
-    private float mTextOffsetPercentInRadius;
 
-    private boolean antiAlias = true;
-    //绘制提示
-    private TextPaint mHintPaint;
-    private CharSequence mHint;
-    private int mHintColor;
-    private float mHintSize;
-    private float mHintOffset;
+    /**
+     * 内圆与外圆的间距
+     */
+    private float mCirclePadding;
 
-    //绘制数值
-    private Paint mValuePaint;
-    private int mValueColor = Color.BLACK;
-    private float mMaxValue = 100;
-    private float mValue = 50;
-    private float mValueSize = 15;
-    private float mValueOffset;
-    private String mPrecisionFormat;
+    /**
+     * 刻度间隔的角度大小
+     */
+    private float mTickSplitAngle = 1.8f;
 
-    //绘制单位
-    private Paint mUnitPaint;
-    private float mUnitSize;
-    private int mUnitColor = Color.BLACK;
-    private float mUnitOffset;
-    private CharSequence mUnit;
-    //前景圆弧
-    private Paint mArcPaint;
-    private float mArcWidth;
-    private int mDialIntervalDegree;
-    private float mStartAngle, mSweepAngle;
-    private RectF mRectF;
-    //渐变
-    private int[] mGradientColors = {Color.parseColor("#00F4FF"), Color.parseColor("#9523C5"), Color.parseColor("#F44B57")};
-    //当前进度，[0.0f,1.0f]
-    private float mPercent;
-    //动画时间
-    private long mAnimTime;
-    //属性动画
-    private ValueAnimator mAnimator;
+    /**
+     * 刻度的角度大小
+     */
+    private float mBlockAngle = 1;
 
-    //背景圆弧
-    private Paint mBgArcPaint;
-    private int mBgArcColor;
+    /**
+     * 总刻度数
+     */
+    private int mTotalTickCount;
 
-    //刻度线颜色
-    private Paint mDialPaint;
-    private float mDialWidth;
-    private int mDialColor;
+    /**
+     * 最大进度
+     */
+    private int mMax = 100;
 
-    private int mDefaultSize;
+    /**
+     * 当前进度
+     */
+    private int mProgress = 0;
+
+    /**
+     * 动画持续的时间
+     */
+    private int mDuration = 500;
+
+    /**
+     * 标签内容
+     */
+    private String mLabelText;
+
+    /**
+     * 字体大小
+     */
+    private float mLabelTextSize;
+
+    /**
+     * 字体颜色
+     */
+    private int mLabelTextColor = 0xFF333333;
+    /**
+     * 进度百分比
+     */
+    private int mProgressPercent;
+
+    /**
+     * 是否显示标签文字
+     */
+    private boolean isShowLabel = true;
+    /**
+     * 是否默认显示百分比为标签文字
+     */
+    private boolean isShowPercentText = true;
+
+    private OnChangeListener mOnChangeListener;
+
+    public DialProgress(Context context) {
+        this(context, null);
+    }
 
     public DialProgress(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(context, attrs);
+        this(context, attrs, 0);
     }
 
-    private void init(Context context, AttributeSet attrs) {
-        mDefaultSize = SizeUtils.dp2px(150);
-        mRectF = new RectF();
-        mCenterPoint = new Point();
-        initConfig();
-        initPaint();
-        setValue(mValue);
-    }
-
-    private void initConfig() {
-        int precision = 0;
-        mDialIntervalDegree = 3;
-        mPrecisionFormat = "%." + precision + "f";
-        mUnitSize = 30;
-        mHintColor = Color.BLACK;
-        mHintSize = 15;
-        mArcWidth = SizeUtils.dp2px(15);
-        mStartAngle = 135;
-        mSweepAngle = 270;
-        mAnimTime = 1000;
-        mBgArcColor = Color.TRANSPARENT;
-        mDialWidth = SizeUtils.dp2px(2);
-        mDialColor = Color.WHITE;
-        mTextOffsetPercentInRadius = 0.33f;
-    }
-
-    private void initPaint() {
-        mHintPaint = new TextPaint();
-        // 设置抗锯齿,会消耗较大资源，绘制图形速度会变慢。
-        mHintPaint.setAntiAlias(antiAlias);
-        // 设置绘制文字大小
-        mHintPaint.setTextSize(mHintSize);
-        // 设置画笔颜色
-        mHintPaint.setColor(mHintColor);
-        // 从中间向两边绘制，不需要再次计算文字
-        mHintPaint.setTextAlign(Paint.Align.CENTER);
-
-        mValuePaint = new Paint();
-        mValuePaint.setAntiAlias(antiAlias);
-        mValuePaint.setTextSize(mValueSize);
-        mValuePaint.setColor(mValueColor);
-        mValuePaint.setTypeface(Typeface.DEFAULT_BOLD);
-        mValuePaint.setTextAlign(Paint.Align.CENTER);
-
-        mUnitPaint = new Paint();
-        mUnitPaint.setAntiAlias(antiAlias);
-        mUnitPaint.setTextSize(mUnitSize);
-        mUnitPaint.setColor(mUnitColor);
-        mUnitPaint.setTextAlign(Paint.Align.CENTER);
-
-        mArcPaint = new Paint();
-        mArcPaint.setAntiAlias(antiAlias);
-        mArcPaint.setStyle(Paint.Style.STROKE);
-        mArcPaint.setStrokeWidth(mArcWidth);
-        mArcPaint.setStrokeCap(Paint.Cap.BUTT);
-
-        mBgArcPaint = new Paint();
-        mBgArcPaint.setAntiAlias(antiAlias);
-        mBgArcPaint.setStyle(Paint.Style.STROKE);
-        mBgArcPaint.setStrokeWidth(mArcWidth);
-        mBgArcPaint.setStrokeCap(Paint.Cap.BUTT);
-        mBgArcPaint.setColor(mBgArcColor);
-
-        mDialPaint = new Paint();
-        mDialPaint.setAntiAlias(antiAlias);
-        mDialPaint.setColor(mDialColor);
-        mDialPaint.setStrokeWidth(mDialWidth);
-        mDialPaint.setStrokeCap(Paint.Cap.ROUND);
+    public DialProgress(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        if (!isInEditMode()) {
+            setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        }
+        init();
     }
 
     /**
-     * 更新圆弧画笔
+     * 初始化
      */
-    private void updateArcPaint() {
-        // 设置渐变
-        // 渐变的颜色是360度，如果只显示270，那么则会缺失部分颜色
-        SweepGradient sweepGradient = new SweepGradient(mCenterPoint.x, mCenterPoint.y, mGradientColors, null);
-        mArcPaint.setShader(sweepGradient);
+    private void init() {
+        DisplayMetrics displayMetrics = getDisplayMetrics();
+        mStrokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, displayMetrics);
+        mLabelTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 30, displayMetrics);
+        mCirclePadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, displayMetrics);
+
+        mStrokeWidth = SizeUtils.dp2px(12);
+        isShader = false;
+        mStartAngle = 270;
+        mSweepAngle = 360;
+        mMax = 100;
+        mProgress = 0;
+        mDuration = 500;
+        mLabelText = "234";
+        mLabelTextSize = 30;
+        isShowLabel = false;
+        mCirclePadding = 10;
+        mBlockAngle = 1;
+        isShowPercentText = TextUtils.isEmpty(mLabelText);
+        mProgressPercent = (int) (mProgress * 100.0f / mMax);
+        mPaint = new Paint();
+        mPaint.setAntiAlias(true);
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setStrokeWidth(mStrokeWidth);
+        //mPaint.setShadowLayer(30, 0, 0, Color.RED);
+        //mPaint.setMaskFilter(new BlurMaskFilter(30f, BlurMaskFilter.Blur.SOLID));
+        mTextPaint = new TextPaint();
+        mTotalTickCount = (int) (mSweepAngle / (mTickSplitAngle + mBlockAngle));
+        anim();
     }
 
+    private DisplayMetrics getDisplayMetrics() {
+        return getResources().getDisplayMetrics();
+    }
+
+    @SuppressLint("DrawAllocation")
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        setMeasuredDimension(myMeasure(widthMeasureSpec, mDefaultSize), myMeasure(heightMeasureSpec, mDefaultSize));
+
+        int defaultValue = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200, getDisplayMetrics());
+
+        int width = measureHandler(widthMeasureSpec, defaultValue);
+        int height = measureHandler(heightMeasureSpec, defaultValue);
+
+        //圆心坐标
+        mCircleCenterX = (width + getPaddingLeft() - getPaddingRight()) / 2.0f;
+        mCircleCenterY = (height + getPaddingTop() - getPaddingBottom()) / 2.0f;
+        //计算间距
+        int padding = Math.max(getPaddingLeft() + getPaddingRight(), getPaddingTop() + getPaddingBottom());
+        //半径=视图宽度-横向或纵向内间距值 - 画笔宽度
+        mRadius = (width - padding - mStrokeWidth) / 2.0f - mCirclePadding;
+        //默认着色器
+        mShader = new SweepGradient(mCircleCenterX, mCircleCenterX, mShaderColors, null);
+        setMeasuredDimension(width, height);
     }
 
-    public static int myMeasure(int measureSpec, int defaultSize) {
+    /**
+     * 测量
+     */
+    private int measureHandler(int measureSpec, int defaultSize) {
         int result = defaultSize;
-        int specMode = View.MeasureSpec.getMode(measureSpec);
-        int specSize = View.MeasureSpec.getSize(measureSpec);
-
-        if (specMode == View.MeasureSpec.EXACTLY) {
-            result = specSize;
-        } else if (specMode == View.MeasureSpec.AT_MOST) {
-            result = Math.min(result, specSize);
+        int measureMode = MeasureSpec.getMode(measureSpec);
+        int measureSize = MeasureSpec.getSize(measureSpec);
+        if (measureMode == MeasureSpec.EXACTLY) {
+            result = measureSize;
+        } else if (measureMode == MeasureSpec.AT_MOST) {
+            result = Math.min(defaultSize, measureSize);
         }
         return result;
-    }
-
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        Log.d(TAG, "onSizeChanged: w = " + w + "; h = " + h + "; oldw = " + oldw + "; oldh = " + oldh);
-        int minSize = Math.min(getMeasuredWidth() - getPaddingLeft() - getPaddingRight() - 2 * (int) mArcWidth,
-                getMeasuredHeight() - getPaddingTop() - getPaddingBottom() - 2 * (int) mArcWidth);
-        mRadius = minSize / 2;
-        mCenterPoint.x = getMeasuredWidth() / 2;
-        mCenterPoint.y = getMeasuredHeight() / 2;
-        //绘制圆弧的边界
-        mRectF.left = mCenterPoint.x - mRadius - mArcWidth / 2;
-        mRectF.top = mCenterPoint.y - mRadius - mArcWidth / 2;
-        mRectF.right = mCenterPoint.x + mRadius + mArcWidth / 2;
-        mRectF.bottom = mCenterPoint.y + mRadius + mArcWidth / 2;
-
-        mValueOffset = mCenterPoint.y + getBaselineOffsetFromY(mValuePaint);
-        mHintOffset = mCenterPoint.y - mRadius * mTextOffsetPercentInRadius + getBaselineOffsetFromY(mHintPaint);
-        mUnitOffset = mCenterPoint.y + mRadius * mTextOffsetPercentInRadius + getBaselineOffsetFromY(mUnitPaint);
-
-        updateArcPaint();
-        Log.d(TAG, "onMeasure: 控件大小 = " + "(" + getMeasuredWidth() + ", " + getMeasuredHeight() + ")"
-                + ";圆心坐标 = " + mCenterPoint.toString()
-                + ";圆半径 = " + mRadius
-                + ";圆的外接矩形 = " + mRectF.toString());
-    }
-
-    private float getBaselineOffsetFromY(Paint paint) {
-        return measureTextHeight(paint) / 2;
-    }
-
-    public static float measureTextHeight(Paint paint) {
-        Paint.FontMetrics fontMetrics = paint.getFontMetrics();
-        return (Math.abs(fontMetrics.ascent) - fontMetrics.descent);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         drawArc(canvas);
-        drawDial(canvas);
-        drawText(canvas);
+        //drawText(canvas);
+        drawPointer(canvas);
     }
 
-    private void drawArc(Canvas canvas) {
-        // 绘制背景圆弧
-        // 从进度圆弧结束的地方开始重新绘制，优化性能
-        float currentAngle = mSweepAngle * mPercent;
+    private void anim() {
+        /*ValueAnimator animator = ValueAnimator.ofFloat(0, 360);
+        animator.setDuration(1000);
+        animator.setInterpolator(new LinearInterpolator());
+        animator.setRepeatCount(ValueAnimator.INFINITE);
+        animator.addUpdateListener(valueAnimator -> {
+            angle = (float) valueAnimator.getAnimatedValue();
+            invalidate();
+        });
+        animator.start();*/
+    }
+
+    private int progress = 50;
+    private int dis = SizeUtils.dp2px(10);
+
+    private void drawPointer(Canvas canvas) {
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.pointer);
+        Matrix m = new Matrix();
+        float px = getWidth() >> 1;
+        float py = getHeight() >> 1;
+        float tempY = bitmap.getHeight() >> 1;
+        m.setRotate(progress * 2.78f, bitmap.getWidth() - dis, tempY);
+        m.postTranslate(px - bitmap.getWidth() + dis, py - tempY);
         canvas.save();
-        canvas.rotate(mStartAngle, mCenterPoint.x, mCenterPoint.y);
-        canvas.drawArc(mRectF, currentAngle, mSweepAngle - currentAngle, false, mBgArcPaint);
-        // 第一个参数 oval 为 RectF 类型，即圆弧显示区域
-        // startAngle 和 sweepAngle  均为 float 类型，分别表示圆弧起始角度和圆弧度数
-        // 3点钟方向为0度，顺时针递增
-        // 如果 startAngle < 0 或者 > 360,则相当于 startAngle % 360
-        // useCenter:如果为True时，在绘制圆弧时将圆心包括在内，通常用来绘制扇形
-        canvas.drawArc(mRectF, 0, currentAngle, false, mArcPaint);
+        canvas.rotate(-49, px, py);
+        canvas.drawBitmap(bitmap, m, null);
         canvas.restore();
-    }
-
-    private void drawDial(Canvas canvas) {
-        int total = (int) (mSweepAngle / mDialIntervalDegree);
-        canvas.save();
-        canvas.rotate(mStartAngle, mCenterPoint.x, mCenterPoint.y);
-        for (int i = 0; i <= total; i++) {
-            canvas.drawLine(mCenterPoint.x + mRadius, mCenterPoint.y, mCenterPoint.x + mRadius + mArcWidth, mCenterPoint.y, mDialPaint);
-            canvas.rotate(mDialIntervalDegree, mCenterPoint.x, mCenterPoint.y);
-        }
-        canvas.restore();
-    }
-
-    private void drawText(Canvas canvas) {
-        canvas.drawText(String.format(mPrecisionFormat, mValue), mCenterPoint.x, mValueOffset, mValuePaint);
-
-        if (mUnit != null) {
-            canvas.drawText(mUnit.toString(), mCenterPoint.x, mUnitOffset, mUnitPaint);
-        }
-
-        if (mHint != null) {
-            canvas.drawText(mHint.toString(), mCenterPoint.x, mHintOffset, mHintPaint);
-        }
-    }
-
-    public float getMaxValue() {
-        return mMaxValue;
-    }
-
-    public void setMaxValue(float maxValue) {
-        mMaxValue = maxValue;
     }
 
     /**
-     * 设置当前值
-     *
-     * @param value
+     * 绘制弧形(默认为一个圆)
      */
-    public void setValue(float value) {
-        if (value > mMaxValue) {
-            value = mMaxValue;
+    private RectF rectF;
+
+    private void drawArc(Canvas canvas) {
+        if (rectF == null) {
+            float tickDiameter = mRadius * 2;
+            float tickStartX = mCircleCenterX - mRadius;
+            float tickStartY = mCircleCenterY - mRadius;
+            rectF = new RectF(tickStartX, tickStartY, tickStartX + tickDiameter, tickStartY + tickDiameter);
         }
-        float start = mPercent;
-        float end = value / mMaxValue;
-        startAnimator(start, end, mAnimTime);
-    }
-
-    private void startAnimator(float start, float end, long animTime) {
-        mAnimator = ValueAnimator.ofFloat(start, end);
-        mAnimator.setDuration(animTime);
-        mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                mPercent = (float) animation.getAnimatedValue();
-                mValue = mPercent * mMaxValue;
-                if (BuildConfig.DEBUG) {
-                    Log.d(TAG, "onAnimationUpdate: percent = " + mPercent
-                            + ";currentAngle = " + (mSweepAngle * mPercent)
-                            + ";value = " + mValue);
-                }
-                invalidate();
+        final int currentBlockIndex = (int) (mProgressPercent / 100f * mTotalTickCount);
+        for (int i = 0; i < mTotalTickCount; i++) {
+            if (i < 28) {
+                continue;
             }
-        });
-        mAnimator.start();
+            if (i < currentBlockIndex) {
+                //已选中的刻度
+                if (isShader && mShader != null) {
+                    mPaint.setShader(mShader);
+                } else {
+                    mPaint.setColor(mProgressColor);
+                }
+            } else {
+                //未选中的刻度
+                mPaint.setShader(null);
+                mPaint.setColor(mNormalColor);
+            }
+            //绘制外边框刻度
+            canvas.drawArc(rectF, i * (mBlockAngle + mTickSplitAngle) + mStartAngle + 142.5f, mBlockAngle, false, mPaint);
+        }
     }
 
-    public int[] getGradientColors() {
-        return mGradientColors;
+    /**
+     * 绘制中间的文本
+     */
+    private void drawText(Canvas canvas) {
+        if (!isShowLabel) {
+            return;
+        }
+        mTextPaint.reset();
+        mTextPaint.setAntiAlias(true);
+        mTextPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+        mTextPaint.setTextSize(mLabelTextSize);
+        mTextPaint.setColor(mLabelTextColor);
+        mTextPaint.setTextAlign(Paint.Align.CENTER);
+
+        Paint.FontMetrics fontMetrics = mTextPaint.getFontMetrics();
+        // 计算文字高度 
+        float fontHeight = fontMetrics.bottom - fontMetrics.top;
+        // 计算文字baseline 
+        float textBaseY = getHeight() - (getHeight() - fontHeight) / 2 - fontMetrics.bottom;
+
+        int textX = getWidth() / 2;
+        if (isShowPercentText) {//是否显示百分比
+            canvas.drawText(mProgressPercent + "%", textX, textBaseY, mTextPaint);
+        } else if (!TextUtils.isEmpty(mLabelText)) {//显示自定义文本
+            canvas.drawText(mLabelText, textX, textBaseY, mTextPaint);
+        }
     }
 
-    public void setGradientColors(int[] gradientColors) {
-        mGradientColors = gradientColors;
-        updateArcPaint();
+    /**
+     * 显示进度动画效果（根据当前已有进度开始）
+     */
+    public void showAppendAnimation(int progress) {
+        showAnimation(mProgress, progress, mDuration);
     }
 
-    public void reset() {
-        startAnimator(mPercent, 0.0f, 1000L);
+    /**
+     * 显示进度动画效果
+     */
+    public void showAnimation(int progress) {
+        showAnimation(progress, mDuration);
+    }
+
+    /**
+     * 显示进度动画效果
+     *
+     * @param duration 动画时长
+     */
+    public void showAnimation(int progress, int duration) {
+        showAnimation(0, progress, duration);
+    }
+
+    /**
+     * 显示进度动画效果，从from到to变化
+     *
+     * @param duration 动画时长
+     */
+    public void showAnimation(int from, int to, int duration) {
+        showAnimation(from, to, duration, null);
+    }
+
+    /**
+     * 显示进度动画效果，从from到to变化
+     *
+     * @param duration 动画时长
+     */
+    public void showAnimation(int from, int to, int duration, Animator.AnimatorListener listener) {
+        this.mDuration = duration;
+        this.mProgress = from;
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(from, to);
+        valueAnimator.setDuration(duration);
+
+        valueAnimator.addUpdateListener(animation -> setProgress((int) animation.getAnimatedValue()));
+
+        if (listener != null) {
+            valueAnimator.removeAllUpdateListeners();
+            valueAnimator.addListener(listener);
+        }
+        valueAnimator.start();
+    }
+
+    /**
+     * 设置最大进度
+     */
+    public void setMax(int max) {
+        this.mMax = max;
+        invalidate();
+    }
+
+    /**
+     * 设置当前进度
+     */
+    public void setProgress(int progress) {
+        this.mProgress = progress;
+        mProgressPercent = (int) (mProgress * 100.0f / mMax);
+        invalidate();
+
+        if (mOnChangeListener != null) {
+            mOnChangeListener.onProgressChanged(mProgress, mMax);
+        }
+    }
+
+    /**
+     * 设置正常颜色
+     */
+    public void setNormalColor(int color) {
+        this.mNormalColor = color;
+        invalidate();
+    }
+
+
+    /**
+     * 设置着色器
+     */
+    public void setShader(Shader shader) {
+        isShader = true;
+        this.mShader = shader;
+        invalidate();
+    }
+
+    /**
+     * 设置进度颜色（通过着色器实现渐变色）
+     */
+    public void setProgressColor(int... colors) {
+        this.mShaderColors = colors;
+        Shader shader = new SweepGradient(mCircleCenterX, mCircleCenterX, colors, null);
+        setShader(shader);
+    }
+
+    /**
+     * 设置进度颜色（纯色）
+     */
+    public void setProgressColor(int color) {
+        isShader = false;
+        this.mProgressColor = color;
+        invalidate();
+    }
+
+    /**
+     * 设置进度颜色
+     */
+    public void setProgressColorResource(int resId) {
+        int color = getResources().getColor(resId);
+        setProgressColor(color);
+    }
+
+    public int getStartAngle() {
+        return mStartAngle;
+    }
+
+    public int getSweepAngle() {
+        return mSweepAngle;
+    }
+
+    public float getCircleCenterX() {
+        return mCircleCenterX;
+    }
+
+    public float getCircleCenterY() {
+        return mCircleCenterY;
+    }
+
+    public float getRadius() {
+        return mRadius;
+    }
+
+    public int getMax() {
+        return mMax;
+    }
+
+    public int getProgress() {
+        return mProgress;
+    }
+
+    public String getLabelText() {
+        return mLabelText;
+    }
+
+    /**
+     * 设置标签文本
+     */
+    public void setLabelText(String labelText) {
+        this.mLabelText = labelText;
+        this.isShowPercentText = TextUtils.isEmpty(labelText);
+        invalidate();
+    }
+
+    /**
+     * 进度百分比
+     */
+    public int getProgressPercent() {
+        return mProgressPercent;
+    }
+
+    /**
+     * 如果自定义设置过{@link #setLabelText(String)} 或通过xml设置过{@code app:labelText}则
+     * 返回{@link #mLabelText}，反之默认返回百分比{@link #mProgressPercent}
+     */
+    public String getText() {
+        if (isShowPercentText) {
+            return mProgressPercent + "%";
+        }
+
+        return mLabelText;
+    }
+
+    public int getLabelTextColor() {
+        return mLabelTextColor;
+    }
+
+    public void setLabelTextColor(int color) {
+        this.mLabelTextColor = color;
+        invalidate();
+    }
+
+    public void setLabelTextColorResource(int resId) {
+        int color = getResources().getColor(resId);
+        setLabelTextColor(color);
+    }
+
+    public void setLabelTextSize(float textSize) {
+        setLabelTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
+    }
+
+    public void setLabelTextSize(int unit, float textSize) {
+        float size = TypedValue.applyDimension(unit, textSize, getDisplayMetrics());
+        if (mLabelTextSize != size) {
+            this.mLabelTextSize = size;
+            invalidate();
+        }
+
+    }
+
+    /**
+     * 设置进度改变监听
+     */
+    public void setOnChangeListener(OnChangeListener onChangeListener) {
+        this.mOnChangeListener = onChangeListener;
+    }
+
+    public interface OnChangeListener {
+        void onProgressChanged(float progress, float max);
     }
 }
