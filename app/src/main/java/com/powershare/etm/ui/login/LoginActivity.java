@@ -1,5 +1,6 @@
 package com.powershare.etm.ui.login;
 
+import android.content.Intent;
 import android.view.View;
 
 import androidx.lifecycle.ViewModelProviders;
@@ -96,7 +97,9 @@ public class LoginActivity extends BaseActivity {
 
         //跳过
         binding.skip.setOnClickListener(view -> {
-            go(MainActivity.class);
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.putExtra("tabIndex", 3);
+            startActivity(intent);
         });
     }
 

@@ -15,7 +15,6 @@ import com.powershare.etm.ui.base.BaseActivity;
 import com.powershare.etm.ui.setting.SettingActivity;
 import com.powershare.etm.ui.tab1.Tab1Fragment;
 import com.powershare.etm.ui.tab2.Tab2Fragment;
-import com.powershare.etm.ui.tab2.TrackingFragment;
 import com.powershare.etm.ui.tab3.Tab3Fragment;
 import com.powershare.etm.ui.tab4.Tab4Fragment;
 import com.powershare.etm.util.LocationUtils;
@@ -44,7 +43,12 @@ public class MainActivity extends BaseActivity {
         initTopBar();
         initPermissions();
         initPagers();
-        initTabs();
+
+        int currentTab = 0;
+        if (getIntent() != null) {
+            currentTab = getIntent().getIntExtra("tabIndex", 0);
+        }
+        initTabs(currentTab);
     }
 
     private void initTopBar() {
@@ -74,7 +78,7 @@ public class MainActivity extends BaseActivity {
         mViewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), viewList));
     }
 
-    private void initTabs() {
+    private void initTabs(int currentTab) {
         mTabSegment.setDefaultNormalColor(ContextCompat.getColor(this, R.color.grayA6));
         mTabSegment.setDefaultSelectedColor(ContextCompat.getColor(this, R.color.colorAccent));
         QMUITabSegment.Tab tab1 = new QMUITabSegment.Tab(
@@ -103,6 +107,6 @@ public class MainActivity extends BaseActivity {
                 .addTab(tab4);
         mTabSegment.notifyDataChanged();
         mTabSegment.setupWithViewPager(mViewPager, false);
-        mTabSegment.selectTab(0);
+        mTabSegment.selectTab(currentTab);
     }
 }
