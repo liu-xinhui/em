@@ -1,5 +1,6 @@
 package com.powershare.etm.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 import lombok.Data;
@@ -8,10 +9,10 @@ import lombok.Data;
  * 预测行程中的充电与耗电信息
  */
 @Data
-public class PredictCharge {
+public class PredictCharge implements Serializable {
 
     //充电站坐标列表
-    private List<Location> chargeLocationList;
+    private List<Charge> chargeLocationList;
 
     //起点SOC,百分比分子取整
     private int startSoc = 100;

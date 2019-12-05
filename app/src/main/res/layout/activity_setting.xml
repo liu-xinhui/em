@@ -26,10 +26,11 @@
             android:text="当前账号" />
 
         <TextView
+            android:id="@+id/phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="15dp"
-            android:text="18918296259"
+            android:text="---"
             android:textColor="#e1fbfc" />
     </LinearLayout>
 

@@ -162,7 +162,7 @@ public class TrackDetailActivity extends BaseActivity {
         if (driveRouteResult != null && driveRouteResult.getPaths() != null) {
             if (driveRouteResult.getPaths().size() > 0) {
                 final DrivePath drivePath = driveRouteResult.getPaths().get(0);
-                DrivingRouteOverlay drivingRouteOverlay = new DrivingRouteOverlay(this, aMap, drivePath, driveRouteResult.getStartPos(), driveRouteResult.getTargetPos(), driveRouteResult.getDriveQuery().getPassedByPoints());
+                DrivingRouteOverlay drivingRouteOverlay = new DrivingRouteOverlay(this, aMap, drivePath, driveRouteResult.getStartPos(), driveRouteResult.getTargetPos(), predictCharge.getChargeLocationList());
                 drivingRouteOverlay.setNodeIconVisibility(false);//设置节点marker是否显示
                 drivingRouteOverlay.setIsColorfulline(true);//是否用颜色展示交通拥堵情况，默认true
                 drivingRouteOverlay.removeFromMap();

@@ -7,6 +7,7 @@ import com.powershare.etm.component.MyDialog;
 import com.powershare.etm.databinding.ActivitySettingBinding;
 import com.powershare.etm.ui.base.BaseActivity;
 import com.powershare.etm.ui.login.LoginActivity;
+import com.powershare.etm.util.UserCache;
 import com.qmuiteam.qmui.widget.QMUITopBarLayout;
 
 public class SettingActivity extends BaseActivity {
@@ -23,14 +24,13 @@ public class SettingActivity extends BaseActivity {
     @Override
     protected void onMounted() {
         initTopBar();
-        binding.logout.setOnClickListener(view -> {
-            new MyDialog.Builder(SettingActivity.this)
-                    .setContent("确定退出登录？")
-                    .setSureListener(sureBtn -> {
-                        go(LoginActivity.class);
-                        ActivityUtils.finishAllActivities(true);
-                    }).create().show();
-        });
+        binding.logout.setOnClickListener(view -> new MyDialog.Builder(SettingActivity.this)
+                .setContent("确定退出登录？")
+                .setSureListener(sureBtn -> {
+                    go(LoginActivity.class);
+                    ActivityUtils.finishAllActivities(true);
+                }).create().show());
+        binding.phone.setText(UserCache.get(UserCache.Field.mobile));
     }
 
     private void initTopBar() {

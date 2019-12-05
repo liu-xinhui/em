@@ -1,6 +1,5 @@
 package com.powershare.etm.ui.tab3;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -25,7 +24,7 @@ import com.blankj.utilcode.util.CollectionUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.CarModel;
-import com.powershare.etm.bean.Location;
+import com.powershare.etm.bean.Charge;
 import com.powershare.etm.bean.PredictCharge;
 import com.powershare.etm.bean.TripParam;
 import com.powershare.etm.databinding.ActivityPredictBinding;
@@ -58,9 +57,7 @@ public class PredictActivity extends BaseActivity {
         return binding.getRoot();
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    private void initMap(Bundle savedInstanceState) {
         binding.map.onCreate(savedInstanceState);
         aMap = binding.map.getMap();
         UiSettings uiSettings = aMap.getUiSettings();
@@ -68,6 +65,7 @@ public class PredictActivity extends BaseActivity {
         uiSettings.setZoomControlsEnabled(false);
         uiSettings.setRotateGesturesEnabled(false);
         binding.mapContainer.setScrollView(binding.scrollView);
+        aMap.setOnMarkerClickListener(marker -> true);
     }
 
     @Override
@@ -107,8 +105,9 @@ public class PredictActivity extends BaseActivity {
     }
 
     @Override
-    protected void onMounted() {
+    protected void onMounted(Bundle savedInstanceState) {
         initTopBar();
+        initMap(savedInstanceState);
         //取值
         Intent intent = getIntent();
         tripParam = (TripParam) intent.getSerializableExtra("tripParam");
@@ -127,11 +126,6 @@ public class PredictActivity extends BaseActivity {
         getCarListData();
         //温度点击
         getTemp();
-        //全屏点击
-        binding.fullScreen.setOnClickListener(view -> {
-            Intent goIntent = new Intent(PredictActivity.this, PredictFullActivity.class);
-            goIntent.putExtra("tripParam", tripParam);
-        });
         this.tracePredict(tripParam);
     }
 
@@ -205,11 +199,11 @@ public class PredictActivity extends BaseActivity {
         LatLonPoint endPoint = new LatLonPoint(tripParam.getDestPoint().getLatitude(), tripParam.getDestPoint().getLongitude());
         final RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(startPoint, endPoint);
         //途经点
-        List<Location> chargeLocationList = predictCharge.getChargeLocationList();
+        List<Charge> chargeLocationList = predictCharge.getChargeLocationList();
         List<LatLonPoint> passedByPoints = null;
         if (CollectionUtils.isNotEmpty(chargeLocationList)) {
             passedByPoints = new ArrayList<>();
-            for (Location location : chargeLocationList) {
+            for (Charge location : chargeLocationList) {
                 passedByPoints.add(new LatLonPoint(location.getLatitude(), location.getLongitude()));
             }
         }
@@ -225,8 +219,18 @@ public class PredictActivity extends BaseActivity {
         aMap.clear();
         if (driveRouteResult != null && driveRouteResult.getPaths() != null) {
             if (driveRouteResult.getPaths().size() > 0) {
+
+                //全屏点击
+                binding.fullScreen.setOnClickListener(view -> {
+                    Intent goIntent = new Intent(PredictActivity.this, PredictFullActivity.class);
+                    goIntent.putExtra("tripParam", tripParam);
+                    goIntent.putExtra("predictCharge", predictCharge);
+                    goIntent.putExtra("driveRouteResult", driveRouteResult);
+                    startActivity(goIntent);
+                });
+                //
                 final DrivePath drivePath = driveRouteResult.getPaths().get(0);
-                DrivingRouteOverlay drivingRouteOverlay = new DrivingRouteOverlay(this, aMap, drivePath, driveRouteResult.getStartPos(), driveRouteResult.getTargetPos(), driveRouteResult.getDriveQuery().getPassedByPoints());
+                DrivingRouteOverlay drivingRouteOverlay = new DrivingRouteOverlay(this, aMap, drivePath, driveRouteResult.getStartPos(), driveRouteResult.getTargetPos(), predictCharge.getChargeLocationList());
                 drivingRouteOverlay.setNodeIconVisibility(false);//设置节点marker是否显示
                 drivingRouteOverlay.setIsColorfulline(true);//是否用颜色展示交通拥堵情况，默认true
                 drivingRouteOverlay.removeFromMap();

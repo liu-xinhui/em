@@ -30,6 +30,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         setContentView(initContentView());
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         createViewModel();
+        onMounted(savedInstanceState);
         onMounted();
     }
 
@@ -38,6 +39,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected void onMounted() {
+    }
+
+    protected void onMounted(Bundle savedInstanceState) {
     }
 
     public void go(Class<?> clazz) {

@@ -15,8 +15,8 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.route.DrivePath;
 import com.amap.api.services.route.DriveStep;
 import com.amap.api.services.route.TMC;
-import com.blankj.utilcode.util.LogUtils;
 import com.powershare.etm.R;
+import com.powershare.etm.bean.Charge;
 import com.powershare.etm.util.AMapUtil;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import java.util.List;
 public class DrivingRouteOverlay extends RouteOverlay {
 
     private DrivePath drivePath;
-    private List<LatLonPoint> throughPointList;
+    private List<Charge> throughPointList;
     private List<Marker> throughPointMarkerList = new ArrayList<>();
     private boolean throughPointMarkerVisible = true;
     private List<TMC> tmcs;
@@ -50,7 +50,7 @@ public class DrivingRouteOverlay extends RouteOverlay {
      * @param path    导航路线规划方案。
      * @param context 当前的activity对象。
      */
-    public DrivingRouteOverlay(Context context, AMap amap, DrivePath path, LatLonPoint start, LatLonPoint end, List<LatLonPoint> throughPointList) {
+    public DrivingRouteOverlay(Context context, AMap amap, DrivePath path, LatLonPoint start, LatLonPoint end, List<Charge> throughPointList) {
         super(context);
         mContext = context;
         mAMap = amap;
@@ -139,7 +139,6 @@ public class DrivingRouteOverlay extends RouteOverlay {
 
     private void showcolorPolyline() {
         addPolyLine(mPolylineOptionscolor);
-
     }
 
     /**
@@ -280,7 +279,7 @@ public class DrivingRouteOverlay extends RouteOverlay {
 
     private void addThroughPointMarker() {
         if (this.throughPointList != null && this.throughPointList.size() > 0) {
-            LatLonPoint latLonPoint;
+            Charge latLonPoint;
             for (int i = 0; i < this.throughPointList.size(); i++) {
                 latLonPoint = this.throughPointList.get(i);
                 if (latLonPoint != null) {
@@ -297,7 +296,7 @@ public class DrivingRouteOverlay extends RouteOverlay {
     }
 
     private BitmapDescriptor getThroughPointBitDes() {
-        return BitmapDescriptorFactory.fromResource(R.mipmap.charging_station);
+        return BitmapDescriptorFactory.fromResource(R.mipmap.charging_station_padding);
     }
 
     /**

@@ -1,6 +1,5 @@
 package com.powershare.etm.ui.tab3;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,11 +20,12 @@ import com.amap.api.services.route.WalkRouteResult;
 import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.CollectionUtils;
 import com.blankj.utilcode.util.LogUtils;
+import com.bumptech.glide.Glide;
+import com.powershare.etm.R;
 import com.powershare.etm.bean.CarModel;
-import com.powershare.etm.bean.Location;
+import com.powershare.etm.bean.Charge;
 import com.powershare.etm.bean.PredictCharge;
 import com.powershare.etm.bean.TripParam;
-import com.powershare.etm.bean.TripPoint;
 import com.powershare.etm.databinding.ActivityPredictFullBinding;
 import com.powershare.etm.ui.base.BaseActivity;
 import com.powershare.etm.ui.route.DrivingRouteOverlay;
@@ -53,22 +53,6 @@ public class PredictFullActivity extends BaseActivity {
     protected View initContentView() {
         binding = ActivityPredictFullBinding.inflate(getLayoutInflater());
         return binding.getRoot();
-    }
-
-    @Override
-    @SuppressLint("ClickableViewAccessibility")
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding.map.onCreate(savedInstanceState);
-        aMap = binding.map.getMap();
-        UiSettings uiSettings = aMap.getUiSettings();
-        uiSettings.setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
-        uiSettings.setZoomControlsEnabled(false);
-        uiSettings.setRotateGesturesEnabled(false);
-        aMap.setOnMarkerClickListener(marker -> {
-            LogUtils.d(marker.getId());
-            return false;
-        });
     }
 
     @Override
@@ -108,17 +92,17 @@ public class PredictFullActivity extends BaseActivity {
     }
 
     @Override
-    protected void onMounted() {
+    protected void onMounted(Bundle savedInstanceState) {
         initTopBar();
+        initMap(savedInstanceState);
+        setChargeVisibility(false);
         //取值
         Intent intent = getIntent();
         tripParam = (TripParam) intent.getSerializableExtra("tripParam");
-        tripParam = new TripParam();
-        TripPoint tripPoint = new TripPoint();
-        //120.849857,31.631866
-        tripPoint.setLongitude(120.849857);
-        tripPoint.setLatitude(31.631866);
-        tripParam.setDestPoint(tripPoint);
+        PredictCharge predictCharge = (PredictCharge) intent.getSerializableExtra("predictCharge");
+        DriveRouteResult driveRouteResult = intent.getParcelableExtra("driveRouteResult");
+        LogUtils.d(predictCharge, driveRouteResult);
+        initUi(predictCharge, driveRouteResult);
         //this.tracePredict(tripParam);
         //车型点击
         getCarListData();
@@ -126,9 +110,7 @@ public class PredictFullActivity extends BaseActivity {
         getTemp();
         //全屏点击
         binding.fullScreen.setOnClickListener(view -> {
-            binding.chargeInfo.setVisibility(View.GONE);
-            binding.nav.setVisibility(View.GONE);
-            binding.fullScreen.setVisibility(View.GONE);
+            setChargeVisibility(false);
         });
         //导航点击
         binding.nav.setOnClickListener(view -> {
@@ -160,6 +142,32 @@ public class PredictFullActivity extends BaseActivity {
                     }).build().show();
         });
     }
+
+    private void initMap(Bundle savedInstanceState) {
+        binding.map.onCreate(savedInstanceState);
+        aMap = binding.map.getMap();
+        UiSettings uiSettings = aMap.getUiSettings();
+        uiSettings.setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
+        uiSettings.setZoomControlsEnabled(false);
+        uiSettings.setRotateGesturesEnabled(false);
+        aMap.setOnMarkerClickListener(marker -> {
+            Object obj = marker.getObject();
+            if (obj instanceof Charge) {
+                Charge charge = (Charge) marker.getObject();
+                binding.name.setText(charge.getName());
+                binding.address.setText(charge.getAddress());
+                binding.price.setText(charge.getPrice());
+                Glide.with(PredictFullActivity.this)
+                        .load(charge.getLogoUrl())
+                        .error(R.mipmap.charging_station)
+                        .placeholder(R.mipmap.charging_station)
+                        .into(binding.icon);
+                setChargeVisibility(true);
+            }
+            return true;
+        });
+    }
+
 
     //请求后台
     private void tracePredict(TripParam tripParam) {
@@ -216,11 +224,11 @@ public class PredictFullActivity extends BaseActivity {
         LatLonPoint endPoint = new LatLonPoint(tripParam.getDestPoint().getLatitude(), tripParam.getDestPoint().getLongitude());
         final RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(startPoint, endPoint);
         //途经点
-        List<Location> chargeLocationList = predictCharge.getChargeLocationList();
+        List<Charge> chargeLocationList = predictCharge.getChargeLocationList();
         List<LatLonPoint> passedByPoints = null;
         if (CollectionUtils.isNotEmpty(chargeLocationList)) {
             passedByPoints = new ArrayList<>();
-            for (Location location : chargeLocationList) {
+            for (Charge location : chargeLocationList) {
                 passedByPoints.add(new LatLonPoint(location.getLatitude(), location.getLongitude()));
             }
         }
@@ -237,7 +245,7 @@ public class PredictFullActivity extends BaseActivity {
         if (driveRouteResult != null && driveRouteResult.getPaths() != null) {
             if (driveRouteResult.getPaths().size() > 0) {
                 final DrivePath drivePath = driveRouteResult.getPaths().get(0);
-                DrivingRouteOverlay drivingRouteOverlay = new DrivingRouteOverlay(this, aMap, drivePath, driveRouteResult.getStartPos(), driveRouteResult.getTargetPos(), driveRouteResult.getDriveQuery().getPassedByPoints());
+                DrivingRouteOverlay drivingRouteOverlay = new DrivingRouteOverlay(this, aMap, drivePath, driveRouteResult.getStartPos(), driveRouteResult.getTargetPos(), predictCharge.getChargeLocationList());
                 drivingRouteOverlay.setNodeIconVisibility(false);//设置节点marker是否显示
                 drivingRouteOverlay.setIsColorfulline(true);//是否用颜色展示交通拥堵情况，默认true
                 drivingRouteOverlay.removeFromMap();
@@ -303,5 +311,12 @@ public class PredictFullActivity extends BaseActivity {
             }).build().show();
         };
         binding.temp.setOnClickListener(tempSelect);
+    }
+
+    private void setChargeVisibility(boolean show) {
+        int visibility = show ? View.VISIBLE : View.GONE;
+        binding.chargeInfo.setVisibility(visibility);
+        binding.nav.setVisibility(visibility);
+        binding.fullScreen.setVisibility(visibility);
     }
 }
