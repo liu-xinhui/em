@@ -1,6 +1,5 @@
 package com.powershare.etm.ui.tab2;
 
-import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.SeekBar;
@@ -16,7 +15,6 @@ import com.powershare.etm.bean.TripPoint;
 import com.powershare.etm.databinding.FragmentStartTrackBinding;
 import com.powershare.etm.ui.base.BaseFragment;
 import com.powershare.etm.util.CommonUtil;
-import com.powershare.etm.util.GlobalValue;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.vm.AMapViewModel;
 import com.powershare.etm.vm.CarViewModel;
@@ -50,7 +48,6 @@ public class StartTrackFragment extends BaseFragment {
         mapViewModel = ViewModelProviders.of(activity).get(AMapViewModel.class);
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onMounted() {
         //车型
@@ -98,11 +95,6 @@ public class StartTrackFragment extends BaseFragment {
         binding.tempSelect.setOnClickListener(tempSelect);
         //开启手动追踪
         binding.startTrack.setOnClickListener(view -> {
-            FragmentManager fragmentManager = getFragmentManager();
-            if (fragmentManager != null) {
-                FragmentUtils.add(fragmentManager, TrackingFragment.newInstance(), R.id.fragment_container);
-                return;
-            }
             //车型
             CarModel carModel = (CarModel) binding.banner.getTag();
             if (carModel == null) {
@@ -149,7 +141,10 @@ public class StartTrackFragment extends BaseFragment {
                 trackViewModel.startTrack(param).observe(StartTrackFragment.this, new MyObserver<Object>() {
                     @Override
                     public void onSuccess(Object o) {
-
+                        FragmentManager fragmentManager = getFragmentManager();
+                        if (fragmentManager != null) {
+                            FragmentUtils.add(fragmentManager, TrackingFragment.newInstance(), R.id.fragment_container);
+                        }
                     }
                 });
             });

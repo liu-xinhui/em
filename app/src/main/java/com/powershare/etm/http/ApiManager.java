@@ -2,10 +2,20 @@ package com.powershare.etm.http;
 
 import android.util.Log;
 
+import com.blankj.utilcode.util.CollectionUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.google.gson.GsonBuilder;
+import com.powershare.etm.util.UserCache;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -16,6 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public enum ApiManager {
     INSTANCE;
     private ApiService apiService;
+    private String token;
 
     public static final String BASE_URL = "http://renrentax.com:8080/etm/";
 
@@ -27,7 +38,17 @@ public enum ApiManager {
         Interceptor headerInterceptor = chain -> {
             Request.Builder builder = chain.request().newBuilder();
             builder.addHeader("Content-Type", "application/json");
-            builder.addHeader("Cookie", "JSESSIONID=D4967DC8D07714A629764647AA1BEE12");
+            if (!chain.request().url().uri().getPath().endsWith("/usc/login")) {
+                if (token == null) {
+                    token = UserCache.get(UserCache.Field.token);
+                }
+                LogUtils.d(chain.request().url(),
+                        chain.request().url().uri(),
+                        token);
+                if (token != null) {
+                    builder.addHeader("Cookie", "JSESSIONID=" + token);
+                }
+            }
             return chain.proceed(builder.build());
         };
 
@@ -36,6 +57,24 @@ public enum ApiManager {
                 .connectTimeout(30, TimeUnit.SECONDS)
                 .addInterceptor(headerInterceptor)
                 .addInterceptor(logInterceptor)
+                .cookieJar(new CookieJar() {
+
+                    @Override
+                    public void saveFromResponse(@NotNull HttpUrl httpUrl, @NotNull List<Cookie> list) {
+                        if (CollectionUtils.isNotEmpty(list)) {
+                            Cookie cookie = list.get(0);
+                            if ("JSESSIONID".equals(cookie.name())) {
+                                UserCache.save(UserCache.Field.token, cookie.value());
+                            }
+                        }
+                    }
+
+                    @NotNull
+                    @Override
+                    public List<Cookie> loadForRequest(@NotNull HttpUrl httpUrl) {
+                        return new ArrayList<>();
+                    }
+                })
                 .build();
 
         Retrofit retrofit = new Retrofit.Builder()

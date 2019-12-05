@@ -52,8 +52,10 @@ public class LiveDataCallAdapter<T> implements CallAdapter<ApiResult<T>, LiveDat
                     }
                     if (result.getStatus().equals(403)) {
                         Activity topActivity = ActivityUtils.getTopActivity();
-                        topActivity.startActivity(new Intent(topActivity, LoginActivity.class));
-                        liveData.postValue(ApiResult.error("请登录"));
+                        if (!(topActivity instanceof LoginActivity)) {
+                            topActivity.startActivity(new Intent(topActivity, LoginActivity.class));
+                            liveData.postValue(ApiResult.error("请登录"));
+                        }
                     } else {
                         liveData.postValue(result.error());
                     }

@@ -211,7 +211,6 @@ public class DrivingRouteOverlay extends RouteOverlay {
     }
 
     private BitmapDescriptor getTrafficBitmapDescriptor(String status) {
-        LogUtils.d("==> 路况信息 is " + status);
         switch (status) {
             case "畅通":
                 return smoothTraffic;

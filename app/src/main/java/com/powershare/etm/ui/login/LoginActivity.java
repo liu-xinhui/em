@@ -51,9 +51,8 @@ public class LoginActivity extends BaseActivity {
                 @Override
                 public void onSuccess(User user) {
                     UserCache.save(UserCache.Field.mobile, user.getMobile());
-                    UserCache.save(UserCache.Field.token, user.getToken());
-                    //go(MainActivity.class);
-                    //finish();
+                    go(MainActivity.class);
+                    finish();
                 }
 
                 @Override
