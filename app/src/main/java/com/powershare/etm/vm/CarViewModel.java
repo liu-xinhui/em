@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.blankj.utilcode.util.CollectionUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.powershare.etm.bean.ApiResult;
 import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.http.ApiManager;

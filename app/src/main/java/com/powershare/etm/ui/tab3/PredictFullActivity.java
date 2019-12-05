@@ -28,7 +28,7 @@ import com.powershare.etm.bean.TripParam;
 import com.powershare.etm.bean.TripPoint;
 import com.powershare.etm.databinding.ActivityPredictFullBinding;
 import com.powershare.etm.ui.base.BaseActivity;
-import com.powershare.etm.ui.tab3.route.DrivingRouteOverlay;
+import com.powershare.etm.ui.route.DrivingRouteOverlay;
 import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.vm.CarViewModel;

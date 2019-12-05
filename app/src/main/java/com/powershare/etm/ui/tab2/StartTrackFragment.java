@@ -1,60 +1,58 @@
-package com.powershare.etm.ui.tab3;
+package com.powershare.etm.ui.tab2;
 
-import android.content.Intent;
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.SeekBar;
 
-import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.amap.api.services.help.Tip;
+import com.blankj.utilcode.util.FragmentUtils;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.bean.TripParam;
 import com.powershare.etm.bean.TripPoint;
-import com.powershare.etm.databinding.FragmentTab3Binding;
+import com.powershare.etm.databinding.FragmentStartTrackBinding;
 import com.powershare.etm.ui.base.BaseFragment;
 import com.powershare.etm.util.CommonUtil;
+import com.powershare.etm.util.GlobalValue;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.vm.AMapViewModel;
 import com.powershare.etm.vm.CarViewModel;
+import com.powershare.etm.vm.TrackViewModel;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tab3Fragment extends BaseFragment {
+public class StartTrackFragment extends BaseFragment {
 
-    private FragmentTab3Binding binding;
+    private FragmentStartTrackBinding binding;
+    private TrackViewModel trackViewModel;
     private CarViewModel carViewModel;
     private AMapViewModel mapViewModel;
 
-    public static Tab3Fragment newInstance() {
-        return new Tab3Fragment();
+    public static StartTrackFragment newInstance() {
+        return new StartTrackFragment();
     }
 
     @Override
     protected View initContentView(LayoutInflater inflater) {
-        binding = FragmentTab3Binding.inflate(inflater);
+        binding = FragmentStartTrackBinding.inflate(inflater);
         return binding.getRoot();
     }
 
     @Override
     protected void createViewModel() {
+        trackViewModel = ViewModelProviders.of(this).get(TrackViewModel.class);
         carViewModel = ViewModelProviders.of(activity).get(CarViewModel.class);
         mapViewModel = ViewModelProviders.of(activity).get(AMapViewModel.class);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onMounted() {
-        View.OnClickListener onClickListener = view -> {
-            Intent intent = new Intent(activity, SearchLocActivity.class);
-            intent.putExtra("type", view.getId() == R.id.recent_track_start_text ? 1 : 2);
-            startActivityForResult(intent, 1);
-        };
-        binding.recentTrackStartText.setOnClickListener(onClickListener);
-        binding.recentTrackEndText.setOnClickListener(onClickListener);
         //车型
         this.getCarListData();
         //电量
@@ -98,16 +96,11 @@ public class Tab3Fragment extends BaseFragment {
             }).build().show();
         };
         binding.tempSelect.setOnClickListener(tempSelect);
-        //计算路线
-        binding.calcRoute.setOnClickListener(view -> {
-            Tip startTip = (Tip) binding.recentTrackStartText.getTag();
-            if (startTip == null) {
-                CommonUtil.showErrorToast("请输入起点");
-                return;
-            }
-            Tip endTip = (Tip) binding.recentTrackEndText.getTag();
-            if (endTip == null) {
-                CommonUtil.showErrorToast("请输入终点");
+        //开启手动追踪
+        binding.startTrack.setOnClickListener(view -> {
+            FragmentManager fragmentManager = getFragmentManager();
+            if (fragmentManager != null) {
+                FragmentUtils.add(fragmentManager, TrackingFragment.newInstance(), R.id.fragment_container);
                 return;
             }
             //车型
@@ -138,44 +131,29 @@ public class Tab3Fragment extends BaseFragment {
             }
             //温度
             String temp = binding.tempValue.getText().toString();
-            //构造参数
             TripParam param = new TripParam();
             param.setCarModelId(carModel.getId());
             param.setTemperature(Integer.parseInt(temp));
             param.setWarningLevel(power);
+            //当前位置
+            mapViewModel.currentLoc().observe(this, aMapLocation -> {
+                TripPoint startPoint = new TripPoint();
+                startPoint.setTimestamp(System.currentTimeMillis());
+                startPoint.setLatitude(aMapLocation.getLatitude());
+                startPoint.setLongitude(aMapLocation.getLongitude());
+                startPoint.setSpeed(aMapLocation.getSpeed());
+                startPoint.setMileage(0);
+                startPoint.setAddress(aMapLocation.getAddress());
+                startPoint.setAg(aMapLocation.getBearing());
+                param.setStartPoint(startPoint);
+                trackViewModel.startTrack(param).observe(StartTrackFragment.this, new MyObserver<Object>() {
+                    @Override
+                    public void onSuccess(Object o) {
 
-            TripPoint startPoint = new TripPoint();
-            startPoint.setLatitude(startTip.getPoint().getLatitude());
-            startPoint.setLongitude(startTip.getPoint().getLongitude());
-            param.setStartPoint(startPoint);
-
-            TripPoint endPoint = new TripPoint();
-            endPoint.setLatitude(endTip.getPoint().getLatitude());
-            endPoint.setLongitude(endTip.getPoint().getLongitude());
-            param.setDestPoint(endPoint);
-
-            Intent intent = new Intent(activity, PredictActivity.class);
-            intent.putExtra("tripParam", param);
-            intent.putExtra("startTip", startTip);
-            intent.putExtra("endTip", endTip);
-            startActivity(intent);
+                    }
+                });
+            });
         });
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 1 && resultCode == 1 && data != null) {
-            int type = data.getIntExtra("type", 1);
-            Tip item = data.getParcelableExtra("result");
-            if (item != null && type == 1) {
-                binding.recentTrackStartText.setText(item.getName());
-                binding.recentTrackStartText.setTag(item);
-            } else if (item != null && type == 2) {
-                binding.recentTrackEndText.setText(item.getName());
-                binding.recentTrackEndText.setTag(item);
-            }
-        }
     }
 
     private void getCarListData() {

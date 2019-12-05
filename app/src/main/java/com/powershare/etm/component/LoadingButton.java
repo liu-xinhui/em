@@ -7,13 +7,11 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.animation.LinearInterpolator;
 
 import androidx.appcompat.widget.AppCompatButton;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.noober.background.BackgroundFactory;
 

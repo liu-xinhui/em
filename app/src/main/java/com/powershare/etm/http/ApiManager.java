@@ -2,18 +2,10 @@ package com.powershare.etm.http;
 
 import android.util.Log;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.google.gson.GsonBuilder;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Cookie;
-import okhttp3.CookieJar;
-import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

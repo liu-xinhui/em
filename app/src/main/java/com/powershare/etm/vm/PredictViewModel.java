@@ -13,6 +13,6 @@ public class PredictViewModel extends ViewModel {
     private ApiService apiService = ApiManager.INSTANCE.getService();
 
     public LiveData<ApiResult<PredictCharge>> tracePredict(TripParam tripParam) {
-        return apiService.tracePredict(tripParam);
+        return apiService.trackPredict(tripParam);
     }
 }

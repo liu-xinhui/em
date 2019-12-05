@@ -7,6 +7,7 @@ import com.powershare.etm.bean.ApiResult;
 import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.bean.PredictCharge;
 import com.powershare.etm.bean.TripParam;
+import com.powershare.etm.bean.TripPoint;
 import com.powershare.etm.bean.User;
 
 import java.util.List;
@@ -30,22 +31,22 @@ public interface ApiService {
 
     //行程预测
     @POST("trip/predict")
-    LiveData<ApiResult<PredictCharge>> tracePredict(@Body TripParam tripParam);
+    LiveData<ApiResult<PredictCharge>> trackPredict(@Body TripParam tripParam);
 
     //行程追踪启动
     @POST("trip/startTrace")
-    LiveData<ApiResult<Object>> startTrace(@Body TripParam tripParam);
+    LiveData<ApiResult<Object>> startTrack(@Body TripParam tripParam);
 
     //行程追踪结束
     @POST("trip/stopTrace")
-    LiveData<ApiResult<List<CarModel>>> stopTrace();
+    LiveData<ApiResult<Object>> stopTrack();
 
     //行程追踪打点
     @POST("trip/trace")
-    LiveData<ApiResult<List<CarModel>>> pushTrace();
+    LiveData<ApiResult<Object>> pushTrack(@Body TripPoint tripPoint);
 
     //行程列表
     @POST("trip/query")
-    LiveData<ApiResult<List<CarModel>>> traceQuery();
+    LiveData<ApiResult<List<Object>>> traceQuery();
 
 }

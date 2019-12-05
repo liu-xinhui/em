@@ -5,7 +5,6 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
@@ -14,32 +13,31 @@ import com.gyf.cactus.Cactus;
 import com.gyf.cactus.callback.CactusCallback;
 import com.powershare.etm.bean.ApiResult;
 import com.powershare.etm.bean.TripParam;
+import com.powershare.etm.bean.TripPoint;
 import com.powershare.etm.http.ApiManager;
 import com.powershare.etm.http.ApiService;
+import com.powershare.etm.util.GlobalValue;
+import com.powershare.etm.util.MyObserver;
 
-public class TraceViewModel extends AndroidViewModel {
+public class TrackViewModel extends AndroidViewModel {
     private ApiService apiService = ApiManager.INSTANCE.getService();
-    private MutableLiveData<String> trackLiveData;
     private AMapLocationClient mLocationClient;
 
-    public TraceViewModel(@NonNull Application application) {
+    public TrackViewModel(@NonNull Application application) {
         super(application);
     }
 
-    public MutableLiveData<String> trace() {
-        if (trackLiveData == null) {
-            trackLiveData = new MutableLiveData<>();
-        }
-        return trackLiveData;
+    public LiveData<ApiResult<Object>> startTrack(TripParam tripParam) {
+        return apiService.startTrack(tripParam);
     }
 
-    public LiveData<ApiResult<Object>> startTrace(TripParam tripParam) {
-        LogUtils.d(tripParam);
-        return apiService.startTrace(tripParam);
+    public LiveData<ApiResult<Object>> stopTrack() {
+        return apiService.stopTrack();
     }
 
     //开始追踪
-    public void startAddTrace() {
+    public void startAddTrack() {
+        GlobalValue.setTracking(true);
         Cactus.getInstance()
                 .isDebug(true)
                 .hideNotification(false)
@@ -60,11 +58,10 @@ public class TraceViewModel extends AndroidViewModel {
     }
 
     //停止追踪
-    public void stopAddTrace() {
+    public void stopAddTrack() {
         Cactus.getInstance().unregister(getApplication());
         stopLocation();
     }
-
 
     /**
      * 启动定位
@@ -84,7 +81,21 @@ public class TraceViewModel extends AndroidViewModel {
         option.setNeedAddress(true);
         mLocationClient.setLocationOption(option);
         mLocationClient.setLocationListener(aMapLocation -> {
-            apiService.pushTrace();
+            GlobalValue.setTrackMileage(10);
+            TripPoint tripPoint = new TripPoint();
+            tripPoint.setTimestamp(System.currentTimeMillis());
+            tripPoint.setLatitude(aMapLocation.getLatitude());
+            tripPoint.setLongitude(aMapLocation.getLongitude());
+            tripPoint.setSpeed(aMapLocation.getSpeed());
+            tripPoint.setMileage(10);
+            tripPoint.setAddress(aMapLocation.getAddress());
+            tripPoint.setAg(aMapLocation.getBearing());
+            apiService.pushTrack(tripPoint).observeForever(new MyObserver<Object>() {
+                @Override
+                public void onSuccess(Object o) {
+
+                }
+            });
         });
         mLocationClient.startLocation();
     }

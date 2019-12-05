@@ -17,6 +17,6 @@ public class TempActivity extends BaseActivity {
     @Override
     protected void onMounted() {
         binding.progressCar.setProgressColor(0xBBF44B57, 0xBBF44B57, 0xBB00F4FF, 0xBB00F4FF, 0xBB9523C5, 0xBB9523C5, 0xBBF44B57);
-        binding.progressCar.showAnimation(100, 100);
+        binding.progressCar.showAnimation(50, 1500);
     }
 }

@@ -1,4 +1,4 @@
-package com.powershare.etm.ui.tab3.route;
+package com.powershare.etm.ui.route;
 
 import android.content.Context;
 import android.graphics.Color;

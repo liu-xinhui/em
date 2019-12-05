@@ -13,12 +13,12 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.SweepGradient;
 import android.text.TextPaint;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 
+import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.powershare.etm.R;
 
@@ -109,24 +109,9 @@ public class DialProgress extends View {
     private int mTotalTickCount;
 
     /**
-     * 最大进度
-     */
-    private int mMax = 100;
-
-    /**
      * 当前进度
      */
     private int mProgress = 0;
-
-    /**
-     * 动画持续的时间
-     */
-    private int mDuration = 500;
-
-    /**
-     * 标签内容
-     */
-    private String mLabelText;
 
     /**
      * 字体大小
@@ -146,12 +131,6 @@ public class DialProgress extends View {
      * 是否显示标签文字
      */
     private boolean isShowLabel = true;
-    /**
-     * 是否默认显示百分比为标签文字
-     */
-    private boolean isShowPercentText = true;
-
-    private OnChangeListener mOnChangeListener;
 
     public DialProgress(Context context) {
         this(context, null);
@@ -173,34 +152,22 @@ public class DialProgress extends View {
      * 初始化
      */
     private void init() {
-        DisplayMetrics displayMetrics = getDisplayMetrics();
-        mStrokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, displayMetrics);
-        mLabelTextSize = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 30, displayMetrics);
-        mCirclePadding = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, displayMetrics);
-
         mStrokeWidth = SizeUtils.dp2px(12);
         isShader = false;
         mStartAngle = 270;
         mSweepAngle = 360;
-        mMax = 100;
-        mProgress = 0;
-        mDuration = 500;
-        mLabelText = "234";
-        mLabelTextSize = 30;
-        isShowLabel = false;
+        mLabelTextColor = ColorUtils.getColor(R.color.colorAccent);
+        mLabelTextSize = SizeUtils.dp2px(18);
+        isShowLabel = true;
         mCirclePadding = 10;
         mBlockAngle = 1;
-        isShowPercentText = TextUtils.isEmpty(mLabelText);
-        mProgressPercent = (int) (mProgress * 100.0f / mMax);
+        mProgressPercent = 0;
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(mStrokeWidth);
-        //mPaint.setShadowLayer(30, 0, 0, Color.RED);
-        //mPaint.setMaskFilter(new BlurMaskFilter(30f, BlurMaskFilter.Blur.SOLID));
         mTextPaint = new TextPaint();
         mTotalTickCount = (int) (mSweepAngle / (mTickSplitAngle + mBlockAngle));
-        anim();
     }
 
     private DisplayMetrics getDisplayMetrics() {
@@ -248,23 +215,10 @@ public class DialProgress extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         drawArc(canvas);
-        //drawText(canvas);
+        drawText(canvas);
         drawPointer(canvas);
     }
 
-    private void anim() {
-        /*ValueAnimator animator = ValueAnimator.ofFloat(0, 360);
-        animator.setDuration(1000);
-        animator.setInterpolator(new LinearInterpolator());
-        animator.setRepeatCount(ValueAnimator.INFINITE);
-        animator.addUpdateListener(valueAnimator -> {
-            angle = (float) valueAnimator.getAnimatedValue();
-            invalidate();
-        });
-        animator.start();*/
-    }
-
-    private int progress = 50;
     private int dis = SizeUtils.dp2px(10);
 
     private void drawPointer(Canvas canvas) {
@@ -273,7 +227,7 @@ public class DialProgress extends View {
         float px = getWidth() >> 1;
         float py = getHeight() >> 1;
         float tempY = bitmap.getHeight() >> 1;
-        m.setRotate(progress * 2.78f, bitmap.getWidth() - dis, tempY);
+        m.setRotate(mProgress * 2.78f, bitmap.getWidth() - dis, tempY);
         m.postTranslate(px - bitmap.getWidth() + dis, py - tempY);
         canvas.save();
         canvas.rotate(-49, px, py);
@@ -293,7 +247,7 @@ public class DialProgress extends View {
             float tickStartY = mCircleCenterY - mRadius;
             rectF = new RectF(tickStartX, tickStartY, tickStartX + tickDiameter, tickStartY + tickDiameter);
         }
-        final int currentBlockIndex = (int) (mProgressPercent / 100f * mTotalTickCount);
+        final int currentBlockIndex = mTotalTickCount;
         for (int i = 0; i < mTotalTickCount; i++) {
             if (i < 28) {
                 continue;
@@ -318,6 +272,8 @@ public class DialProgress extends View {
     /**
      * 绘制中间的文本
      */
+    private int textBottomMargin = SizeUtils.dp2px(15);
+
     private void drawText(Canvas canvas) {
         if (!isShowLabel) {
             return;
@@ -328,33 +284,13 @@ public class DialProgress extends View {
         mTextPaint.setTextSize(mLabelTextSize);
         mTextPaint.setColor(mLabelTextColor);
         mTextPaint.setTextAlign(Paint.Align.CENTER);
-
         Paint.FontMetrics fontMetrics = mTextPaint.getFontMetrics();
-        // 计算文字高度 
+        // 计算文字高度
         float fontHeight = fontMetrics.bottom - fontMetrics.top;
-        // 计算文字baseline 
-        float textBaseY = getHeight() - (getHeight() - fontHeight) / 2 - fontMetrics.bottom;
-
+        // 计算文字baseline
+        float textBaseY = getHeight() - fontHeight - fontMetrics.bottom - textBottomMargin;
         int textX = getWidth() / 2;
-        if (isShowPercentText) {//是否显示百分比
-            canvas.drawText(mProgressPercent + "%", textX, textBaseY, mTextPaint);
-        } else if (!TextUtils.isEmpty(mLabelText)) {//显示自定义文本
-            canvas.drawText(mLabelText, textX, textBaseY, mTextPaint);
-        }
-    }
-
-    /**
-     * 显示进度动画效果（根据当前已有进度开始）
-     */
-    public void showAppendAnimation(int progress) {
-        showAnimation(mProgress, progress, mDuration);
-    }
-
-    /**
-     * 显示进度动画效果
-     */
-    public void showAnimation(int progress) {
-        showAnimation(progress, mDuration);
+        canvas.drawText(mProgress + "%", textX, textBaseY, mTextPaint);
     }
 
     /**
@@ -381,7 +317,6 @@ public class DialProgress extends View {
      * @param duration 动画时长
      */
     public void showAnimation(int from, int to, int duration, Animator.AnimatorListener listener) {
-        this.mDuration = duration;
         this.mProgress = from;
         ValueAnimator valueAnimator = ValueAnimator.ofInt(from, to);
         valueAnimator.setDuration(duration);
@@ -396,34 +331,12 @@ public class DialProgress extends View {
     }
 
     /**
-     * 设置最大进度
-     */
-    public void setMax(int max) {
-        this.mMax = max;
-        invalidate();
-    }
-
-    /**
      * 设置当前进度
      */
     public void setProgress(int progress) {
         this.mProgress = progress;
-        mProgressPercent = (int) (mProgress * 100.0f / mMax);
-        invalidate();
-
-        if (mOnChangeListener != null) {
-            mOnChangeListener.onProgressChanged(mProgress, mMax);
-        }
-    }
-
-    /**
-     * 设置正常颜色
-     */
-    public void setNormalColor(int color) {
-        this.mNormalColor = color;
         invalidate();
     }
-
 
     /**
      * 设置着色器
@@ -441,120 +354,5 @@ public class DialProgress extends View {
         this.mShaderColors = colors;
         Shader shader = new SweepGradient(mCircleCenterX, mCircleCenterX, colors, null);
         setShader(shader);
-    }
-
-    /**
-     * 设置进度颜色（纯色）
-     */
-    public void setProgressColor(int color) {
-        isShader = false;
-        this.mProgressColor = color;
-        invalidate();
-    }
-
-    /**
-     * 设置进度颜色
-     */
-    public void setProgressColorResource(int resId) {
-        int color = getResources().getColor(resId);
-        setProgressColor(color);
-    }
-
-    public int getStartAngle() {
-        return mStartAngle;
-    }
-
-    public int getSweepAngle() {
-        return mSweepAngle;
-    }
-
-    public float getCircleCenterX() {
-        return mCircleCenterX;
-    }
-
-    public float getCircleCenterY() {
-        return mCircleCenterY;
-    }
-
-    public float getRadius() {
-        return mRadius;
-    }
-
-    public int getMax() {
-        return mMax;
-    }
-
-    public int getProgress() {
-        return mProgress;
-    }
-
-    public String getLabelText() {
-        return mLabelText;
-    }
-
-    /**
-     * 设置标签文本
-     */
-    public void setLabelText(String labelText) {
-        this.mLabelText = labelText;
-        this.isShowPercentText = TextUtils.isEmpty(labelText);
-        invalidate();
-    }
-
-    /**
-     * 进度百分比
-     */
-    public int getProgressPercent() {
-        return mProgressPercent;
-    }
-
-    /**
-     * 如果自定义设置过{@link #setLabelText(String)} 或通过xml设置过{@code app:labelText}则
-     * 返回{@link #mLabelText}，反之默认返回百分比{@link #mProgressPercent}
-     */
-    public String getText() {
-        if (isShowPercentText) {
-            return mProgressPercent + "%";
-        }
-
-        return mLabelText;
-    }
-
-    public int getLabelTextColor() {
-        return mLabelTextColor;
-    }
-
-    public void setLabelTextColor(int color) {
-        this.mLabelTextColor = color;
-        invalidate();
-    }
-
-    public void setLabelTextColorResource(int resId) {
-        int color = getResources().getColor(resId);
-        setLabelTextColor(color);
-    }
-
-    public void setLabelTextSize(float textSize) {
-        setLabelTextSize(TypedValue.COMPLEX_UNIT_SP, textSize);
-    }
-
-    public void setLabelTextSize(int unit, float textSize) {
-        float size = TypedValue.applyDimension(unit, textSize, getDisplayMetrics());
-        if (mLabelTextSize != size) {
-            this.mLabelTextSize = size;
-            invalidate();
-        }
-
-    }
-
-    /**
-     * 设置进度改变监听
-     */
-    public void setOnChangeListener(OnChangeListener onChangeListener) {
-        this.mOnChangeListener = onChangeListener;
-    }
-
-    public interface OnChangeListener {
-        void onProgressChanged(float progress, float max);
     }
 }

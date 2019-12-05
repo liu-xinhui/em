@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/background"
+        android:paddingHorizontal="16dp"
+        android:paddingBottom="25dp"
+        tools:context=".ui.tab2.Tab2Fragment">
+
+        <androidx.constraintlayout.widget.Group
+            android:id="@+id/recent_track_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:constraint_referenced_ids="recent_track_title,recent_track_icon,recent_track_arrow,
+            recent_track_start,recent_track_start_text,recent_track_end,recent_track_end_text,
+            recent_track_dash,mileage_bg,power_bg, mileage_bg_value,mileage_bg_unit, mileage_bg_title,
+            power_bg_value,power_bg_unit,power_bg_title,recent_track_history" />
+
+        <TextView
+            android:id="@+id/recent_track_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="12dp"
+            android:text="最近行程"
+            android:textColor="#e1fbfc"
+            android:textSize="14dp"
+            app:layout_constraintLeft_toRightOf="@id/recent_track_icon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.noober.background.view.BLView
+            android:id="@+id/recent_track_icon"
+            android:layout_width="4dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="15dp"
+            app:bl_corners_radius="3dp"
+            app:bl_solid_color="@color/colorAccent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/recent_track_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:src="@mipmap/go"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/recent_track_history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="5dp"
+            android:text="历史行程记录"
+            app:layout_constraintRight_toLeftOf="@id/recent_track_arrow"
+            app:layout_constraintTop_toTopOf="@id/recent_track_arrow" />
+
+        <ImageView
+            android:id="@+id/recent_track_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:src="@mipmap/start"
+            app:layout_constraintLeft_toLeftOf="@id/recent_track_title"
+            app:layout_constraintTop_toBottomOf="@id/recent_track_icon" />
+
+        <TextView
+            android:id="@+id/recent_track_start_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="上海市黄浦区南京东路"
+            app:layout_constraintBottom_toBottomOf="@id/recent_track_start"
+            app:layout_constraintLeft_toRightOf="@id/recent_track_start"
+            app:layout_constraintTop_toTopOf="@id/recent_track_start"
+            app:layout_constraintVertical_bias="0.5" />
+
+        <ImageView
+            android:id="@+id/recent_track_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:src="@mipmap/end"
+            app:layout_constraintLeft_toLeftOf="@id/recent_track_start"
+            app:layout_constraintTop_toBottomOf="@id/recent_track_start" />
+
+        <TextView
+            android:id="@+id/recent_track_end_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginBottom="10dp"
+            android:text="上海市嘉定区槎溪路"
+            app:layout_constraintBottom_toBottomOf="@id/recent_track_end"
+            app:layout_constraintLeft_toRightOf="@id/recent_track_end"
+            app:layout_constraintTop_toTopOf="@id/recent_track_end"
+            app:layout_constraintVertical_bias="0.15" />
+
+        <com.noober.background.view.BLView
+            android:id="@+id/recent_track_dash"
+            android:layout_width="3dp"
+            android:layout_height="96dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="2dp"
+            app:bl_stroke_color="@color/textD3"
+            app:bl_stroke_dashGap="2dp"
+            app:bl_stroke_dashWidth="2dp"
+            app:bl_stroke_position="left"
+            app:bl_stroke_width="1dp"
+            app:layout_constraintLeft_toLeftOf="@id/recent_track_start"
+            app:layout_constraintTop_toBottomOf="@id/recent_track_start" />
+
+        <com.noober.background.view.BLView
+            android:id="@+id/mileage_bg"
+            android:layout_width="106dp"
+            android:layout_height="66dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            app:bl_solid_color="#2E2E2E"
+            app:layout_constraintLeft_toLeftOf="@+id/recent_track_start_text"
+            app:layout_constraintTop_toBottomOf="@+id/recent_track_start_text" />
+
+        <com.noober.background.view.BLView
+            android:id="@+id/power_bg"
+            android:layout_width="106dp"
+            android:layout_height="66dp"
+            android:layout_marginStart="20dp"
+            app:bl_solid_color="#2E2E2E"
+            app:layout_constraintLeft_toRightOf="@+id/mileage_bg"
+            app:layout_constraintTop_toTopOf="@+id/mileage_bg" />
+
+        <!--第一个框框内容-->
+        <TextView
+            android:id="@+id/mileage_bg_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:text="174"
+            android:textColor="#ffe1fbfc"
+            android:textSize="18dp"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintLeft_toLeftOf="@id/mileage_bg"
+            app:layout_constraintRight_toLeftOf="@id/mileage_bg_unit"
+            app:layout_constraintTop_toTopOf="@id/mileage_bg" />
+
+        <TextView
+            android:id="@+id/mileage_bg_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:text="KM"
+            android:textColor="#ffe1fbfc"
+            android:textSize="12dp"
+            app:layout_constraintBaseline_toBaselineOf="@id/mileage_bg_value"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintLeft_toRightOf="@id/mileage_bg_value"
+            app:layout_constraintRight_toRightOf="@id/mileage_bg" />
+
+        <TextView
+            android:id="@+id/mileage_bg_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginBottom="12dp"
+            android:text="总里程"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="@id/mileage_bg"
+            app:layout_constraintLeft_toLeftOf="@id/mileage_bg"
+            app:layout_constraintRight_toRightOf="@id/mileage_bg" />
+
+        <!--第3个框框内容-->
+        <TextView
+            android:id="@+id/power_bg_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="9dp"
+            android:text="20"
+            android:textColor="#ffe1fbfc"
+            android:textSize="18dp"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintLeft_toLeftOf="@id/power_bg"
+            app:layout_constraintRight_toLeftOf="@id/power_bg_unit"
+            app:layout_constraintTop_toTopOf="@id/power_bg" />
+
+        <TextView
+            android:id="@+id/power_bg_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:text="%"
+            android:textColor="#ffe1fbfc"
+            android:textSize="12dp"
+            app:layout_constraintBaseline_toBaselineOf="@id/power_bg_value"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintLeft_toRightOf="@id/power_bg_value"
+            app:layout_constraintRight_toRightOf="@id/power_bg" />
+
+        <TextView
+            android:id="@+id/power_bg_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginBottom="12dp"
+            android:text="消耗电量"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="@id/power_bg"
+            app:layout_constraintLeft_toLeftOf="@id/power_bg"
+            app:layout_constraintRight_toRightOf="@id/power_bg" />
+        <!--===============================================================================-->
+        <LinearLayout
+            android:id="@+id/track_empty_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="190dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:src="@mipmap/track_empty" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="您尚未完成任何行程"
+                android:textColor="#ffe1fbfc"
+                android:textSize="14dp" />
+
+            <TextView
+                android:layout_width="260dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="可以手动开启一段行程，在行程结束后， 您将在此处看到结果。"
+                android:textColor="#ffd3d3d3"
+                android:textSize="14sp" />
+        </LinearLayout>
+        <!--===============================================================================-->
+        <com.noober.background.view.BLButton
+            android:id="@+id/start_track"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="210dp"
+            android:text="开启手动追踪"
+            android:textColor="#fff"
+            app:bl_corners_radius="4dp"
+            app:bl_pressed_drawable="#00f4ff"
+            app:bl_stroke_color="#00f4ff"
+            app:bl_stroke_width="1dp"
+            app:bl_unPressed_drawable="#0d9fa6"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!--车型框框-->
+        <com.noober.background.view.BLView
+            android:id="@+id/car_model_bg"
+            android:layout_width="match_parent"
+            android:layout_height="450dp"
+            android:layout_marginTop="28dp"
+            app:bl_corners_radius="5dp"
+            app:bl_solid_color="@color/backgroundLite"
+            app:layout_constraintTop_toBottomOf="@+id/start_track" />
+
+        <com.noober.background.view.BLView
+            android:id="@+id/car_model_icon"
+            android:layout_width="4dp"
+            android:layout_height="15dp"
+            android:layout_margin="15dp"
+            app:bl_corners_radius="3dp"
+            app:bl_solid_color="@color/colorAccent"
+            app:layout_constraintLeft_toLeftOf="@id/car_model_bg"
+            app:layout_constraintTop_toTopOf="@id/car_model_bg" />
+
+        <TextView
+            android:id="@+id/car_model_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="12dp"
+            android:text="车型"
+            android:textColor="#e1fbfc"
+            android:textSize="14dp"
+            app:layout_constraintLeft_toRightOf="@id/car_model_icon"
+            app:layout_constraintTop_toTopOf="@id/car_model_bg" />
+
+        <ImageView
+            android:id="@+id/car_model_car_bg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:src="@mipmap/car_bg"
+            app:layout_constraintLeft_toLeftOf="@id/car_model_bg"
+            app:layout_constraintRight_toRightOf="@id/car_model_bg"
+            app:layout_constraintTop_toTopOf="@id/car_model_bg" />
+
+        <com.powershare.etm.component.ImageView360
+            android:id="@+id/banner"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="20dp"
+            android:scaleType="fitCenter"
+            app:layout_constraintBottom_toBottomOf="@id/car_model_car_bg"
+            app:layout_constraintLeft_toLeftOf="@id/car_model_car_bg"
+            app:layout_constraintRight_toRightOf="@id/car_model_car_bg"
+            app:layout_constraintTop_toTopOf="@id/car_model_car_bg" />
+
+        <TextView
+            android:id="@+id/car_model_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="新科雷嘉 NEW KADJAR"
+            android:textColor="#ffe1fbfc"
+            android:textSize="18dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/car_model_car_bg" />
+
+        <ImageView
+            android:id="@+id/car_title_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="3dp"
+            android:src="@mipmap/down"
+            app:layout_constraintLeft_toRightOf="@+id/car_model_value"
+            app:layout_constraintTop_toTopOf="@id/car_model_value" />
+
+        <View
+            android:id="@+id/car_model_select"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toBottomOf="@id/car_model_value"
+            app:layout_constraintLeft_toLeftOf="@id/car_model_bg"
+            app:layout_constraintRight_toRightOf="@id/car_model_bg"
+            app:layout_constraintTop_toTopOf="@id/car_model_value" />
+
+        <SeekBar
+            android:id="@+id/car_model_power_bar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="15dp"
+            android:layout_marginTop="13dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="25dp"
+            android:progressBackgroundTint="@color/backgroundLite"
+            android:progressTint="@color/backgroundLite"
+            android:thumb="@mipmap/power"
+            app:layout_constraintLeft_toLeftOf="@id/car_model_bg"
+            app:layout_constraintRight_toRightOf="@id/car_model_bg"
+            app:layout_constraintTop_toBottomOf="@id/car_title_arrow" />
+
+        <ImageView
+            android:id="@+id/car_model_temp"
+            android:layout_width="0dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="29dp"
+            android:layout_marginTop="48dp"
+            android:layout_marginEnd="28dp"
+            android:scaleType="fitStart"
+            android:src="@mipmap/temperature"
+            app:layout_constraintLeft_toLeftOf="@id/car_model_bg"
+            app:layout_constraintRight_toRightOf="@id/car_model_bg"
+            app:layout_constraintTop_toBottomOf="@id/car_title_arrow" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:text="当达到设定的剩余电量，将提醒您进行充电"
+            android:textColor="@color/textA6"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="@id/car_model_bg"
+            app:layout_constraintEnd_toEndOf="@id/car_model_bg"
+            app:layout_constraintStart_toStartOf="@id/car_model_bg" />
+
+        <!--温度框框-->
+        <com.noober.background.view.BLView
+            android:id="@+id/temp_bg"
+            android:layout_width="match_parent"
+            android:layout_height="190dp"
+            android:layout_marginTop="20dp"
+            app:bl_corners_radius="5dp"
+            app:bl_solid_color="@color/backgroundLite"
+            app:layout_constraintTop_toBottomOf="@+id/car_model_bg" />
+
+        <com.noober.background.view.BLView
+            android:id="@+id/temp_icon"
+            android:layout_width="4dp"
+            android:layout_height="15dp"
+            android:layout_margin="15dp"
+            app:bl_corners_radius="3dp"
+            app:bl_solid_color="@color/colorAccent"
+            app:layout_constraintLeft_toLeftOf="@id/temp_bg"
+            app:layout_constraintTop_toTopOf="@id/temp_bg" />
+
+        <TextView
+            android:id="@+id/temp_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="12dp"
+            android:text="温度"
+            android:textColor="#e1fbfc"
+            android:textSize="14dp"
+            app:layout_constraintLeft_toRightOf="@id/temp_icon"
+            app:layout_constraintTop_toTopOf="@id/temp_bg" />
+
+        <TextView
+            android:id="@+id/temp_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="18"
+            android:textColor="@color/colorAccent"
+            android:textSize="27dp"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintLeft_toLeftOf="@id/temp_bg"
+            app:layout_constraintRight_toLeftOf="@id/temp_unit"
+            app:layout_constraintTop_toTopOf="@id/temp_bg" />
+
+        <TextView
+            android:id="@+id/temp_unit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_marginTop="30dp"
+            android:text="℃"
+            android:textColor="@color/colorAccent"
+            android:textSize="16dp"
+            app:layout_constraintBaseline_toBaselineOf="@id/temp_value"
+            app:layout_constraintLeft_toRightOf="@id/temp_value"
+            app:layout_constraintRight_toRightOf="@id/temp_bg" />
+
+        <ImageView
+            android:id="@+id/temp_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:src="@mipmap/down"
+            app:layout_constraintLeft_toRightOf="@+id/temp_unit"
+            app:layout_constraintTop_toTopOf="@id/temp_value" />
+
+        <View
+            android:id="@+id/temp_select"
+            android:layout_width="150dp"
+            android:layout_height="60dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintBottom_toTopOf="@id/temp_current"
+            app:layout_constraintLeft_toLeftOf="@id/temp_bg"
+            app:layout_constraintRight_toRightOf="@id/temp_bg" />
+
+        <com.powershare.etm.component.LoadingButton
+            android:id="@+id/temp_current"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="8dp"
+            android:drawableStart="@mipmap/curr_loc"
+            android:drawablePadding="5dp"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="10dp"
+            android:text="使用当前位置温度"
+            android:textColor="#fff"
+            app:bl_corners_radius="4dp"
+            app:bl_pressed_drawable="#00f4ff"
+            app:bl_stroke_color="#00f4ff"
+            app:bl_stroke_width="1dp"
+            app:bl_unPressed_drawable="#40585a"
+            app:layout_constraintLeft_toLeftOf="@id/temp_bg"
+            app:layout_constraintRight_toRightOf="@id/temp_bg"
+            app:layout_constraintTop_toBottomOf="@id/temp_unit" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"
+            android:text="设置的温度将会影响车辆的续航里程和电池\n电量的模拟结果"
+            android:textColor="@color/textA6"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="@id/temp_bg"
+            app:layout_constraintEnd_toEndOf="@id/temp_bg"
+            app:layout_constraintStart_toStartOf="@id/temp_bg" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

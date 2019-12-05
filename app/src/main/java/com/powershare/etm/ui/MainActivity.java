@@ -13,8 +13,8 @@ import com.powershare.etm.component.MyDialog;
 import com.powershare.etm.databinding.ActivityMainBinding;
 import com.powershare.etm.ui.base.BaseActivity;
 import com.powershare.etm.ui.setting.SettingActivity;
-import com.powershare.etm.ui.tab1.Tab1Fragment;
 import com.powershare.etm.ui.tab2.Tab2Fragment;
+import com.powershare.etm.ui.tab2.TrackingFragment;
 import com.powershare.etm.ui.tab3.Tab3Fragment;
 import com.powershare.etm.ui.tab4.Tab4Fragment;
 import com.powershare.etm.util.LocationUtils;
@@ -65,7 +65,7 @@ public class MainActivity extends BaseActivity {
 
     private void initPagers() {
         ArrayList<Fragment> viewList = new ArrayList<>();
-        viewList.add(Tab1Fragment.newInstance());
+        viewList.add(TrackingFragment.newInstance());
         viewList.add(Tab2Fragment.newInstance());
         viewList.add(Tab3Fragment.newInstance());
         viewList.add(Tab4Fragment.newInstance());

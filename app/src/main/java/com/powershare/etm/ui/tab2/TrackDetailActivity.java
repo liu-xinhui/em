@@ -1,6 +1,5 @@
-package com.powershare.etm.ui.tab3;
+package com.powershare.etm.ui.tab2;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -27,15 +26,20 @@ import com.powershare.etm.R;
 import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.bean.Location;
 import com.powershare.etm.bean.PredictCharge;
+import com.powershare.etm.bean.Trip;
 import com.powershare.etm.bean.TripParam;
 import com.powershare.etm.databinding.ActivityPredictBinding;
+import com.powershare.etm.databinding.ActivityTrackDetailBinding;
+import com.powershare.etm.databinding.ActivityTrackListBinding;
 import com.powershare.etm.ui.base.BaseActivity;
 import com.powershare.etm.ui.route.DrivingRouteOverlay;
+import com.powershare.etm.ui.tab3.PredictFullActivity;
 import com.powershare.etm.util.AMapUtil;
 import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.vm.CarViewModel;
 import com.powershare.etm.vm.PredictViewModel;
+import com.powershare.etm.vm.TrackViewModel;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 
 import org.jetbrains.annotations.NotNull;
@@ -45,16 +49,15 @@ import java.util.List;
 
 import static com.amap.api.services.route.RouteSearch.DRIVING_SINGLE_DEFAULT;
 
-public class PredictActivity extends BaseActivity {
-    private ActivityPredictBinding binding;
-    private PredictViewModel predictViewModel;
-    private CarViewModel carViewModel;
+public class TrackDetailActivity extends BaseActivity {
+    private ActivityTrackDetailBinding binding;
+    private TrackViewModel trackViewModel;
     private AMap aMap;
-    private TripParam tripParam;
+    private String trickId;
 
     @Override
     protected View initContentView() {
-        binding = ActivityPredictBinding.inflate(getLayoutInflater());
+        binding = ActivityTrackDetailBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
 
@@ -95,15 +98,14 @@ public class PredictActivity extends BaseActivity {
     }
 
     private void initTopBar() {
-        binding.topBar.setTitle("行程预估结果");
+        binding.topBar.setTitle("行程预测详情");
         binding.topBar.setBackgroundAlpha(1);
         binding.topBar.addLeftBackImageButton().setOnClickListener(v -> finish());
     }
 
     @Override
     protected void createViewModel() {
-        predictViewModel = ViewModelProviders.of(this).get(PredictViewModel.class);
-        carViewModel = ViewModelProviders.of(this).get(CarViewModel.class);
+        trackViewModel = ViewModelProviders.of(this).get(TrackViewModel.class);
     }
 
     @Override
@@ -111,33 +113,16 @@ public class PredictActivity extends BaseActivity {
         initTopBar();
         //取值
         Intent intent = getIntent();
-        tripParam = (TripParam) intent.getSerializableExtra("tripParam");
-        //起始位置
-        Tip startTip = intent.getParcelableExtra("startTip");
-        Tip endTip = intent.getParcelableExtra("endTip");
-        if (tripParam == null || startTip == null || endTip == null) {
+        trickId = intent.getStringExtra("trickId");
+        if (trickId == null) {
             CommonUtil.showErrorToast("未知错误");
             return;
         }
-        binding.trackStartName.setText(startTip.getName());
-        binding.trackStartAddress.setText(startTip.getAddress());
-        binding.trackEndName.setText(endTip.getName());
-        binding.trackEndAddress.setText(endTip.getAddress());
-        //车型点击
-        getCarListData();
-        //温度点击
-        getTemp();
-        //全屏点击
-        binding.fullScreen.setOnClickListener(view -> {
-            Intent goIntent = new Intent(PredictActivity.this, PredictFullActivity.class);
-            goIntent.putExtra("tripParam", tripParam);
-        });
-        this.tracePredict(tripParam);
     }
 
     //请求后台
     private void tracePredict(TripParam tripParam) {
-        predictViewModel.tracePredict(tripParam).observe(this, new MyObserver<PredictCharge>() {
+/*        trackViewModel.tracePredict(tripParam).observe(this, new MyObserver<PredictCharge>() {
             @Override
             public void onStart() {
                 showLoading();
@@ -168,56 +153,7 @@ public class PredictActivity extends BaseActivity {
                 super.onError(e);
                 hideLoading();
             }
-        });
-    }
-
-    //显示路线
-    private void mapRoute(TripParam tripParam, PredictCharge predictCharge) {
-        RouteSearch routeSearch = new RouteSearch(this);
-        routeSearch.setRouteSearchListener(new RouteSearch.OnRouteSearchListener() {
-            @Override
-            public void onBusRouteSearched(BusRouteResult busRouteResult, int i) {
-
-            }
-
-            @Override
-            public void onDriveRouteSearched(DriveRouteResult driveRouteResult, int code) {
-                hideLoading();
-                if (code == 1000) {
-                    initUi(predictCharge, driveRouteResult);
-                } else {
-                    CommonUtil.showErrorToast("出错");
-                }
-            }
-
-            @Override
-            public void onWalkRouteSearched(WalkRouteResult walkRouteResult, int i) {
-
-            }
-
-            @Override
-            public void onRideRouteSearched(RideRouteResult rideRouteResult, int i) {
-
-            }
-        });
-        //起点终点
-        LatLonPoint startPoint = new LatLonPoint(tripParam.getStartPoint().getLatitude(), tripParam.getStartPoint().getLongitude());
-        LatLonPoint endPoint = new LatLonPoint(tripParam.getDestPoint().getLatitude(), tripParam.getDestPoint().getLongitude());
-        final RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(startPoint, endPoint);
-        //途经点
-        List<Location> chargeLocationList = predictCharge.getChargeLocationList();
-        List<LatLonPoint> passedByPoints = null;
-        if (CollectionUtils.isNotEmpty(chargeLocationList)) {
-            passedByPoints = new ArrayList<>();
-            for (Location location : chargeLocationList) {
-                passedByPoints.add(new LatLonPoint(location.getLatitude(), location.getLongitude()));
-            }
-        }
-        //fromAndTo包含路径规划的起点和终点，drivingMode表示驾车模式
-        //第三个参数表示途经点（最多支持16个），第四个参数表示避让区域（最多支持32个），第五个参数表示避让道路
-        RouteSearch.DriveRouteQuery query = new RouteSearch.DriveRouteQuery(fromAndTo, DRIVING_SINGLE_DEFAULT, passedByPoints, null, "");
-        //发送请求
-        routeSearch.calculateDriveRouteAsyn(query);
+        });*/
     }
 
     private void initUi(PredictCharge predictCharge, DriveRouteResult driveRouteResult) {
@@ -246,7 +182,7 @@ public class PredictActivity extends BaseActivity {
                 binding.infoContainer.removeAllViews();
                 for (String item : items) {
                     String[] itemArr = item.split(",");
-                    View view = LayoutInflater.from(PredictActivity.this).inflate(R.layout.item_title_value, null);
+                    View view = LayoutInflater.from(TrackDetailActivity.this).inflate(R.layout.item_title_value, null);
                     TextView value = view.findViewById(R.id.item_title_value);
                     TextView unit = view.findViewById(R.id.item_title_value_unit);
                     TextView title = view.findViewById(R.id.item_title);
@@ -267,59 +203,5 @@ public class PredictActivity extends BaseActivity {
         } else {
             CommonUtil.showErrorToast("无结果");
         }
-    }
-
-    private void getCarListData() {
-        List<CarModel> mCarModels = new ArrayList<>();
-        QMUIBottomSheet.BottomListSheetBuilder builder = new QMUIBottomSheet.BottomListSheetBuilder(this)
-                .setOnSheetItemClickListener((dialog, itemView, position, tag) -> {
-                    dialog.dismiss();
-                    tripParam.setCarModelId(mCarModels.get(position).getId());
-                    this.tracePredict(tripParam);
-                });
-        binding.car.setOnClickListener(view -> {
-            if (mCarModels.size() == 0) {
-                //车辆列表数据
-                carViewModel.carList(false).observe(PredictActivity.this, new MyObserver<List<CarModel>>() {
-                    @Override
-                    public void onStart() {
-                        showLoading();
-                    }
-
-                    @Override
-                    public void onSuccess(List<CarModel> carModels) {
-                        mCarModels.clear();
-                        mCarModels.addAll(carModels);
-                        for (CarModel carModel : carModels) {
-                            builder.addItem(carModel.getName());
-                        }
-                        builder.build().show();
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        hideLoading();
-                    }
-                });
-            } else {
-                builder.build().show();
-            }
-        });
-    }
-
-    private void getTemp() {
-        View.OnClickListener tempSelect = view -> {
-            QMUIBottomSheet.BottomListSheetBuilder builder = new QMUIBottomSheet.BottomListSheetBuilder(this);
-            for (int i = -20; i <= 40; i++) {
-                builder.addItem(i + "℃");
-            }
-            builder.setOnSheetItemClickListener((dialog, itemView, position, tag) -> {
-                dialog.dismiss();
-                int temp = Integer.parseInt(tag.replace("℃", ""));
-                tripParam.setTemperature(temp);
-                this.tracePredict(tripParam);
-            }).build().show();
-        };
-        binding.temp.setOnClickListener(tempSelect);
     }
 }
