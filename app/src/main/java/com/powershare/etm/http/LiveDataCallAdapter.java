@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.blankj.utilcode.util.ActivityUtils;
 import com.powershare.etm.bean.ApiResult;
 import com.powershare.etm.ui.login.LoginActivity;
+import com.powershare.etm.util.UserCache;
 
 import java.lang.reflect.Type;
 
@@ -51,6 +52,7 @@ public class LiveDataCallAdapter<T> implements CallAdapter<ApiResult<T>, LiveDat
                         return;
                     }
                     if (result.getStatus().equals(403)) {
+                        UserCache.clear();
                         Activity topActivity = ActivityUtils.getTopActivity();
                         if (!(topActivity instanceof LoginActivity)) {
                             topActivity.startActivity(new Intent(topActivity, LoginActivity.class));

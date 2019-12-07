@@ -15,7 +15,6 @@ import com.powershare.etm.App;
 import com.powershare.etm.util.CommonUtil;
 
 public class AMapViewModel extends ViewModel {
-    private AMapLocationClient mLocationClient;
 
     public LiveData<String> temp(String city) {
         MutableLiveData<String> liveData = new MutableLiveData<>();
@@ -45,21 +44,17 @@ public class AMapViewModel extends ViewModel {
     public LiveData<AMapLocation> currentLoc() {
         MutableLiveData<AMapLocation> locLiveData = new MutableLiveData<>();
         //初始化定位
-        if (mLocationClient == null) {
-            mLocationClient = new AMapLocationClient(App.getInstance());
-            //设置定位回调监听
-            //声明AMapLocationClientOption对象
-            AMapLocationClientOption option = new AMapLocationClientOption();
-            //设置定位场景，目前支持三种场景（签到、出行、运动，默认无场景）
-            option.setLocationPurpose(AMapLocationClientOption.AMapLocationPurpose.SignIn);
-            mLocationClient.setLocationOption(option);
-        }
-        if (null != mLocationClient) {
-            mLocationClient.setLocationListener(locLiveData::setValue);
-            //设置场景模式后最好调用一次stop，再调用start以保证场景模式生效
-            mLocationClient.stopLocation();
-            mLocationClient.startLocation();
-        }
+        AMapLocationClient mLocationClient = new AMapLocationClient(App.getInstance());
+        //设置定位回调监听
+        //声明AMapLocationClientOption对象
+        AMapLocationClientOption option = new AMapLocationClientOption();
+        //设置定位场景，目前支持三种场景（签到、出行、运动，默认无场景）
+        option.setLocationPurpose(AMapLocationClientOption.AMapLocationPurpose.SignIn);
+        mLocationClient.setLocationOption(option);
+        mLocationClient.setLocationListener(locLiveData::setValue);
+        //设置场景模式后最好调用一次stop，再调用start以保证场景模式生效
+        mLocationClient.stopLocation();
+        mLocationClient.startLocation();
         return locLiveData;
     }
 }

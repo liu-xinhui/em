@@ -5,34 +5,43 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.navi.AMapNavi;
+import com.amap.api.track.AMapTrackClient;
 import com.blankj.utilcode.util.LogUtils;
 import com.gyf.cactus.Cactus;
 import com.gyf.cactus.callback.CactusCallback;
 import com.powershare.etm.bean.ApiResult;
 import com.powershare.etm.bean.TripParam;
 import com.powershare.etm.bean.TripPoint;
+import com.powershare.etm.bean.TripSoc;
 import com.powershare.etm.http.ApiManager;
 import com.powershare.etm.http.ApiService;
 import com.powershare.etm.util.GlobalValue;
-import com.powershare.etm.util.MyObserver;
 
 public class TrackViewModel extends AndroidViewModel {
     private ApiService apiService = ApiManager.INSTANCE.getService();
+    private static MediatorLiveData<ApiResult<TripSoc>> tripSoc;
     private AMapLocationClient mLocationClient;
+    private static boolean isServiceOpen;
 
     public TrackViewModel(@NonNull Application application) {
         super(application);
     }
 
-    public LiveData<ApiResult<Object>> startTrack(TripParam tripParam) {
+    public MediatorLiveData<ApiResult<TripSoc>> getTripSoc() {
+        return tripSoc = new MediatorLiveData<>();
+    }
+
+    public LiveData<ApiResult<TripSoc>> startTrack(TripParam tripParam) {
         return apiService.startTrack(tripParam);
     }
 
-    public LiveData<ApiResult<Object>> stopTrack() {
-        return apiService.stopTrack();
+    public LiveData<ApiResult<String>> stopTrack(CharSequence discard) {
+        return apiService.stopTrack(discard);
     }
 
     //开始追踪
@@ -44,13 +53,13 @@ public class TrackViewModel extends AndroidViewModel {
                 .hideNotificationAfterO(false)
                 .addCallback(new CactusCallback() {
                     @Override
-                    public void doWork(int i) {
-                        //高德地图上传位置
+                    public void doWork(int times) {
                         startLocation();
                     }
 
                     @Override
                     public void onStop() {
+                        LogUtils.d("服务关闭");
                         stopLocation();
                     }
                 })
@@ -59,6 +68,7 @@ public class TrackViewModel extends AndroidViewModel {
 
     //停止追踪
     public void stopAddTrack() {
+        isServiceOpen = false;
         Cactus.getInstance().unregister(getApplication());
         stopLocation();
     }
@@ -66,11 +76,13 @@ public class TrackViewModel extends AndroidViewModel {
     /**
      * 启动定位
      */
-    private void startLocation() {
-        stopLocation();
-        if (null == mLocationClient) {
-            mLocationClient = new AMapLocationClient(getApplication());
+    private synchronized void startLocation() {
+        if (isServiceOpen) {
+            return;
         }
+        isServiceOpen = true;
+        stopLocation();
+        mLocationClient = new AMapLocationClient(getApplication());
         AMapLocationClientOption option = new AMapLocationClientOption();
         // 使用连续定位
         option.setOnceLocation(false);
@@ -81,6 +93,7 @@ public class TrackViewModel extends AndroidViewModel {
         option.setNeedAddress(true);
         mLocationClient.setLocationOption(option);
         mLocationClient.setLocationListener(aMapLocation -> {
+            LogUtils.d("位置上传");
             GlobalValue.setTrackMileage(10);
             TripPoint tripPoint = new TripPoint();
             tripPoint.setTimestamp(System.currentTimeMillis());
@@ -90,12 +103,7 @@ public class TrackViewModel extends AndroidViewModel {
             tripPoint.setMileage(10);
             tripPoint.setAddress(aMapLocation.getAddress());
             tripPoint.setAg(aMapLocation.getBearing());
-            apiService.pushTrack(tripPoint).observeForever(new MyObserver<Object>() {
-                @Override
-                public void onSuccess(Object o) {
-
-                }
-            });
+            tripSoc.addSource(apiService.pushTrack(tripPoint), tripSocApiResult -> tripSoc.setValue(tripSocApiResult));
         });
         mLocationClient.startLocation();
     }
@@ -105,7 +113,15 @@ public class TrackViewModel extends AndroidViewModel {
      */
     private void stopLocation() {
         if (null != mLocationClient) {
+            LogUtils.d("停止位置上传");
             mLocationClient.stopLocation();
         }
     }
+
+    private void mapTrack() {
+        AMapNavi mAMapNavi = AMapNavi.getInstance(getApplication());
+        
+    }
+
+
 }

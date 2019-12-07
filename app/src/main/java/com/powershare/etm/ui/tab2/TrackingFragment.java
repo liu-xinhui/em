@@ -2,16 +2,25 @@ package com.powershare.etm.ui.tab2;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.GridLayout;
+import android.widget.TextView;
 
 import androidx.lifecycle.ViewModelProviders;
 
 import com.blankj.utilcode.util.FragmentUtils;
+import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.SizeUtils;
+import com.powershare.etm.R;
+import com.powershare.etm.bean.TripSoc;
 import com.powershare.etm.component.MyDialog;
 import com.powershare.etm.databinding.FragmentTrackingBinding;
 import com.powershare.etm.ui.base.BaseFragment;
 import com.powershare.etm.util.GlobalValue;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.vm.TrackViewModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TrackingFragment extends BaseFragment {
 
@@ -41,27 +50,21 @@ public class TrackingFragment extends BaseFragment {
                 .setContent("确定结束追踪并放弃记录吗？")
                 .setSureListener(sureBtn -> {
                     FragmentUtils.remove(TrackingFragment.this);
-                    GlobalValue.setTracking(false);
-                    trackViewModel.stopAddTrack();
                 }).create().show());
         binding.finishTrack.setOnClickListener(view -> {
             if (GlobalValue.getTrackMileage() < 1000) {
                 new MyDialog.Builder(activity)
                         .setContent("此次行程未满1KM，将不会被记录。是否结束追踪？")
                         .setSureText("结束追踪")
-                        .setSureListener(sureBtn -> {
-                            FragmentUtils.remove(TrackingFragment.this);
-                            GlobalValue.setTracking(false);
-                            trackViewModel.stopAddTrack();
-                        }).create().show();
+                        .setSureListener(sureBtn -> FragmentUtils.remove(TrackingFragment.this)).create().show();
             } else {
                 new MyDialog.Builder(activity)
                         .setContent("是否结束追踪？")
                         .setSureText("结束追踪")
                         .setSureListener(sureBtn -> {
-                            trackViewModel.stopTrack().observe(TrackingFragment.this, new MyObserver<Object>() {
+                            trackViewModel.stopTrack("是").observe(TrackingFragment.this, new MyObserver<String>() {
                                 @Override
-                                public void onSuccess(Object o) {
+                                public void onSuccess(String o) {
                                     GlobalValue.setTracking(false);
                                     trackViewModel.stopAddTrack();
                                     binding.cancelTrack.setVisibility(View.GONE);
@@ -72,6 +75,48 @@ public class TrackingFragment extends BaseFragment {
                         }).create().show();
             }
         });
+        initGrid(new TripSoc());
+        trackViewModel.getTripSoc().observe(this, new MyObserver<TripSoc>() {
+            @Override
+            public void onSuccess(TripSoc tripSoc) {
+                LogUtils.d("update");
+                initGrid(tripSoc);
+            }
+        });
+        trackViewModel.stopAddTrack();
         trackViewModel.startAddTrack();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        GlobalValue.setTracking(false);
+        trackViewModel.stopAddTrack();
+    }
+
+    private void initGrid(TripSoc tripSoc) {
+        List<String> items = new ArrayList<>();
+        items.add(0 + ",km,总里程");
+        items.add(tripSoc.getEnergy() + ",kwh,消耗电量");
+        items.add(tripSoc.getRmbPublich() + ",RMB,充电成本（公共充电）");
+        items.add(tripSoc.getRmbPrivate() + ",RMB,充电成本（私人充电）");
+        binding.infoContainer.removeAllViews();
+        for (String item : items) {
+            String[] itemArr = item.split(",");
+            View view = LayoutInflater.from(activity).inflate(R.layout.item_title_value, null);
+            TextView value = view.findViewById(R.id.item_title_value);
+            TextView unit = view.findViewById(R.id.item_title_value_unit);
+            TextView title = view.findViewById(R.id.item_title);
+            value.setText(itemArr[0]);
+            unit.setText(itemArr[1]);
+            title.setText(itemArr[2]);
+            GridLayout.LayoutParams param = new GridLayout.LayoutParams();
+            param.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.FILL, 1);
+            param.width = 0;
+            param.height = SizeUtils.dp2px(66);
+            int margin = SizeUtils.dp2px(8);
+            param.setMargins(margin, margin, margin, margin);
+            binding.infoContainer.addView(view, param);
+        }
     }
 }

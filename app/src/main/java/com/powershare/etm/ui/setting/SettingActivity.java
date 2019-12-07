@@ -1,5 +1,6 @@
 package com.powershare.etm.ui.setting;
 
+import android.text.TextUtils;
 import android.view.View;
 
 import com.blankj.utilcode.util.ActivityUtils;
@@ -24,13 +25,23 @@ public class SettingActivity extends BaseActivity {
     @Override
     protected void onMounted() {
         initTopBar();
-        binding.logout.setOnClickListener(view -> new MyDialog.Builder(SettingActivity.this)
-                .setContent("确定退出登录？")
-                .setSureListener(sureBtn -> {
-                    go(LoginActivity.class);
-                    ActivityUtils.finishAllActivities(true);
-                }).create().show());
-        binding.phone.setText(UserCache.get(UserCache.Field.mobile));
+        String phone = UserCache.get(UserCache.Field.mobile);
+        boolean isLogin = !TextUtils.isEmpty(phone);
+        binding.logout.setText(isLogin ? "退出登录" : "登录");
+        binding.logout.setOnClickListener(view -> {
+            if (isLogin) {
+                new MyDialog.Builder(SettingActivity.this)
+                        .setContent("确定退出登录？")
+                        .setSureListener(sureBtn -> {
+                            UserCache.clear();
+                            go(LoginActivity.class);
+                            ActivityUtils.finishAllActivities(true);
+                        }).create().show();
+            } else {
+                go(LoginActivity.class);
+            }
+        });
+        binding.phone.setText(isLogin ? phone : "未登录");
     }
 
     private void initTopBar() {

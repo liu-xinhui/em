@@ -7,14 +7,22 @@ import android.widget.SeekBar;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
 import com.blankj.utilcode.util.FragmentUtils;
+import com.blankj.utilcode.util.LogUtils;
+import com.gyf.cactus.Cactus;
+import com.gyf.cactus.callback.CactusCallback;
+import com.powershare.etm.App;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.bean.TripParam;
 import com.powershare.etm.bean.TripPoint;
+import com.powershare.etm.bean.TripSoc;
 import com.powershare.etm.databinding.FragmentStartTrackBinding;
 import com.powershare.etm.ui.base.BaseFragment;
 import com.powershare.etm.util.CommonUtil;
+import com.powershare.etm.util.GlobalValue;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.vm.AMapViewModel;
 import com.powershare.etm.vm.CarViewModel;
@@ -95,6 +103,7 @@ public class StartTrackFragment extends BaseFragment {
         binding.tempSelect.setOnClickListener(tempSelect);
         //开启手动追踪
         binding.startTrack.setOnClickListener(view -> {
+            binding.startTrack.showLoading();
             //车型
             CarModel carModel = (CarModel) binding.banner.getTag();
             if (carModel == null) {
@@ -129,6 +138,11 @@ public class StartTrackFragment extends BaseFragment {
             param.setWarningLevel(power);
             //当前位置
             mapViewModel.currentLoc().observe(this, aMapLocation -> {
+                if (aMapLocation.getErrorCode() != 0) {
+                    CommonUtil.showErrorToast("定位失败");
+                    binding.startTrack.hideLoading();
+                    return;
+                }
                 TripPoint startPoint = new TripPoint();
                 startPoint.setTimestamp(System.currentTimeMillis());
                 startPoint.setLatitude(aMapLocation.getLatitude());
@@ -138,13 +152,18 @@ public class StartTrackFragment extends BaseFragment {
                 startPoint.setAddress(aMapLocation.getAddress());
                 startPoint.setAg(aMapLocation.getBearing());
                 param.setStartPoint(startPoint);
-                trackViewModel.startTrack(param).observe(StartTrackFragment.this, new MyObserver<Object>() {
+                trackViewModel.startTrack(param).observe(StartTrackFragment.this, new MyObserver<TripSoc>() {
                     @Override
-                    public void onSuccess(Object o) {
+                    public void onSuccess(TripSoc o) {
                         FragmentManager fragmentManager = getFragmentManager();
                         if (fragmentManager != null) {
                             FragmentUtils.add(fragmentManager, TrackingFragment.newInstance(), R.id.fragment_container);
                         }
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        binding.startTrack.hideLoading();
                     }
                 });
             });
@@ -199,4 +218,5 @@ public class StartTrackFragment extends BaseFragment {
             binding.banner.setBitmapUrls(null);
         }
     }
+
 }

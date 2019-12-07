@@ -1,10 +1,14 @@
 package com.powershare.etm.ui.login;
 
 import android.content.Intent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 
 import androidx.lifecycle.ViewModelProviders;
 
+import com.blankj.utilcode.util.ActivityUtils;
+import com.blankj.utilcode.util.KeyboardUtils;
 import com.blankj.utilcode.util.RegexUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.powershare.etm.bean.User;
@@ -53,7 +57,7 @@ public class LoginActivity extends BaseActivity {
                 public void onSuccess(User user) {
                     UserCache.save(UserCache.Field.mobile, user.getMobile());
                     go(MainActivity.class);
-                    finish();
+                    ActivityUtils.finishAllActivities(true);
                 }
 
                 @Override
@@ -93,6 +97,25 @@ public class LoginActivity extends BaseActivity {
                     binding.sendCode.setEnabled(true);
                 }
             });
+        });
+
+        binding.code.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() == 6) {
+                    KeyboardUtils.hideSoftInput(binding.code);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
         });
 
         //跳过

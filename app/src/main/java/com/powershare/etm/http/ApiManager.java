@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.blankj.utilcode.util.CollectionUtils;
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.StringUtils;
 import com.google.gson.GsonBuilder;
 import com.powershare.etm.util.UserCache;
 
@@ -39,13 +40,10 @@ public enum ApiManager {
             Request.Builder builder = chain.request().newBuilder();
             builder.addHeader("Content-Type", "application/json");
             if (!chain.request().url().uri().getPath().endsWith("/usc/login")) {
-                if (token == null) {
+                if (StringUtils.isSpace(token)) {
                     token = UserCache.get(UserCache.Field.token);
                 }
-                LogUtils.d(chain.request().url(),
-                        chain.request().url().uri(),
-                        token);
-                if (token != null) {
+                if (!StringUtils.isSpace(token)) {
                     builder.addHeader("Cookie", "JSESSIONID=" + token);
                 }
             }
@@ -64,7 +62,8 @@ public enum ApiManager {
                         if (CollectionUtils.isNotEmpty(list)) {
                             Cookie cookie = list.get(0);
                             if ("JSESSIONID".equals(cookie.name())) {
-                                UserCache.save(UserCache.Field.token, cookie.value());
+                                token = cookie.value();
+                                UserCache.save(UserCache.Field.token, token);
                             }
                         }
                     }
