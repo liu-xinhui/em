@@ -38,6 +38,7 @@ public class StartTrackFragment extends BaseFragment {
     private TrackViewModel trackViewModel;
     private CarViewModel carViewModel;
     private AMapViewModel mapViewModel;
+    private List<CarModel> mCarModels = new ArrayList<>();
 
     public static StartTrackFragment newInstance() {
         return new StartTrackFragment();
@@ -59,6 +60,7 @@ public class StartTrackFragment extends BaseFragment {
     @Override
     protected void onMounted() {
         //电量
+        binding.carModelPowerBar.setProgress(100);
         binding.carModelPowerBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -93,7 +95,9 @@ public class StartTrackFragment extends BaseFragment {
             }
             builder.setOnSheetItemClickListener((dialog, itemView, position, tag) -> {
                 dialog.dismiss();
-                binding.tempValue.setText(tag.replace("℃", ""));
+                String temp = tag.replace("℃", "");
+                binding.tempValue.setText(temp);
+                GlobalValue.setCurrentTemp(Integer.parseInt(temp));
             }).build().show();
         };
         binding.tempSelect.setOnClickListener(tempSelect);
@@ -106,6 +110,12 @@ public class StartTrackFragment extends BaseFragment {
         getCarListData();
         getTemp();
         getLastTrack(null);
+    }
+
+    void resumeData() {
+        String temp = GlobalValue.getCurrentTemp() + "";
+        binding.tempValue.setText(temp);
+        setCurrentCar(GlobalValue.getCurrentCarIndex());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -129,12 +139,10 @@ public class StartTrackFragment extends BaseFragment {
     }
 
     private void getCarListData() {
-        List<CarModel> mCarModels = new ArrayList<>();
         QMUIBottomSheet.BottomListSheetBuilder builder = new QMUIBottomSheet.BottomListSheetBuilder(activity)
                 .setOnSheetItemClickListener((dialog, itemView, position, tag) -> {
                     dialog.dismiss();
-                    binding.carModelValue.setText(tag);
-                    setCurrentCar(mCarModels.get(position));
+                    setCurrentCar(position);
                 });
         binding.carModelSelect.setOnClickListener(view -> builder.build().show());
         //车辆列表数据
@@ -144,7 +152,7 @@ public class StartTrackFragment extends BaseFragment {
                 mCarModels.clear();
                 mCarModels.addAll(carModels);
                 if (carModels.size() > 0) {
-                    setCurrentCar(carModels.get(0));
+                    setCurrentCar(0);
                 }
                 for (CarModel carModel : carModels) {
                     builder.addItem(carModel.getName());
@@ -158,13 +166,20 @@ public class StartTrackFragment extends BaseFragment {
         mapViewModel.currentLoc().observe(activity, location -> mapViewModel.temp(location.getCity()).observe(activity, temp -> {
             binding.tempCurrent.hideLoading();
             if (!"none".equals(temp)) {
+                GlobalValue.setCurrentTemp(Integer.parseInt(temp));
                 binding.tempValue.setText(temp);
             }
         }));
     }
 
-    private void setCurrentCar(CarModel currentCar) {
+    private void setCurrentCar(int index) {
+        if (GlobalValue.getCurrentCarIndex() > mCarModels.size() - 1) {
+            return;
+        }
+        GlobalValue.setCurrentCarIndex(index);
+        CarModel currentCar = mCarModels.get(index);
         String[] photoIds = currentCar.getPhotoIds();
+        binding.carModelValue.setText(currentCar.getName());
         binding.banner.setTag(currentCar);
         if (photoIds != null && photoIds.length > 0) {
             String[] photoUrls = new String[photoIds.length];

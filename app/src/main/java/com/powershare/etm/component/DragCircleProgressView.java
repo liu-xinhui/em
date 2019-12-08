@@ -281,21 +281,17 @@ public class DragCircleProgressView extends View {
     }
 
     public void setProgress(float progress) {
-        final float validProgress = checkProgress(progress);
         //动画切换进度值
-        new Thread(() -> {
-            float oldProgress = DragCircleProgressView.this.progress;
-            for (int i = 1; i <= 100; i++) {
-                DragCircleProgressView.this.progress = oldProgress + (validProgress - oldProgress) * (1.0f * i / 100);
-                postInvalidate();
-                SystemClock.sleep(5);
-            }
-        }).start();
+        this.progress = checkProgress(progress);
+        invalidate();
     }
 
     public void setProgressSync(float progress) {
         this.progress = checkProgress(progress);
         invalidate();
+        if (progressChangeListener != null) {
+            progressChangeListener.onChange(progress);
+        }
     }
 
     //保证progress的值位于[0,max]
@@ -308,5 +304,15 @@ public class DragCircleProgressView extends View {
 
     public void setDraggingEnabled(boolean draggingEnabled) {
         this.draggingEnabled = draggingEnabled;
+    }
+
+    private ProgressChangeListener progressChangeListener;
+
+    public void setOnProgressChangeListener(ProgressChangeListener progressChangeListener) {
+        this.progressChangeListener = progressChangeListener;
+    }
+
+    public interface ProgressChangeListener {
+        void onChange(float progress);
     }
 }

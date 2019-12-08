@@ -27,7 +27,6 @@
         android:maxLength="11"
         android:padding="10dp"
         android:selectAllOnFocus="true"
-        android:text="18918296259"
         app:bl_stroke_color="#bbb"
         app:bl_stroke_position="bottom"
         app:bl_stroke_width="1dp"

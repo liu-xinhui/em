@@ -58,6 +58,7 @@ public class Tab3Fragment extends BaseFragment {
         //车型
         this.getCarListData();
         //电量
+        binding.carModelPowerBar.setProgress(100);
         binding.carModelPowerBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {

@@ -9,6 +9,7 @@ import com.blankj.utilcode.util.FragmentUtils;
 import com.powershare.etm.R;
 import com.powershare.etm.databinding.FragmentTab2Binding;
 import com.powershare.etm.ui.base.BaseFragment;
+import com.powershare.etm.util.GlobalValue;
 
 public class Tab2Fragment extends BaseFragment {
 
@@ -36,6 +37,14 @@ public class Tab2Fragment extends BaseFragment {
     protected void loadData() {
         if (startTrackFragment != null) {
             startTrackFragment.initData();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (startTrackFragment != null) {
+            startTrackFragment.resumeData();
         }
     }
 }

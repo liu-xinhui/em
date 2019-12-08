@@ -20,6 +20,7 @@ import com.powershare.etm.ui.base.BaseFragment;
 import com.powershare.etm.ui.tab2.TrackListActivity;
 import com.powershare.etm.util.AMapUtil;
 import com.powershare.etm.util.CommonUtil;
+import com.powershare.etm.util.GlobalValue;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.util.PermissionHelper;
 import com.powershare.etm.vm.AMapViewModel;
@@ -74,6 +75,16 @@ public class Tab1Fragment extends BaseFragment {
             mainActivity.selectTab(1);
             EventBus.getDefault().post(new StartTrackEvent());
         }));
+        binding.progressTemperature.setOnProgressChangeListener(progress -> {
+            int temp = (int) (progress - 20);
+            if (temp < -20) {
+                temp = -20;
+            }
+            if (temp > 50) {
+                temp = 50;
+            }
+            GlobalValue.setCurrentTemp(temp);
+        });
     }
 
     private void initTabs() {
@@ -191,6 +202,7 @@ public class Tab1Fragment extends BaseFragment {
     }
 
     private void setCurrentCar() {
+        GlobalValue.setCurrentCarIndex(currentCarIndex);
         if (CollectionUtils.isNotEmpty(carModelList)) {
             String nav = (currentCarIndex + 1) + "/" + carModelList.size();
             binding.bannerNav.setText(nav);
@@ -216,6 +228,14 @@ public class Tab1Fragment extends BaseFragment {
         getCarListData();
         getTemp();
         getLastAndTotalTrack(null);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        binding.progressTemperature.setProgress(20 + GlobalValue.getCurrentTemp());
+        currentCarIndex = GlobalValue.getCurrentCarIndex();
+        setCurrentCar();
     }
 
     @Override

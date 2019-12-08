@@ -14,7 +14,7 @@ public class GlobalValue {
     //已经追踪的里程（m)
     @Getter
     @Setter
-    private static int trackMileage = 500000;
+    private static int trackMileage = 0;
     //是否已经开始跳转到登录页面，防止重复跳转登录页
     private static long lastToLoginTime;
     //当前追踪的参数
@@ -22,9 +22,17 @@ public class GlobalValue {
     @Setter
     private static TripParam tripParam;
 
+    @Getter
+    @Setter
+    private static int currentTemp;
+
+    @Getter
+    @Setter
+    private static int currentCarIndex;
+
     public static void setTracking(boolean tracking) {
         GlobalValue.tracking = tracking;
-        GlobalValue.trackMileage = 500000;
+        GlobalValue.trackMileage = 0;
     }
 
     public static String getTrackMileageKm() {
