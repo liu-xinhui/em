@@ -47,12 +47,12 @@ public class AMapUtil {
     }
 
     public static String formatFloat(float src) {
-        DecimalFormat numF = new DecimalFormat("##0.0");
+        DecimalFormat numF = new DecimalFormat("##0.#");
         return numF.format(src);
     }
 
     public static String formatDouble(double src) {
-        DecimalFormat numF = new DecimalFormat("##0.0");
+        DecimalFormat numF = new DecimalFormat("##0.#");
         return numF.format(src);
     }
 }

@@ -1,5 +1,7 @@
 package com.powershare.etm.ui.tab2;
 
+import android.content.Intent;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.GridLayout;
@@ -15,10 +17,14 @@ import com.powershare.etm.bean.Trip;
 import com.powershare.etm.bean.TripSoc;
 import com.powershare.etm.component.MyDialog;
 import com.powershare.etm.databinding.FragmentTrackingBinding;
+import com.powershare.etm.event.RefreshTrackEvent;
+import com.powershare.etm.event.StartTrackEvent;
 import com.powershare.etm.ui.base.BaseFragment;
 import com.powershare.etm.util.GlobalValue;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.vm.TrackViewModel;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,23 +69,26 @@ public class TrackingFragment extends BaseFragment {
                         .setSureListener(sureBtn -> trackViewModel.stopTrack("false").observe(TrackingFragment.this, new MyObserver<Trip>() {
                             @Override
                             public void onSuccess(Trip o) {
+                                EventBus.getDefault().post(new RefreshTrackEvent());
                                 trackViewModel.stopAddTrack();
                                 binding.cancelTrack.setVisibility(View.GONE);
                                 binding.finishTrack.setVisibility(View.GONE);
                                 binding.goDetail.setVisibility(View.VISIBLE);
-                                LogUtils.d(o.getId());
+                                binding.goDetail.setOnClickListener(view -> {
+                                    Intent intent = new Intent(activity, TrackDetailActivity.class);
+                                    intent.putExtra("trickId", o.getId());
+                                    startActivity(intent);
+                                    new Handler().postDelayed(() -> FragmentUtils.remove(TrackingFragment.this), 1000);
+                                });
                             }
                         })).create().show();
             }
         });
         initGrid(new TripSoc());
-        trackViewModel.getTripSoc().observe(this, new MyObserver<TripSoc>() {
-            @Override
-            public void onSuccess(TripSoc tripSoc) {
-                binding.progress.setProgress(tripSoc.getSoc());
-                LogUtils.d("update", tripSoc.getSoc());
-                initGrid(tripSoc);
-            }
+        trackViewModel.getTripSoc().observe(this, tripSoc -> {
+            binding.progress.setProgress(tripSoc.getSoc());
+            LogUtils.d("update", tripSoc.getSoc());
+            initGrid(tripSoc);
         });
         trackViewModel.startAddTrack();
     }

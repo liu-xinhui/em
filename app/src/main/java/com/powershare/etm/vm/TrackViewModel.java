@@ -16,6 +16,9 @@ import com.amap.api.navi.model.AMapNaviTrafficFacilityInfo;
 import com.amap.api.navi.model.AimLessModeCongestionInfo;
 import com.amap.api.navi.model.AimLessModeStat;
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.NotificationUtils;
+import com.powershare.etm.App;
+import com.powershare.etm.R;
 import com.powershare.etm.bean.ApiResult;
 import com.powershare.etm.bean.TotalTrip;
 import com.powershare.etm.bean.Trip;
@@ -26,12 +29,13 @@ import com.powershare.etm.http.ApiManager;
 import com.powershare.etm.http.ApiService;
 import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.GlobalValue;
+import com.powershare.etm.util.MyObserver;
 
 import java.util.List;
 
 public class TrackViewModel extends AndroidViewModel {
     private ApiService apiService = ApiManager.INSTANCE.getService();
-    private MediatorLiveData<ApiResult<TripSoc>> tripSoc;
+    private MediatorLiveData<TripSoc> tripSoc;
     private AMapLocationClient mLocationClient;
     private AMapNavi mAMapNavi;
 
@@ -39,7 +43,7 @@ public class TrackViewModel extends AndroidViewModel {
         super(application);
     }
 
-    public MediatorLiveData<ApiResult<TripSoc>> getTripSoc() {
+    public MediatorLiveData<TripSoc> getTripSoc() {
         return tripSoc = new MediatorLiveData<>();
     }
 
@@ -91,10 +95,29 @@ public class TrackViewModel extends AndroidViewModel {
             tripPoint.setMileage(GlobalValue.getTrackMileage() / 1000.0);
             tripPoint.setAddress(aMapLocation.getAddress());
             tripPoint.setAg(aMapLocation.getBearing());
-            tripSoc.addSource(apiService.pushTrack(tripPoint), tripSocApiResult -> tripSoc.setValue(tripSocApiResult));
+            apiService.pushTrack(tripPoint).observeForever(new MyObserver<TripSoc>() {
+                @Override
+                public void onSuccess(TripSoc tripSocApiResult) {
+                    tripSoc.setValue(tripSocApiResult);
+                    TripParam tripParam = GlobalValue.getTripParam();
+                    if (tripParam != null
+                            && tripSocApiResult.getSoc() <= tripParam.getWarningLevel()
+                            && !tripParam.isWarned()) {
+                        GlobalValue.getTripParam().setWarned(true);
+                        NotificationUtils.notify(1, param -> {
+                            param.setSmallIcon(R.mipmap.ic_launcher)
+                                    .setContentTitle("充电提醒")
+                                    .setContentText("当前剩余电量为" + tripSocApiResult.getSoc() + "%，请前往站点进行充电")
+                                    .setAutoCancel(true);
+                            return null;
+                        });
+                    }
+                }
+            });
         });
         mLocationClient.startLocation();
         startMapTrack();
+        App.getInstance().startKeepAlive();
     }
 
     //停止追踪
@@ -108,6 +131,7 @@ public class TrackViewModel extends AndroidViewModel {
             LogUtils.d("停止智能巡航");
             mAMapNavi.stopAimlessMode();
         }
+        App.getInstance().stopKeepAlive();
     }
 
     private void startMapTrack() {

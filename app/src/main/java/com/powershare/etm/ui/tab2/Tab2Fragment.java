@@ -12,6 +12,8 @@ import com.powershare.etm.ui.base.BaseFragment;
 
 public class Tab2Fragment extends BaseFragment {
 
+    private StartTrackFragment startTrackFragment;
+
     public static Tab2Fragment newInstance() {
         return new Tab2Fragment();
     }
@@ -26,7 +28,14 @@ public class Tab2Fragment extends BaseFragment {
     protected void onMounted() {
         FragmentManager fragmentManager = getFragmentManager();
         if (fragmentManager != null) {
-            FragmentUtils.add(fragmentManager, StartTrackFragment.newInstance(), R.id.fragment_container);
+            FragmentUtils.add(fragmentManager, startTrackFragment = StartTrackFragment.newInstance(), R.id.fragment_container);
+        }
+    }
+
+    @Override
+    protected void loadData() {
+        if (startTrackFragment != null) {
+            startTrackFragment.initData();
         }
     }
 }

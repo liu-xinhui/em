@@ -1,6 +1,8 @@
 package com.powershare.etm.util;
 
 
+import com.powershare.etm.bean.TripParam;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,13 +14,17 @@ public class GlobalValue {
     //已经追踪的里程（m)
     @Getter
     @Setter
-    private static int trackMileage = 50000;
+    private static int trackMileage = 500000;
     //是否已经开始跳转到登录页面，防止重复跳转登录页
     private static long lastToLoginTime;
+    //当前追踪的参数
+    @Getter
+    @Setter
+    private static TripParam tripParam;
 
     public static void setTracking(boolean tracking) {
         GlobalValue.tracking = tracking;
-        GlobalValue.trackMileage = 50000;
+        GlobalValue.trackMileage = 500000;
     }
 
     public static String getTrackMileageKm() {

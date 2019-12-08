@@ -15,6 +15,7 @@ import com.powershare.etm.bean.TripParam;
 import com.powershare.etm.bean.TripPoint;
 import com.powershare.etm.bean.TripSoc;
 import com.powershare.etm.databinding.FragmentStartTrackBinding;
+import com.powershare.etm.event.RefreshTrackEvent;
 import com.powershare.etm.event.StartTrackEvent;
 import com.powershare.etm.ui.base.BaseFragment;
 import com.powershare.etm.util.AMapUtil;
@@ -33,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StartTrackFragment extends BaseFragment {
-
     private FragmentStartTrackBinding binding;
     private TrackViewModel trackViewModel;
     private CarViewModel carViewModel;
@@ -102,10 +102,14 @@ public class StartTrackFragment extends BaseFragment {
         binding.recentTrackBg.setOnClickListener(v -> go(TrackListActivity.class));
     }
 
-    @Override
-    protected void loadData() {
+    void initData() {
         getCarListData();
         getTemp();
+        getLastTrack(null);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getLastTrack(RefreshTrackEvent event) {
         trackViewModel.getLastTrip().observe(this, new MyObserver<Trip>() {
             @Override
             public void onSuccess(Trip trip) {
@@ -230,6 +234,7 @@ public class StartTrackFragment extends BaseFragment {
             trackViewModel.startTrack(param).observe(StartTrackFragment.this, new MyObserver<TripSoc>() {
                 @Override
                 public void onSuccess(TripSoc o) {
+                    GlobalValue.setTripParam(param);
                     FragmentManager fragmentManager = getFragmentManager();
                     if (fragmentManager != null) {
                         FragmentUtils.add(fragmentManager, TrackingFragment.newInstance(), R.id.fragment_container);

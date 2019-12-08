@@ -242,11 +242,11 @@ public class PredictActivity extends BaseActivity {
                 String distance = AMapUtil.mToKm(dis);
                 String hour = AMapUtil.secondToHour(dur);
                 items.add(distance + ",km,总里程");
-                items.add(predictCharge.getEnergy() + ",kwh,消耗电量");
+                items.add(AMapUtil.formatDouble(predictCharge.getEnergy()) + ",kwh,消耗电量");
                 items.add(hour + ",H,行驶时间");
                 items.add(AMapUtil.speed(distance, hour) + ",KM/H,平均速度");
-                items.add(predictCharge.getRmbPublich() + ",RMB,充电成本（公共充电）");
-                items.add(predictCharge.getRmbPrivate() + ",RMB,充电成本（私人充电）");
+                items.add(AMapUtil.formatDouble(predictCharge.getRmbPublich()) + ",RMB,充电成本（公共充电）");
+                items.add(AMapUtil.formatDouble(predictCharge.getRmbPrivate()) + ",RMB,充电成本（私人充电）");
                 binding.infoContainer.removeAllViews();
                 for (String item : items) {
                     String[] itemArr = item.split(",");

@@ -23,4 +23,6 @@ public class TripParam implements Serializable {
 
     //终点
     private TripPoint destPoint;
+
+    private boolean isWarned;
 }

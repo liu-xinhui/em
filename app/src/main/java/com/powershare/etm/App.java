@@ -20,7 +20,6 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         app = this;
-        keepAlive();
         //Bugtags
         BugtagsOptions options = new BugtagsOptions.Builder().
                 trackingBackgroundCrash(true).
@@ -33,11 +32,11 @@ public class App extends Application {
         Bugtags.start("439fc09d99d5cafd8d09f5d8f29e35a4", this, Bugtags.BTGInvocationEventBubble, options);
     }
 
-    private void keepAlive() {
+    public void startKeepAlive() {
         Cactus.getInstance()
                 .isDebug(true)
-                .hideNotification(false)
-                .hideNotificationAfterO(false)
+                .hideNotification(true)
+                .hideNotificationAfterO(true)
                 .addCallback(new CactusCallback() {
                     @Override
                     public void doWork(int times) {
@@ -50,5 +49,9 @@ public class App extends Application {
                     }
                 })
                 .register(this);
+    }
+
+    public void stopKeepAlive() {
+        Cactus.getInstance().unregister(this);
     }
 }

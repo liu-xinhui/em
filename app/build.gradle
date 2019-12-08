@@ -71,7 +71,7 @@ dependencies {
     //https://github.com/JavaNoober/BackgroundLibrary
     implementation 'com.noober.background:core:1.6.1'
     //https://github.com/Blankj/AndroidUtilCode
-    implementation 'com.blankj:utilcodex:1.25.9'
+    implementation 'com.blankj:utilcodex:1.26.0'
     implementation 'com.squareup.retrofit2:retrofit:2.6.2'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.2'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.2.2'
@@ -89,7 +89,7 @@ dependencies {
     //https://github.com/wenchaosong/Banner
     implementation 'com.ms:Banner-androidx:2.3.20'
     //https://github.com/youlookwhat/ByRecyclerView
-    implementation 'com.github.youlookwhat:ByRecyclerView:1.0.8'
+    implementation 'com.github.youlookwhat:ByRecyclerView:1.0.10'
     //高德地图
     //noinspection GradleDependency
     //implementation 'com.amap.api:3dmap:latest.integration'

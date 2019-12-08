@@ -13,6 +13,7 @@ import com.powershare.etm.bean.MatchingDegree;
 import com.powershare.etm.bean.TotalTrip;
 import com.powershare.etm.bean.Trip;
 import com.powershare.etm.databinding.FragmentTab1Binding;
+import com.powershare.etm.event.RefreshTrackEvent;
 import com.powershare.etm.event.StartTrackEvent;
 import com.powershare.etm.ui.MainActivity;
 import com.powershare.etm.ui.base.BaseFragment;
@@ -27,6 +28,8 @@ import com.powershare.etm.vm.TrackViewModel;
 import com.qmuiteam.qmui.widget.QMUITabSegment;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -212,6 +215,16 @@ public class Tab1Fragment extends BaseFragment {
     protected void loadData() {
         getCarListData();
         getTemp();
+        getLastAndTotalTrack(null);
+    }
+
+    @Override
+    protected boolean useEventBus() {
+        return true;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void getLastAndTotalTrack(RefreshTrackEvent event) {
         trackViewModel.getLastTrip().observe(this, new MyObserver<Trip>() {
             @Override
             public void onSuccess(Trip trip) {
@@ -249,7 +262,7 @@ public class Tab1Fragment extends BaseFragment {
         if (mTotalTrip == null) {
             return;
         }
-        if (mTotalTrip.getTotalTimes() >= 2) {
+        if (mTotalTrip.getTotalTimes() >= 20) {
             binding.trackCountNeed.setText("该车与您的匹配度");
             CarModel currentCar = carModelList.get(currentCarIndex);
             carViewModel.getMatchingDegree(currentCar.getId()).observe(Tab1Fragment.this, new MyObserver<MatchingDegree>() {

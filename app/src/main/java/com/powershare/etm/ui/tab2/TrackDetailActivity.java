@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProviders;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.UiSettings;
-import com.amap.api.services.route.DrivePath;
 import com.blankj.utilcode.util.CollectionUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SizeUtils;
@@ -21,7 +20,6 @@ import com.powershare.etm.bean.Trip;
 import com.powershare.etm.bean.TripPoint;
 import com.powershare.etm.databinding.ActivityTrackDetailBinding;
 import com.powershare.etm.ui.base.BaseActivity;
-import com.powershare.etm.ui.route.DrivingRouteOverlay;
 import com.powershare.etm.ui.route.TrackDetailOverlay;
 import com.powershare.etm.util.AMapUtil;
 import com.powershare.etm.util.CommonUtil;
@@ -81,7 +79,7 @@ public class TrackDetailActivity extends BaseActivity {
     }
 
     private void initTopBar() {
-        binding.topBar.setTitle("行程预测详情");
+        binding.topBar.setTitle("行程追踪详情");
         binding.topBar.setBackgroundAlpha(1);
         binding.topBar.addLeftBackImageButton().setOnClickListener(v -> finish());
     }
@@ -135,11 +133,11 @@ public class TrackDetailActivity extends BaseActivity {
                 String distance = AMapUtil.formatDouble(trip.getMileage());
                 String hour = AMapUtil.formatDouble(trip.getDuration());
                 items.add(distance + ",km,总里程");
-                items.add(trip.getEnergy() + ",kwh,消耗电量");
+                items.add(AMapUtil.formatDouble(trip.getEnergy()) + ",kwh,消耗电量");
                 items.add(hour + ",H,行驶时间");
                 items.add(AMapUtil.formatDouble(trip.getAvSpeed()) + ",KM/H,平均速度");
-                items.add(trip.getRmbPublich() + ",RMB,充电成本（公共充电）");
-                items.add(trip.getRmbPrivate() + ",RMB,充电成本（私人充电）");
+                items.add(AMapUtil.formatDouble(trip.getRmbPublich()) + ",RMB,充电成本（公共充电）");
+                items.add(AMapUtil.formatDouble(trip.getRmbPrivate()) + ",RMB,充电成本（私人充电）");
                 binding.infoContainer.removeAllViews();
                 for (String item : items) {
                     String[] itemArr = item.split(",");

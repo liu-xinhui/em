@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.blankj.utilcode.constant.PermissionConstants;
+import com.blankj.utilcode.util.NotificationUtils;
+import com.blankj.utilcode.util.PermissionUtils;
 import com.powershare.etm.R;
 import com.powershare.etm.adapter.MyPagerAdapter;
 import com.powershare.etm.component.MyDialog;
@@ -17,6 +19,7 @@ import com.powershare.etm.ui.tab1.Tab1Fragment;
 import com.powershare.etm.ui.tab2.Tab2Fragment;
 import com.powershare.etm.ui.tab3.Tab3Fragment;
 import com.powershare.etm.ui.tab4.Tab4Fragment;
+import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.LocationUtils;
 import com.powershare.etm.util.PermissionHelper;
 import com.qmuiteam.qmui.widget.QMUITabSegment;
