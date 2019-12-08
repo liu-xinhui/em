@@ -104,4 +104,6 @@ dependencies {
     //https://work.bugtags.cn
     //noinspection GradleDependency
     implementation 'com.bugtags.library:bugtags-lib:latest.integration'
+    //https://github.com/greenrobot/EventBus
+    implementation 'org.greenrobot:eventbus:3.1.1'
 }

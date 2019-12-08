@@ -9,9 +9,12 @@ import androidx.lifecycle.ViewModelProviders;
 import com.blankj.utilcode.util.CollectionUtils;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.CarModel;
+import com.powershare.etm.bean.MatchingDegree;
 import com.powershare.etm.bean.TotalTrip;
 import com.powershare.etm.bean.Trip;
 import com.powershare.etm.databinding.FragmentTab1Binding;
+import com.powershare.etm.event.StartTrackEvent;
+import com.powershare.etm.ui.MainActivity;
 import com.powershare.etm.ui.base.BaseFragment;
 import com.powershare.etm.ui.tab2.TrackListActivity;
 import com.powershare.etm.util.AMapUtil;
@@ -22,6 +25,8 @@ import com.powershare.etm.vm.AMapViewModel;
 import com.powershare.etm.vm.CarViewModel;
 import com.powershare.etm.vm.TrackViewModel;
 import com.qmuiteam.qmui.widget.QMUITabSegment;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -34,6 +39,7 @@ public class Tab1Fragment extends BaseFragment {
 
     private List<CarModel> carModelList;
     private int currentCarIndex;
+    private TotalTrip mTotalTrip;
 
     public static Tab1Fragment newInstance() {
         return new Tab1Fragment();
@@ -61,6 +67,9 @@ public class Tab1Fragment extends BaseFragment {
         initProgressTemperature();
         initPreNext();
         binding.startTrack.setOnClickListener(v -> PermissionHelper.getLocPermission(() -> {
+            MainActivity mainActivity = (MainActivity) activity;
+            mainActivity.selectTab(1);
+            EventBus.getDefault().post(new StartTrackEvent());
         }));
     }
 
@@ -110,6 +119,7 @@ public class Tab1Fragment extends BaseFragment {
                         binding.pre.setVisibility(View.GONE);
                         binding.next.setVisibility(View.GONE);
                         binding.bannerNav.setVisibility(View.GONE);
+                        getMatchingDegree();
                         break;
                     case 2:
                         binding.progressCar.setVisibility(View.INVISIBLE);
@@ -217,10 +227,12 @@ public class Tab1Fragment extends BaseFragment {
         trackViewModel.getTotalTrip().observe(this, new MyObserver<TotalTrip>() {
             @Override
             public void onSuccess(TotalTrip totalTrip) {
+                mTotalTrip = totalTrip;
                 binding.countTrackNum.setText(String.valueOf(totalTrip.getTotalTimes()));
                 binding.mileageBgValue.setText(AMapUtil.formatDouble(totalTrip.getTotalMileage()));
                 binding.timeLongBgValue.setText(AMapUtil.formatDouble(totalTrip.getTotalDuration()));
                 binding.powerBgValue.setText(AMapUtil.formatDouble(totalTrip.getTotalEnergy()));
+                getMatchingDegree();
             }
         });
     }
@@ -231,5 +243,26 @@ public class Tab1Fragment extends BaseFragment {
                 binding.progressTemperature.setProgress(20 + Float.parseFloat(temp));
             }
         }));
+    }
+
+    private void getMatchingDegree() {
+        if (mTotalTrip == null) {
+            return;
+        }
+        if (mTotalTrip.getTotalTimes() >= 2) {
+            binding.trackCountNeed.setText("该车与您的匹配度");
+            CarModel currentCar = carModelList.get(currentCarIndex);
+            carViewModel.getMatchingDegree(currentCar.getId()).observe(Tab1Fragment.this, new MyObserver<MatchingDegree>() {
+                @Override
+                public void onSuccess(MatchingDegree matchingDegree) {
+                    String degree = matchingDegree.getDegree() + "%";
+                    binding.trackCount.setText(degree);
+                    binding.carFit.setVisibility(View.VISIBLE);
+                    binding.carFit.setText(String.format("契合度%s", degree));
+                }
+            });
+        } else {
+            binding.trackCount.setText(String.valueOf(mTotalTrip.getTotalTimes()));
+        }
     }
 }

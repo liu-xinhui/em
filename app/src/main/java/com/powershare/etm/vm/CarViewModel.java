@@ -8,6 +8,7 @@ import com.blankj.utilcode.util.CollectionUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.powershare.etm.bean.ApiResult;
 import com.powershare.etm.bean.CarModel;
+import com.powershare.etm.bean.MatchingDegree;
 import com.powershare.etm.http.ApiManager;
 import com.powershare.etm.http.ApiService;
 import com.powershare.etm.util.DataCache;
@@ -25,7 +26,7 @@ public class CarViewModel extends ViewModel {
             liveData.observeForever(new MyObserver<List<CarModel>>() {
                 @Override
                 public void onSuccess(List<CarModel> result) {
-                    LogUtils.d("---------------------------------"+result.size());
+                    LogUtils.d("---------------------------------" + result.size());
                     DataCache.INSTANCE.setCarModels(result);
                 }
             });
@@ -35,5 +36,9 @@ public class CarViewModel extends ViewModel {
             liveData.setValue(ApiResult.success(carModels));
             return liveData;
         }
+    }
+
+    public LiveData<ApiResult<MatchingDegree>> getMatchingDegree(String carId) {
+        return apiService.getMatchingDegree(carId);
     }
 }

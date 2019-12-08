@@ -28,6 +28,7 @@ public class MainActivity extends BaseActivity {
     private ViewPager mViewPager;
     private QMUITabSegment mTabSegment;
     private QMUITopBarLayout mTopBar;
+    private Tab2Fragment fragment2;
 
     @Override
     protected View initContentView() {
@@ -71,7 +72,7 @@ public class MainActivity extends BaseActivity {
     private void initPagers(int currentTab) {
         ArrayList<Fragment> viewList = new ArrayList<>();
         viewList.add(Tab1Fragment.newInstance());
-        viewList.add(Tab2Fragment.newInstance());
+        viewList.add(fragment2 = Tab2Fragment.newInstance());
         viewList.add(Tab3Fragment.newInstance());
         viewList.add(Tab4Fragment.newInstance());
         mViewPager.setOffscreenPageLimit(4);
@@ -108,5 +109,9 @@ public class MainActivity extends BaseActivity {
                 .addTab(tab4);
         mTabSegment.notifyDataChanged();
         mTabSegment.setupWithViewPager(mViewPager, false);
+    }
+
+    public void selectTab(int tabIndex) {
+        mTabSegment.selectTab(tabIndex);
     }
 }

@@ -15,14 +15,19 @@ import com.powershare.etm.bean.TripParam;
 import com.powershare.etm.bean.TripPoint;
 import com.powershare.etm.bean.TripSoc;
 import com.powershare.etm.databinding.FragmentStartTrackBinding;
+import com.powershare.etm.event.StartTrackEvent;
 import com.powershare.etm.ui.base.BaseFragment;
 import com.powershare.etm.util.AMapUtil;
 import com.powershare.etm.util.CommonUtil;
+import com.powershare.etm.util.GlobalValue;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.vm.AMapViewModel;
 import com.powershare.etm.vm.CarViewModel;
 import com.powershare.etm.vm.TrackViewModel;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,72 +98,7 @@ public class StartTrackFragment extends BaseFragment {
         };
         binding.tempSelect.setOnClickListener(tempSelect);
         //开启手动追踪
-        binding.startTrack.setOnClickListener(view -> {
-            binding.startTrack.showLoading();
-            //车型
-            CarModel carModel = (CarModel) binding.banner.getTag();
-            if (carModel == null) {
-                CommonUtil.showErrorToast("未选择车型");
-                return;
-            }
-            //电量
-            int powerProgress = binding.carModelPowerBar.getProgress();
-            int power = 10;
-            switch (powerProgress) {
-                case 0:
-                    power = 10;
-                    break;
-                case 25:
-                    power = 15;
-                    break;
-                case 50:
-                    power = 20;
-                    break;
-                case 75:
-                    power = 25;
-                    break;
-                case 100:
-                    power = 30;
-                    break;
-            }
-            //温度
-            String temp = binding.tempValue.getText().toString();
-            TripParam param = new TripParam();
-            param.setCarModelId(carModel.getId());
-            param.setTemperature(Integer.parseInt(temp));
-            param.setWarningLevel(power);
-            //当前位置
-            mapViewModel.currentLoc().observe(this, aMapLocation -> {
-                if (aMapLocation.getErrorCode() != 0) {
-                    CommonUtil.showErrorToast("定位失败");
-                    binding.startTrack.hideLoading();
-                    return;
-                }
-                TripPoint startPoint = new TripPoint();
-                startPoint.setTimestamp(System.currentTimeMillis());
-                startPoint.setLatitude(aMapLocation.getLatitude());
-                startPoint.setLongitude(aMapLocation.getLongitude());
-                startPoint.setSpeed(aMapLocation.getSpeed());
-                startPoint.setMileage(0);
-                startPoint.setAddress(aMapLocation.getAddress());
-                startPoint.setAg(aMapLocation.getBearing());
-                param.setStartPoint(startPoint);
-                trackViewModel.startTrack(param).observe(StartTrackFragment.this, new MyObserver<TripSoc>() {
-                    @Override
-                    public void onSuccess(TripSoc o) {
-                        FragmentManager fragmentManager = getFragmentManager();
-                        if (fragmentManager != null) {
-                            FragmentUtils.add(fragmentManager, TrackingFragment.newInstance(), R.id.fragment_container);
-                        }
-                    }
-
-                    @Override
-                    public void onFinish() {
-                        binding.startTrack.hideLoading();
-                    }
-                });
-            });
-        });
+        binding.startTrack.setOnClickListener(view -> startTrack(null));
         binding.recentTrackBg.setOnClickListener(v -> go(TrackListActivity.class));
     }
 
@@ -233,4 +173,79 @@ public class StartTrackFragment extends BaseFragment {
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void startTrack(StartTrackEvent event) {
+        if (GlobalValue.isTracking()) {
+            return;
+        }
+        binding.startTrack.showLoading();
+        //车型
+        CarModel carModel = (CarModel) binding.banner.getTag();
+        if (carModel == null) {
+            CommonUtil.showErrorToast("未选择车型");
+            return;
+        }
+        //电量
+        int powerProgress = binding.carModelPowerBar.getProgress();
+        int power = 10;
+        switch (powerProgress) {
+            case 0:
+                power = 10;
+                break;
+            case 25:
+                power = 15;
+                break;
+            case 50:
+                power = 20;
+                break;
+            case 75:
+                power = 25;
+                break;
+            case 100:
+                power = 30;
+                break;
+        }
+        //温度
+        String temp = binding.tempValue.getText().toString();
+        TripParam param = new TripParam();
+        param.setCarModelId(carModel.getId());
+        param.setTemperature(Integer.parseInt(temp));
+        param.setWarningLevel(power);
+        //当前位置
+        mapViewModel.currentLoc().observe(this, aMapLocation -> {
+            if (aMapLocation.getErrorCode() != 0) {
+                CommonUtil.showErrorToast("定位失败");
+                binding.startTrack.hideLoading();
+                return;
+            }
+            TripPoint startPoint = new TripPoint();
+            startPoint.setTimestamp(System.currentTimeMillis());
+            startPoint.setLatitude(aMapLocation.getLatitude());
+            startPoint.setLongitude(aMapLocation.getLongitude());
+            startPoint.setSpeed(aMapLocation.getSpeed());
+            startPoint.setMileage(0);
+            startPoint.setAddress(aMapLocation.getAddress());
+            startPoint.setAg(aMapLocation.getBearing());
+            param.setStartPoint(startPoint);
+            trackViewModel.startTrack(param).observe(StartTrackFragment.this, new MyObserver<TripSoc>() {
+                @Override
+                public void onSuccess(TripSoc o) {
+                    FragmentManager fragmentManager = getFragmentManager();
+                    if (fragmentManager != null) {
+                        FragmentUtils.add(fragmentManager, TrackingFragment.newInstance(), R.id.fragment_container);
+                    }
+                }
+
+                @Override
+                public void onFinish() {
+                    binding.startTrack.hideLoading();
+                }
+            });
+        });
+    }
+
+    @Override
+    protected boolean useEventBus() {
+        return true;
+    }
 }

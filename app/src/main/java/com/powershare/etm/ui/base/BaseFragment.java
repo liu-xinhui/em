@@ -12,6 +12,8 @@ import androidx.fragment.app.Fragment;
 
 import com.blankj.utilcode.util.LogUtils;
 
+import org.greenrobot.eventbus.EventBus;
+
 import lombok.Setter;
 
 
@@ -32,6 +34,9 @@ public abstract class BaseFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         activity = (BaseActivity) getActivity();
+        if (useEventBus()) {
+            EventBus.getDefault().register(this);
+        }
         createViewModel();
         onMounted();
     }
@@ -76,5 +81,15 @@ public abstract class BaseFragment extends Fragment {
         activity.hideLoading();
     }
 
+    protected boolean useEventBus() {
+        return false;
+    }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (useEventBus()) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
 }

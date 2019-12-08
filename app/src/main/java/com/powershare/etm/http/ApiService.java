@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData;
 
 import com.powershare.etm.bean.ApiResult;
 import com.powershare.etm.bean.CarModel;
+import com.powershare.etm.bean.MatchingDegree;
 import com.powershare.etm.bean.PredictCharge;
 import com.powershare.etm.bean.TotalTrip;
 import com.powershare.etm.bean.Trip;
@@ -31,6 +32,10 @@ public interface ApiService {
     //车辆列表
     @POST("carModel/list")
     LiveData<ApiResult<List<CarModel>>> carList();
+
+    //锲合度
+    @POST("carModel/getMatchingDegree")
+    LiveData<ApiResult<MatchingDegree>> getMatchingDegree(@Query("id") String carId);
 
     //行程预测
     @POST("trip/predict")
