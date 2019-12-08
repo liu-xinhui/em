@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Electrify Me</string>
+    <string name="app_name">ElectrifyMe</string>
 
     <string name="title_tab1">数据面板</string>
     <string name="title_tab2">行程追踪</string>

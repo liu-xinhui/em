@@ -9,12 +9,18 @@ import androidx.lifecycle.ViewModelProviders;
 import com.blankj.utilcode.util.CollectionUtils;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.CarModel;
+import com.powershare.etm.bean.TotalTrip;
+import com.powershare.etm.bean.Trip;
 import com.powershare.etm.databinding.FragmentTab1Binding;
 import com.powershare.etm.ui.base.BaseFragment;
+import com.powershare.etm.ui.tab2.TrackListActivity;
+import com.powershare.etm.util.AMapUtil;
 import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.util.PermissionHelper;
+import com.powershare.etm.vm.AMapViewModel;
 import com.powershare.etm.vm.CarViewModel;
+import com.powershare.etm.vm.TrackViewModel;
 import com.qmuiteam.qmui.widget.QMUITabSegment;
 
 import java.util.List;
@@ -22,8 +28,9 @@ import java.util.List;
 public class Tab1Fragment extends BaseFragment {
 
     private FragmentTab1Binding binding;
-    private Tab1ViewModel tab1ViewModel;
     private CarViewModel carViewModel;
+    private TrackViewModel trackViewModel;
+    private AMapViewModel mapViewModel;
 
     private List<CarModel> carModelList;
     private int currentCarIndex;
@@ -40,8 +47,9 @@ public class Tab1Fragment extends BaseFragment {
 
     @Override
     protected void createViewModel() {
-        tab1ViewModel = ViewModelProviders.of(this).get(Tab1ViewModel.class);
+        trackViewModel = ViewModelProviders.of(this).get(TrackViewModel.class);
         carViewModel = ViewModelProviders.of(activity).get(CarViewModel.class);
+        mapViewModel = ViewModelProviders.of(activity).get(AMapViewModel.class);
     }
 
     @Override
@@ -51,10 +59,8 @@ public class Tab1Fragment extends BaseFragment {
         binding.progressCar.showAnimation(100, 500);
         initTabs();
         initProgressTemperature();
-        getCarListData();
         initPreNext();
         binding.startTrack.setOnClickListener(v -> PermissionHelper.getLocPermission(() -> {
-
         }));
     }
 
@@ -133,11 +139,13 @@ public class Tab1Fragment extends BaseFragment {
 
             }
         });
+        binding.recentTrackBg.setOnClickListener(v -> go(TrackListActivity.class));
+        binding.countTrackBg.setOnClickListener(v -> go(TrackListActivity.class));
     }
 
     private void initProgressTemperature() {
-        binding.progressTemperature.setMax(60);
-        binding.progressTemperature.setProgress(20);
+        binding.progressTemperature.setMax(70);
+        binding.progressTemperature.setProgress(20 + 20);
         binding.progressTemperature.setDraggingEnabled(true);
     }
 
@@ -188,5 +196,40 @@ public class Tab1Fragment extends BaseFragment {
                 binding.banner.setBitmapUrls(null);
             }
         }
+    }
+
+    @Override
+    protected void loadData() {
+        getCarListData();
+        getTemp();
+        trackViewModel.getLastTrip().observe(this, new MyObserver<Trip>() {
+            @Override
+            public void onSuccess(Trip trip) {
+                if (trip != null) {
+                    binding.recentTrackStartText.setText(trip.getStartAddress());
+                    binding.recentTrackEndText.setText(trip.getDestAddress());
+                } else {
+                    binding.recentTrackStartText.setText("您最近暂无行程");
+                    binding.recentTrackEndText.setText("您最近暂无行程");
+                }
+            }
+        });
+        trackViewModel.getTotalTrip().observe(this, new MyObserver<TotalTrip>() {
+            @Override
+            public void onSuccess(TotalTrip totalTrip) {
+                binding.countTrackNum.setText(String.valueOf(totalTrip.getTotalTimes()));
+                binding.mileageBgValue.setText(AMapUtil.formatDouble(totalTrip.getTotalMileage()));
+                binding.timeLongBgValue.setText(AMapUtil.formatDouble(totalTrip.getTotalDuration()));
+                binding.powerBgValue.setText(AMapUtil.formatDouble(totalTrip.getTotalEnergy()));
+            }
+        });
+    }
+
+    private void getTemp() {
+        mapViewModel.currentLoc().observe(activity, location -> mapViewModel.temp(location.getCity()).observe(activity, temp -> {
+            if (!"none".equals(temp)) {
+                binding.progressTemperature.setProgress(20 + Float.parseFloat(temp));
+            }
+        }));
     }
 }

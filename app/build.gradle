@@ -31,7 +31,7 @@ android {
             signingConfig signingConfigs.release
         }
         debug {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
@@ -50,13 +50,22 @@ android {
     }
 }
 
+//应用 Bugtags 插件
+apply plugin: 'com.bugtags.library.plugin'
+
+//Bugtags 插件配置
+bugtags {
+    //自动上传符号表功能配置，如果需要根据 build varint 配置，请参考帮助中心->符号表->Android 符号表->配置自动上传符号表
+    appKey "439fc09d99d5cafd8d09f5d8f29e35a4"  //这里是你的 appKey
+    appSecret "0883cfca14c84187b792aee23a7bcf31"   //这里是你的 appSecret，管理员在设置页可以查看
+    mappingUploadEnabled true
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'androidx.navigation:navigation-fragment:2.1.0'
-    implementation 'androidx.navigation:navigation-ui:2.1.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
 
     //https://github.com/JavaNoober/BackgroundLibrary
@@ -83,7 +92,7 @@ dependencies {
     implementation 'com.github.youlookwhat:ByRecyclerView:1.0.8'
     //高德地图
     //noinspection GradleDependency
-    implementation 'com.amap.api:3dmap:latest.integration'
+    //implementation 'com.amap.api:3dmap:latest.integration'
     //noinspection GradleDependency
     implementation 'com.amap.api:search:latest.integration'
     //noinspection GradleDependency
@@ -92,4 +101,7 @@ dependencies {
     implementation 'com.amap.api:navi-3dmap:latest.integration'
     //https://github.com/gyf-dev/Cactus
     implementation 'com.gyf.cactus:cactus:1.1.3-beta01'
+    //https://work.bugtags.cn
+    //noinspection GradleDependency
+    implementation 'com.bugtags.library:bugtags-lib:latest.integration'
 }

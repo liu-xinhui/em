@@ -17,5 +17,5 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         tools:layoutManager="LinearLayoutManager"
-        tools:listitem="@layout/item_car" />
+        tools:listitem="@layout/item_track_history" />
 </LinearLayout>

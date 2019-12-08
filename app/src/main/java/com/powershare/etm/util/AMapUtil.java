@@ -50,4 +50,9 @@ public class AMapUtil {
         DecimalFormat numF = new DecimalFormat("##0.0");
         return numF.format(src);
     }
+
+    public static String formatDouble(double src) {
+        DecimalFormat numF = new DecimalFormat("##0.0");
+        return numF.format(src);
+    }
 }

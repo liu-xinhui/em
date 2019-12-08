@@ -82,7 +82,6 @@ public class Tab4Fragment extends BaseFragment {
             @Override
             public void onSuccess(List<CarModel> carModels) {
                 adapter.setNewData(carModels);
-                adapter.notifyDataSetChanged();
             }
 
             @Override

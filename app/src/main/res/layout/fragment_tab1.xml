@@ -155,14 +155,16 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tabs" />
 
+        <!--第1个框框-->
         <com.noober.background.view.BLView
             android:id="@+id/recent_track_bg"
             android:layout_width="match_parent"
-            android:layout_height="125dp"
+            android:layout_height="0dp"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="30dp"
             app:bl_corners_radius="5dp"
             app:bl_solid_color="@color/backgroundLite"
+            app:layout_constraintBottom_toBottomOf="@id/recent_track_end_text"
             app:layout_constraintTop_toBottomOf="@+id/start_track" />
 
         <com.noober.background.view.BLView
@@ -207,12 +209,14 @@
 
         <TextView
             android:id="@+id/recent_track_start_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
-            android:text="上海市黄浦区南京东路"
+            android:layout_marginEnd="15dp"
+            android:text="---"
             app:layout_constraintBottom_toBottomOf="@id/recent_track_start"
             app:layout_constraintLeft_toRightOf="@id/recent_track_start"
+            app:layout_constraintRight_toRightOf="@id/recent_track_bg"
             app:layout_constraintTop_toTopOf="@id/recent_track_start"
             app:layout_constraintVertical_bias="0.5" />
 
@@ -227,13 +231,16 @@
 
         <TextView
             android:id="@+id/recent_track_end_text"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
+            android:layout_marginEnd="15dp"
             android:layout_marginBottom="10dp"
-            android:text="上海市嘉定区槎溪路"
+            android:paddingBottom="15dp"
+            android:text="---"
             app:layout_constraintBottom_toBottomOf="@id/recent_track_end"
             app:layout_constraintLeft_toRightOf="@id/recent_track_end"
+            app:layout_constraintRight_toRightOf="@id/recent_track_bg"
             app:layout_constraintTop_toTopOf="@id/recent_track_end"
             app:layout_constraintVertical_bias="0.15" />
 
@@ -295,9 +302,9 @@
 
         <TextView
             android:id="@+id/count_track_num"
-            android:layout_width="51dp"
-            android:layout_height="36dp"
-            android:text="172"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="---"
             android:textColor="@color/colorAccent"
             android:textSize="30dp"
             app:layout_constraintBottom_toBottomOf="@id/count_track_bg"
@@ -371,7 +378,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="9dp"
-            android:text="99999"
+            android:text="---"
             android:textColor="#ffe1fbfc"
             android:textSize="18dp"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -410,7 +417,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="9dp"
-            android:text="8888"
+            android:text="---"
             android:textColor="#ffe1fbfc"
             android:textSize="18dp"
             app:layout_constraintHorizontal_chainStyle="packed"
@@ -449,7 +456,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="9dp"
-            android:text="7777"
+            android:text="---"
             android:textColor="#ffe1fbfc"
             android:textSize="18dp"
             app:layout_constraintHorizontal_chainStyle="packed"

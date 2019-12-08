@@ -89,7 +89,7 @@ public class Tab3Fragment extends BaseFragment {
         binding.tempCurrent.setOnClickListener(view -> getTemp());
         View.OnClickListener tempSelect = view -> {
             QMUIBottomSheet.BottomListSheetBuilder builder = new QMUIBottomSheet.BottomListSheetBuilder(activity);
-            for (int i = -20; i <= 40; i++) {
+            for (int i = -20; i <= 50; i++) {
                 builder.addItem(i + "℃");
             }
             builder.setOnSheetItemClickListener((dialog, itemView, position, tag) -> {

@@ -8,8 +8,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.blankj.utilcode.util.ActivityUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.powershare.etm.bean.ApiResult;
 import com.powershare.etm.ui.login.LoginActivity;
+import com.powershare.etm.util.GlobalValue;
 import com.powershare.etm.util.UserCache;
 
 import java.lang.reflect.Type;
@@ -54,9 +56,10 @@ public class LiveDataCallAdapter<T> implements CallAdapter<ApiResult<T>, LiveDat
                     if (result.getStatus().equals(403)) {
                         UserCache.clear();
                         Activity topActivity = ActivityUtils.getTopActivity();
-                        if (!(topActivity instanceof LoginActivity)) {
+                        if (GlobalValue.isNeedGotoLogin() && !(topActivity instanceof LoginActivity)) {
                             topActivity.startActivity(new Intent(topActivity, LoginActivity.class));
                             liveData.postValue(ApiResult.error("请登录"));
+                            ActivityUtils.finishAllActivities(true);
                         }
                     } else {
                         liveData.postValue(result.error());

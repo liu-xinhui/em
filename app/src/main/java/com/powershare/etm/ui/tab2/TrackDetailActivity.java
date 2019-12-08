@@ -12,48 +12,31 @@ import androidx.lifecycle.ViewModelProviders;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.UiSettings;
-import com.amap.api.services.core.LatLonPoint;
-import com.amap.api.services.help.Tip;
-import com.amap.api.services.route.BusRouteResult;
 import com.amap.api.services.route.DrivePath;
-import com.amap.api.services.route.DriveRouteResult;
-import com.amap.api.services.route.RideRouteResult;
-import com.amap.api.services.route.RouteSearch;
-import com.amap.api.services.route.WalkRouteResult;
 import com.blankj.utilcode.util.CollectionUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.powershare.etm.R;
-import com.powershare.etm.bean.CarModel;
-import com.powershare.etm.bean.Location;
-import com.powershare.etm.bean.PredictCharge;
 import com.powershare.etm.bean.Trip;
-import com.powershare.etm.bean.TripParam;
-import com.powershare.etm.databinding.ActivityPredictBinding;
+import com.powershare.etm.bean.TripPoint;
 import com.powershare.etm.databinding.ActivityTrackDetailBinding;
-import com.powershare.etm.databinding.ActivityTrackListBinding;
 import com.powershare.etm.ui.base.BaseActivity;
 import com.powershare.etm.ui.route.DrivingRouteOverlay;
-import com.powershare.etm.ui.tab3.PredictFullActivity;
+import com.powershare.etm.ui.route.TrackDetailOverlay;
 import com.powershare.etm.util.AMapUtil;
 import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.MyObserver;
-import com.powershare.etm.vm.CarViewModel;
-import com.powershare.etm.vm.PredictViewModel;
 import com.powershare.etm.vm.TrackViewModel;
-import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.amap.api.services.route.RouteSearch.DRIVING_SINGLE_DEFAULT;
-
 public class TrackDetailActivity extends BaseActivity {
     private ActivityTrackDetailBinding binding;
     private TrackViewModel trackViewModel;
     private AMap aMap;
-    private String trickId;
 
     @Override
     protected View initContentView() {
@@ -113,72 +96,50 @@ public class TrackDetailActivity extends BaseActivity {
         initTopBar();
         //取值
         Intent intent = getIntent();
-        trickId = intent.getStringExtra("trickId");
+        String trickId = intent.getStringExtra("trickId");
         if (trickId == null) {
             CommonUtil.showErrorToast("未知错误");
             return;
         }
+        traceGet(trickId);
     }
 
     //请求后台
-    private void tracePredict(TripParam tripParam) {
-/*        trackViewModel.tracePredict(tripParam).observe(this, new MyObserver<PredictCharge>() {
+    private void traceGet(String trackId) {
+        trackViewModel.traceGet(trackId).observe(this, new MyObserver<Trip>() {
             @Override
             public void onStart() {
                 showLoading();
             }
 
             @Override
-            public void onSuccess(PredictCharge predictCharge) {
-                String powerValueStart = predictCharge.getStartSoc() + "%";
+            public void onSuccess(Trip trip) {
+                hideLoading();
+                String powerValueStart = trip.getStartSoc() + "%";
                 binding.powerValueStart.setText(powerValueStart);
                 //
-                String powerValueEnd = predictCharge.getDestSoc() + "%";
+                String powerValueEnd = trip.getDestSoc() + "%";
                 binding.powerValueEnd.setText(powerValueEnd);
                 //
-                String powerConsumption = "行程消耗" + (predictCharge.getStartSoc() - predictCharge.getDestSoc()) + "%电量";
+                String powerConsumption = "行程消耗" + (trip.getStartSoc() - trip.getDestSoc()) + "%电量";
                 binding.powerConsumption.setText(powerConsumption);
                 //提示
-                if (CollectionUtils.isEmpty(predictCharge.getChargeLocationList())) {
+                if (CollectionUtils.isEmpty(trip.getChargePoints())) {
                     binding.notice.setText("恭喜您！途中无需充电~");
                 } else {
-                    String text = "途中需要充电" + predictCharge.getChargeLocationList().size() + "次~";
+                    String text = "途中需要充电" + trip.getChargePoints().size() + "次~";
                     binding.notice.setText(text);
                 }
-                mapRoute(tripParam, predictCharge);
-            }
 
-            @Override
-            public void onError(Throwable e) {
-                super.onError(e);
-                hideLoading();
-            }
-        });*/
-    }
-
-    private void initUi(PredictCharge predictCharge, DriveRouteResult driveRouteResult) {
-        //地图
-        aMap.clear();
-        if (driveRouteResult != null && driveRouteResult.getPaths() != null) {
-            if (driveRouteResult.getPaths().size() > 0) {
-                final DrivePath drivePath = driveRouteResult.getPaths().get(0);
-                DrivingRouteOverlay drivingRouteOverlay = new DrivingRouteOverlay(this, aMap, drivePath, driveRouteResult.getStartPos(), driveRouteResult.getTargetPos(), predictCharge.getChargeLocationList());
-                drivingRouteOverlay.setNodeIconVisibility(false);//设置节点marker是否显示
-                drivingRouteOverlay.setIsColorfulline(true);//是否用颜色展示交通拥堵情况，默认true
-                drivingRouteOverlay.removeFromMap();
-                drivingRouteOverlay.addToMap();
-                drivingRouteOverlay.zoomToSpan();
-                int dis = (int) drivePath.getDistance();
-                int dur = (int) drivePath.getDuration();
                 List<String> items = new ArrayList<>();
-                String distance = AMapUtil.mToKm(dis);
-                String hour = AMapUtil.secondToHour(dur);
+                String distance = AMapUtil.formatDouble(trip.getMileage());
+                String hour = AMapUtil.formatDouble(trip.getDuration());
                 items.add(distance + ",km,总里程");
-                items.add(predictCharge.getEnergy() + ",kwh,消耗电量");
+                items.add(trip.getEnergy() + ",kwh,消耗电量");
                 items.add(hour + ",H,行驶时间");
-                items.add(AMapUtil.speed(distance, hour) + ",KM/H,平均速度");
-                items.add(predictCharge.getRmbPublich() + ",RMB,充电成本（公共充电）");
-                items.add(predictCharge.getRmbPrivate() + ",RMB,充电成本（私人充电）");
+                items.add(AMapUtil.formatDouble(trip.getAvSpeed()) + ",KM/H,平均速度");
+                items.add(trip.getRmbPublich() + ",RMB,充电成本（公共充电）");
+                items.add(trip.getRmbPrivate() + ",RMB,充电成本（私人充电）");
                 binding.infoContainer.removeAllViews();
                 for (String item : items) {
                     String[] itemArr = item.split(",");
@@ -197,11 +158,28 @@ public class TrackDetailActivity extends BaseActivity {
                     param.setMargins(margin, margin, margin, margin);
                     binding.infoContainer.addView(view, param);
                 }
-            } else if (driveRouteResult.getPaths() == null) {
-                CommonUtil.showErrorToast("无结果");
+                initMapTrack(trip);
             }
-        } else {
-            CommonUtil.showErrorToast("无结果");
+
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                hideLoading();
+            }
+        });
+    }
+
+    private void initMapTrack(Trip trip) {
+        //地图
+        aMap.clear();
+        List<TripPoint> tripPoints = trip.getTripPoints();
+        if (CollectionUtils.isEmpty(tripPoints)) {
+            return;
         }
+        LogUtils.json(tripPoints);
+        TrackDetailOverlay trackDetailOverlay = new TrackDetailOverlay(this, aMap, tripPoints, trip.getChargePoints());
+        trackDetailOverlay.removeFromMap();
+        trackDetailOverlay.addToMap();
+        trackDetailOverlay.zoomToSpan();
     }
 }

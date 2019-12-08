@@ -19,6 +19,7 @@ import android.util.TypedValue;
 import android.view.View;
 
 import com.blankj.utilcode.util.ColorUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.powershare.etm.R;
 
@@ -334,7 +335,7 @@ public class DialProgress extends View {
      * 设置当前进度
      */
     public void setProgress(int progress) {
-        this.mProgress = progress;
+        this.mProgress = Math.max(progress, 0);
         invalidate();
     }
 

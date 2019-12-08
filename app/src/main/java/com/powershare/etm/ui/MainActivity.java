@@ -42,13 +42,13 @@ public class MainActivity extends BaseActivity {
     protected void onMounted() {
         initTopBar();
         initPermissions();
-        initPagers();
 
-        int currentTab = 0;
+        int currentTab = 3;
         if (getIntent() != null) {
-            currentTab = getIntent().getIntExtra("tabIndex", 0);
+            currentTab = getIntent().getIntExtra("tabIndex", 3);
         }
-        initTabs(currentTab);
+        initPagers(currentTab);
+        initTabs();
     }
 
     private void initTopBar() {
@@ -68,7 +68,7 @@ public class MainActivity extends BaseActivity {
         }, PermissionConstants.STORAGE, PermissionConstants.LOCATION);
     }
 
-    private void initPagers() {
+    private void initPagers(int currentTab) {
         ArrayList<Fragment> viewList = new ArrayList<>();
         viewList.add(Tab1Fragment.newInstance());
         viewList.add(Tab2Fragment.newInstance());
@@ -76,9 +76,10 @@ public class MainActivity extends BaseActivity {
         viewList.add(Tab4Fragment.newInstance());
         mViewPager.setOffscreenPageLimit(4);
         mViewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), viewList));
+        mViewPager.setCurrentItem(currentTab);
     }
 
-    private void initTabs(int currentTab) {
+    private void initTabs() {
         mTabSegment.setDefaultNormalColor(ContextCompat.getColor(this, R.color.grayA6));
         mTabSegment.setDefaultSelectedColor(ContextCompat.getColor(this, R.color.colorAccent));
         QMUITabSegment.Tab tab1 = new QMUITabSegment.Tab(
@@ -107,6 +108,5 @@ public class MainActivity extends BaseActivity {
                 .addTab(tab4);
         mTabSegment.notifyDataChanged();
         mTabSegment.setupWithViewPager(mViewPager, false);
-        mTabSegment.selectTab(currentTab);
     }
 }

@@ -10,10 +10,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.blankj.utilcode.util.LogUtils;
+
+import lombok.Setter;
+
 
 public abstract class BaseFragment extends Fragment {
 
     protected BaseActivity activity;
+    @Setter
+    private boolean dataLoaded = false;
 
     protected abstract View initContentView(LayoutInflater inflater);
 
@@ -30,12 +36,27 @@ public abstract class BaseFragment extends Fragment {
         onMounted();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        LogUtils.d("onResume-" + this.getClass().getName());
+        if (!dataLoaded) {
+            dataLoaded = true;
+            LogUtils.d("loadData-" + this.getClass().getName());
+            loadData();
+        }
+    }
+
     //此处创建viewModel
     protected void createViewModel() {
     }
 
-    //此处加载数据
+    //此处加载ui
     protected void onMounted() {
+    }
+
+    //此处懒加载数据
+    protected void loadData() {
     }
 
     public void go(Class activity) {
@@ -54,4 +75,6 @@ public abstract class BaseFragment extends Fragment {
     public void hideLoading() {
         activity.hideLoading();
     }
+
+
 }

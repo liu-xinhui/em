@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.noober.background.view.BLConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/charge_info"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="15dp"
+    android:layout_marginBottom="15dp"
+    android:padding="15dp"
+    app:bl_corners_radius="5dp"
+    app:bl_solid_color="@color/backgroundLite">
+
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="2019.11.21  08:24:13"
+        android:textColor="#ffa6a6a6"
+        android:textSize="12dp"
+        app:layout_constraintLeft_toLeftOf="@id/name"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/name" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/go"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/date">
+
+        <com.noober.background.view.BLView
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            app:bl_corners_radius="10dp"
+            app:bl_solid_color="@color/colorAccent"
+            app:layout_constraintLeft_toLeftOf="@id/date"
+            app:layout_constraintTop_toBottomOf="@id/date" />
+
+        <TextView
+            android:id="@+id/start_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:text="上海市黄浦区南京西路"
+            android:textColor="#ffd3d3d3"
+            android:textSize="14dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:paddingBottom="3dp"
+            android:src="@mipmap/history_start" />
+
+        <TextView
+            android:id="@+id/start_soc"
+            android:layout_width="35dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="100%"
+            android:textColor="#ffd3d3d3"
+            android:textSize="14dp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/end"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/start">
+
+        <com.noober.background.view.BLView
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            app:bl_corners_radius="10dp"
+            app:bl_solid_color="#F44B57"
+            app:layout_constraintLeft_toLeftOf="@id/date"
+            app:layout_constraintTop_toBottomOf="@id/date" />
+
+        <TextView
+            android:id="@+id/end_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:text="上海市黄浦区南京西路"
+            android:textColor="#ffd3d3d3"
+            android:textSize="14dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:paddingBottom="3dp"
+            android:src="@mipmap/history_end" />
+
+        <TextView
+            android:id="@+id/end_soc"
+            android:layout_width="35dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:text="80%"
+            android:textColor="#ffd3d3d3"
+            android:textSize="14dp" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:background="#6C6C6C"
+        app:layout_constraintTop_toBottomOf="@id/end" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/divider">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="总里程"
+            android:textColor="#ffa6a6a6"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/mileage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="174KM"
+            android:textColor="#ffe1fbfc"
+            android:textSize="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="消耗电量"
+            android:textColor="#ffa6a6a6"
+            android:textSize="12dp" />
+
+        <TextView
+            android:id="@+id/power"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="20%"
+            android:textColor="#ffe1fbfc"
+            android:textSize="12dp" />
+    </LinearLayout>
+    <!--
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:src="@mipmap/charging_station"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="5dp"
+        android:text="-&#45;&#45;"
+        android:textColor="#e1fbfc"
+        android:textSize="16dp"
+        app:layout_constraintLeft_toRightOf="@id/icon"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="-&#45;&#45;"
+        android:textColor="#ffd3d3d3"
+        android:textSize="14dp"
+        app:layout_constraintLeft_toLeftOf="@id/name"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/name" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="26dp"
+        android:layout_marginTop="10dp"
+        android:background="#6C6C6C"
+        app:layout_constraintTop_toBottomOf="@id/address" />
+
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="-&#45;&#45;"
+        android:textColor="#fff44b57"
+        android:textSize="16dp"
+        app:layout_constraintLeft_toLeftOf="@id/address"
+        app:layout_constraintTop_toBottomOf="@id/address" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:text="元/度"
+        android:textColor="#ffa6a6a6"
+        android:textSize="12dp"
+        app:layout_constraintBaseline_toBaselineOf="@id/price"
+        app:layout_constraintLeft_toRightOf="@id/price" />-->
+</com.noober.background.view.BLConstraintLayout>
+

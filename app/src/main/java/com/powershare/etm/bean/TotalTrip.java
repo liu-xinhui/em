@@ -20,7 +20,7 @@ public class TotalTrip {
     private double totalMileage = 0;
 
     //累计时间,单位:h
-    private long totalDuration = 0;
+    private double totalDuration = 0;
 
     //平均速度,单位:km/h
     private double avSpeed = 0;

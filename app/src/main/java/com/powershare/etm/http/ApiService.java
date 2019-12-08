@@ -6,6 +6,8 @@ import androidx.lifecycle.LiveData;
 import com.powershare.etm.bean.ApiResult;
 import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.bean.PredictCharge;
+import com.powershare.etm.bean.TotalTrip;
+import com.powershare.etm.bean.Trip;
 import com.powershare.etm.bean.TripParam;
 import com.powershare.etm.bean.TripPoint;
 import com.powershare.etm.bean.TripSoc;
@@ -40,7 +42,7 @@ public interface ApiService {
 
     //行程追踪结束
     @POST("trip/stopTrace")
-    LiveData<ApiResult<String>> stopTrack(@Query("discard") CharSequence discard);
+    LiveData<ApiResult<Trip>> stopTrack(@Query("discard") CharSequence discard);
 
     //行程追踪打点
     @POST("trip/trace")
@@ -48,6 +50,17 @@ public interface ApiService {
 
     //行程列表
     @POST("trip/query")
-    LiveData<ApiResult<List<Object>>> traceQuery();
+    LiveData<ApiResult<List<Trip>>> traceQuery(@Query("page") int page, @Query("rows") int rows);
 
+    //行程列表
+    @POST("trip/get")
+    LiveData<ApiResult<Trip>> traceGet(@Query("id") String trackId);
+
+    //获取最近一次行程详情
+    @POST("trip/getLastTrip")
+    LiveData<ApiResult<Trip>> getLastTrip();
+
+    //获取行程累计信息
+    @POST("trip/getTotalTrip")
+    LiveData<ApiResult<TotalTrip>> getTotalTrip();
 }

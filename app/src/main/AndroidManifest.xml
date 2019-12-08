@@ -42,7 +42,6 @@
             android:value="4bdd58c5d486c08527879804be3f66e6" />
         <!--高德定位-->
         <service android:name="com.amap.api.location.APSService" />
-        <service android:name="com.amap.api.track.AMapTrackService" />
 
         <activity
             android:name=".ui.MainActivity"

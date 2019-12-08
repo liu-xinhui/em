@@ -5,11 +5,13 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.blankj.utilcode.util.CollectionUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.powershare.etm.bean.ApiResult;
 import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.http.ApiManager;
 import com.powershare.etm.http.ApiService;
 import com.powershare.etm.util.DataCache;
+import com.powershare.etm.util.MyObserver;
 
 import java.util.List;
 
@@ -20,10 +22,13 @@ public class CarViewModel extends ViewModel {
         List<CarModel> carModels = DataCache.INSTANCE.getCarModels();
         if (network || CollectionUtils.isEmpty(carModels)) {
             LiveData<ApiResult<List<CarModel>>> liveData = apiService.carList();
-            ApiResult<List<CarModel>> apiResult = liveData.getValue();
-            if (apiResult != null) {
-                DataCache.INSTANCE.setCarModels(apiResult.getData());
-            }
+            liveData.observeForever(new MyObserver<List<CarModel>>() {
+                @Override
+                public void onSuccess(List<CarModel> result) {
+                    LogUtils.d("---------------------------------"+result.size());
+                    DataCache.INSTANCE.setCarModels(result);
+                }
+            });
             return liveData;
         } else {
             MutableLiveData<ApiResult<List<CarModel>>> liveData = new MutableLiveData<>();

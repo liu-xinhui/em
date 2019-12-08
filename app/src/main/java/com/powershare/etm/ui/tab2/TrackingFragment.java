@@ -11,6 +11,7 @@ import com.blankj.utilcode.util.FragmentUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.powershare.etm.R;
+import com.powershare.etm.bean.Trip;
 import com.powershare.etm.bean.TripSoc;
 import com.powershare.etm.component.MyDialog;
 import com.powershare.etm.databinding.FragmentTrackingBinding;
@@ -45,12 +46,10 @@ public class TrackingFragment extends BaseFragment {
     @Override
     protected void onMounted() {
         binding.progress.setProgressColor(0xBBF44B57, 0xBBF44B57, 0xBB00F4FF, 0xBB00F4FF, 0xBB9523C5, 0xBB9523C5, 0xBBF44B57);
-        binding.progress.showAnimation(0, 1500);
+        binding.progress.setProgress(0);
         binding.cancelTrack.setOnClickListener(view -> new MyDialog.Builder(activity)
                 .setContent("确定结束追踪并放弃记录吗？")
-                .setSureListener(sureBtn -> {
-                    FragmentUtils.remove(TrackingFragment.this);
-                }).create().show());
+                .setSureListener(sureBtn -> FragmentUtils.remove(TrackingFragment.this)).create().show());
         binding.finishTrack.setOnClickListener(view -> {
             if (GlobalValue.getTrackMileage() < 1000) {
                 new MyDialog.Builder(activity)
@@ -61,42 +60,39 @@ public class TrackingFragment extends BaseFragment {
                 new MyDialog.Builder(activity)
                         .setContent("是否结束追踪？")
                         .setSureText("结束追踪")
-                        .setSureListener(sureBtn -> {
-                            trackViewModel.stopTrack("是").observe(TrackingFragment.this, new MyObserver<String>() {
-                                @Override
-                                public void onSuccess(String o) {
-                                    GlobalValue.setTracking(false);
-                                    trackViewModel.stopAddTrack();
-                                    binding.cancelTrack.setVisibility(View.GONE);
-                                    binding.finishTrack.setVisibility(View.GONE);
-                                    binding.goDetail.setVisibility(View.VISIBLE);
-                                }
-                            });
-                        }).create().show();
+                        .setSureListener(sureBtn -> trackViewModel.stopTrack("false").observe(TrackingFragment.this, new MyObserver<Trip>() {
+                            @Override
+                            public void onSuccess(Trip o) {
+                                trackViewModel.stopAddTrack();
+                                binding.cancelTrack.setVisibility(View.GONE);
+                                binding.finishTrack.setVisibility(View.GONE);
+                                binding.goDetail.setVisibility(View.VISIBLE);
+                                LogUtils.d(o.getId());
+                            }
+                        })).create().show();
             }
         });
         initGrid(new TripSoc());
         trackViewModel.getTripSoc().observe(this, new MyObserver<TripSoc>() {
             @Override
             public void onSuccess(TripSoc tripSoc) {
-                LogUtils.d("update");
+                binding.progress.setProgress(tripSoc.getSoc());
+                LogUtils.d("update", tripSoc.getSoc());
                 initGrid(tripSoc);
             }
         });
-        trackViewModel.stopAddTrack();
         trackViewModel.startAddTrack();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        GlobalValue.setTracking(false);
         trackViewModel.stopAddTrack();
     }
 
     private void initGrid(TripSoc tripSoc) {
         List<String> items = new ArrayList<>();
-        items.add(0 + ",km,总里程");
+        items.add(GlobalValue.getTrackMileageKm() + ",km,总里程");
         items.add(tripSoc.getEnergy() + ",kwh,消耗电量");
         items.add(tripSoc.getRmbPublich() + ",RMB,充电成本（公共充电）");
         items.add(tripSoc.getRmbPrivate() + ",RMB,充电成本（私人充电）");

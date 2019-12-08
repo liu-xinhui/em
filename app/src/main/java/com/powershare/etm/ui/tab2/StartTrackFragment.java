@@ -7,22 +7,17 @@ import android.widget.SeekBar;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
 import com.blankj.utilcode.util.FragmentUtils;
-import com.blankj.utilcode.util.LogUtils;
-import com.gyf.cactus.Cactus;
-import com.gyf.cactus.callback.CactusCallback;
-import com.powershare.etm.App;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.CarModel;
+import com.powershare.etm.bean.Trip;
 import com.powershare.etm.bean.TripParam;
 import com.powershare.etm.bean.TripPoint;
 import com.powershare.etm.bean.TripSoc;
 import com.powershare.etm.databinding.FragmentStartTrackBinding;
 import com.powershare.etm.ui.base.BaseFragment;
+import com.powershare.etm.util.AMapUtil;
 import com.powershare.etm.util.CommonUtil;
-import com.powershare.etm.util.GlobalValue;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.vm.AMapViewModel;
 import com.powershare.etm.vm.CarViewModel;
@@ -58,8 +53,6 @@ public class StartTrackFragment extends BaseFragment {
 
     @Override
     protected void onMounted() {
-        //车型
-        this.getCarListData();
         //电量
         binding.carModelPowerBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -68,7 +61,6 @@ public class StartTrackFragment extends BaseFragment {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
@@ -88,11 +80,10 @@ public class StartTrackFragment extends BaseFragment {
             }
         });
         //温度
-        this.getTemp();
         binding.tempCurrent.setOnClickListener(view -> getTemp());
         View.OnClickListener tempSelect = view -> {
             QMUIBottomSheet.BottomListSheetBuilder builder = new QMUIBottomSheet.BottomListSheetBuilder(activity);
-            for (int i = -20; i <= 40; i++) {
+            for (int i = -20; i <= 50; i++) {
                 builder.addItem(i + "℃");
             }
             builder.setOnSheetItemClickListener((dialog, itemView, position, tag) -> {
@@ -167,6 +158,29 @@ public class StartTrackFragment extends BaseFragment {
                     }
                 });
             });
+        });
+        binding.recentTrackBg.setOnClickListener(v -> go(TrackListActivity.class));
+    }
+
+    @Override
+    protected void loadData() {
+        getCarListData();
+        getTemp();
+        trackViewModel.getLastTrip().observe(this, new MyObserver<Trip>() {
+            @Override
+            public void onSuccess(Trip trip) {
+                if (trip != null) {
+                    binding.recentTrackGroup.setVisibility(View.VISIBLE);
+                    binding.trackEmptyWrapper.setVisibility(View.GONE);
+                    binding.recentTrackStartText.setText(trip.getStartAddress());
+                    binding.recentTrackEndText.setText(trip.getDestAddress());
+                    binding.mileageBgValue.setText(AMapUtil.formatDouble(trip.getMileage()));
+                    binding.powerBgValue.setText(AMapUtil.formatDouble(trip.getStartSoc() - trip.getDestSoc()));
+                } else {
+                    binding.recentTrackGroup.setVisibility(View.GONE);
+                    binding.trackEmptyWrapper.setVisibility(View.VISIBLE);
+                }
+            }
         });
     }
 

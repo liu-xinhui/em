@@ -288,7 +288,7 @@ public class DragCircleProgressView extends View {
             for (int i = 1; i <= 100; i++) {
                 DragCircleProgressView.this.progress = oldProgress + (validProgress - oldProgress) * (1.0f * i / 100);
                 postInvalidate();
-                SystemClock.sleep(20);
+                SystemClock.sleep(5);
             }
         }).start();
     }

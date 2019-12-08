@@ -56,8 +56,7 @@ public class LoginActivity extends BaseActivity {
                 @Override
                 public void onSuccess(User user) {
                     UserCache.save(UserCache.Field.mobile, user.getMobile());
-                    go(MainActivity.class);
-                    ActivityUtils.finishAllActivities(true);
+                    gotoMain(0);
                 }
 
                 @Override
@@ -120,10 +119,14 @@ public class LoginActivity extends BaseActivity {
 
         //跳过
         binding.skip.setOnClickListener(view -> {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.putExtra("tabIndex", 3);
-            startActivity(intent);
+            gotoMain(3);
         });
     }
 
+    private void gotoMain(int tabIndex) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("tabIndex", tabIndex);
+        startActivity(intent);
+        ActivityUtils.finishAllActivities(true);
+    }
 }
