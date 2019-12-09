@@ -116,7 +116,6 @@ public class TrackViewModel extends AndroidViewModel {
             });
         });
         mLocationClient.startLocation();
-        startMapTrack();
         App.getInstance().startKeepAlive();
     }
 
@@ -127,41 +126,7 @@ public class TrackViewModel extends AndroidViewModel {
             LogUtils.d("停止位置上传");
             mLocationClient.stopLocation();
         }
-        if (null != mAMapNavi) {
-            LogUtils.d("停止智能巡航");
-            mAMapNavi.stopAimlessMode();
-        }
         App.getInstance().stopKeepAlive();
-    }
-
-    private void startMapTrack() {
-        LogUtils.d("开始智能巡航");
-        mAMapNavi = AMapNavi.getInstance(getApplication());
-        mAMapNavi.startAimlessMode(AimLessMode.NONE_DETECTED);
-        mAMapNavi.addAimlessModeListener(new AimlessModeListener() {
-            @Override
-            public void onUpdateTrafficFacility(AMapNaviTrafficFacilityInfo[] aMapNaviTrafficFacilityInfos) {
-
-            }
-
-            @Override
-            public void onUpdateAimlessModeElecCameraInfo(AMapNaviTrafficFacilityInfo[] aMapNaviTrafficFacilityInfos) {
-
-            }
-
-            @Override
-            public void updateAimlessModeStatistics(AimLessModeStat aimLessModeStat) {
-                String log = "distance=" + aimLessModeStat.getAimlessModeDistance() + ",time=" + aimLessModeStat.getAimlessModeTime();
-                CommonUtil.showSuccessToast(log);
-                LogUtils.d(log);
-                GlobalValue.setTrackMileage(aimLessModeStat.getAimlessModeDistance());
-            }
-
-            @Override
-            public void updateAimlessModeCongestionInfo(AimLessModeCongestionInfo aimLessModeCongestionInfo) {
-
-            }
-        });
     }
 
 }

@@ -55,8 +55,6 @@ public class Tab3Fragment extends BaseFragment {
         };
         binding.recentTrackStartText.setOnClickListener(onClickListener);
         binding.recentTrackEndText.setOnClickListener(onClickListener);
-        //车型
-        this.getCarListData();
         //电量
         binding.carModelPowerBar.setProgress(100);
         binding.carModelPowerBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -66,7 +64,6 @@ public class Tab3Fragment extends BaseFragment {
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
@@ -85,8 +82,6 @@ public class Tab3Fragment extends BaseFragment {
                 }
             }
         });
-        //温度
-        this.getTemp();
         binding.tempCurrent.setOnClickListener(view -> getTemp());
         View.OnClickListener tempSelect = view -> {
             QMUIBottomSheet.BottomListSheetBuilder builder = new QMUIBottomSheet.BottomListSheetBuilder(activity);
@@ -164,6 +159,14 @@ public class Tab3Fragment extends BaseFragment {
     }
 
     @Override
+    protected void loadData() {
+        //车型
+        this.getCarListData();
+        //温度
+        this.getTemp();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1 && resultCode == 1 && data != null) {
@@ -184,7 +187,6 @@ public class Tab3Fragment extends BaseFragment {
         QMUIBottomSheet.BottomListSheetBuilder builder = new QMUIBottomSheet.BottomListSheetBuilder(activity)
                 .setOnSheetItemClickListener((dialog, itemView, position, tag) -> {
                     dialog.dismiss();
-                    binding.carModelValue.setText(tag);
                     setCurrentCar(mCarModels.get(position));
                 });
         binding.carModelSelect.setOnClickListener(view -> builder.build().show());
@@ -217,6 +219,7 @@ public class Tab3Fragment extends BaseFragment {
     private void setCurrentCar(CarModel currentCar) {
         String[] photoIds = currentCar.getPhotoIds();
         binding.banner.setTag(currentCar);
+        binding.carModelValue.setText(currentCar.getName());
         if (photoIds != null && photoIds.length > 0) {
             String[] photoUrls = new String[photoIds.length];
             for (int i = 0; i < photoIds.length; i++) {

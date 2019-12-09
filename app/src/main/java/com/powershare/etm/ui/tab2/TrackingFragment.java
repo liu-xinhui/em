@@ -9,17 +9,24 @@ import android.widget.TextView;
 
 import androidx.lifecycle.ViewModelProviders;
 
+import com.amap.api.navi.AMapNavi;
+import com.amap.api.navi.AimlessModeListener;
+import com.amap.api.navi.enums.AimLessMode;
+import com.amap.api.navi.model.AMapNaviTrafficFacilityInfo;
+import com.amap.api.navi.model.AimLessModeCongestionInfo;
+import com.amap.api.navi.model.AimLessModeStat;
 import com.blankj.utilcode.util.FragmentUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SizeUtils;
+import com.powershare.etm.App;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.Trip;
 import com.powershare.etm.bean.TripSoc;
 import com.powershare.etm.component.MyDialog;
 import com.powershare.etm.databinding.FragmentTrackingBinding;
 import com.powershare.etm.event.RefreshTrackEvent;
-import com.powershare.etm.event.StartTrackEvent;
 import com.powershare.etm.ui.base.BaseFragment;
+import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.GlobalValue;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.vm.TrackViewModel;
@@ -33,6 +40,7 @@ public class TrackingFragment extends BaseFragment {
 
     private FragmentTrackingBinding binding;
     private TrackViewModel trackViewModel;
+    private AMapNavi mAMapNavi;
 
     public static TrackingFragment newInstance() {
         return new TrackingFragment();
@@ -55,35 +63,31 @@ public class TrackingFragment extends BaseFragment {
         binding.progress.setProgress(0);
         binding.cancelTrack.setOnClickListener(view -> new MyDialog.Builder(activity)
                 .setContent("确定结束追踪并放弃记录吗？")
-                .setSureListener(sureBtn -> FragmentUtils.remove(TrackingFragment.this)).create().show());
-        binding.finishTrack.setOnClickListener(view -> {
-            if (GlobalValue.getTrackMileage() < 1000) {
-                new MyDialog.Builder(activity)
-                        .setContent("此次行程未满1KM，将不会被记录。是否结束追踪？")
-                        .setSureText("结束追踪")
-                        .setSureListener(sureBtn -> FragmentUtils.remove(TrackingFragment.this)).create().show();
-            } else {
-                new MyDialog.Builder(activity)
-                        .setContent("是否结束追踪？")
-                        .setSureText("结束追踪")
-                        .setSureListener(sureBtn -> trackViewModel.stopTrack("false").observe(TrackingFragment.this, new MyObserver<Trip>() {
-                            @Override
-                            public void onSuccess(Trip o) {
-                                EventBus.getDefault().post(new RefreshTrackEvent());
-                                trackViewModel.stopAddTrack();
-                                binding.cancelTrack.setVisibility(View.GONE);
-                                binding.finishTrack.setVisibility(View.GONE);
-                                binding.goDetail.setVisibility(View.VISIBLE);
-                                binding.goDetail.setOnClickListener(view -> {
-                                    Intent intent = new Intent(activity, TrackDetailActivity.class);
-                                    intent.putExtra("trickId", o.getId());
-                                    startActivity(intent);
-                                    new Handler().postDelayed(() -> FragmentUtils.remove(TrackingFragment.this), 1000);
-                                });
-                            }
-                        })).create().show();
-            }
-        });
+                .setSureListener(sureBtn -> trackViewModel.stopTrack("true").observe(TrackingFragment.this, new MyObserver<Trip>() {
+                    @Override
+                    public void onSuccess(Trip o) {
+                        FragmentUtils.remove(TrackingFragment.this);
+                    }
+                })).create().show());
+        binding.finishTrack.setOnClickListener(view -> new MyDialog.Builder(activity)
+                .setContent(GlobalValue.getTrackMileage() < 1000 ? "此次行程未满1KM，是否结束追踪？" : "是否结束追踪？")
+                .setSureText("结束追踪")
+                .setSureListener(sureBtn -> trackViewModel.stopTrack("false").observe(TrackingFragment.this, new MyObserver<Trip>() {
+                    @Override
+                    public void onSuccess(Trip o) {
+                        EventBus.getDefault().post(new RefreshTrackEvent());
+                        trackViewModel.stopAddTrack();
+                        binding.cancelTrack.setVisibility(View.GONE);
+                        binding.finishTrack.setVisibility(View.GONE);
+                        binding.goDetail.setVisibility(View.VISIBLE);
+                        binding.goDetail.setOnClickListener(view -> {
+                            Intent intent = new Intent(activity, TrackDetailActivity.class);
+                            intent.putExtra("trickId", o.getId());
+                            startActivity(intent);
+                            new Handler().postDelayed(() -> FragmentUtils.remove(TrackingFragment.this), 1000);
+                        });
+                    }
+                })).create().show());
         initGrid(new TripSoc());
         trackViewModel.getTripSoc().observe(this, tripSoc -> {
             binding.progress.setProgress(tripSoc.getSoc());
@@ -91,12 +95,14 @@ public class TrackingFragment extends BaseFragment {
             initGrid(tripSoc);
         });
         trackViewModel.startAddTrack();
+        startMapTrack();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         trackViewModel.stopAddTrack();
+        stopMapTrack();
     }
 
     private void initGrid(TripSoc tripSoc) {
@@ -122,6 +128,43 @@ public class TrackingFragment extends BaseFragment {
             int margin = SizeUtils.dp2px(8);
             param.setMargins(margin, margin, margin, margin);
             binding.infoContainer.addView(view, param);
+        }
+    }
+
+    private void startMapTrack() {
+        LogUtils.d("开始智能巡航");
+        mAMapNavi = AMapNavi.getInstance(activity);
+        mAMapNavi.startAimlessMode(AimLessMode.NONE_DETECTED);
+        mAMapNavi.addAimlessModeListener(new AimlessModeListener() {
+            @Override
+            public void onUpdateTrafficFacility(AMapNaviTrafficFacilityInfo[] aMapNaviTrafficFacilityInfos) {
+
+            }
+
+            @Override
+            public void onUpdateAimlessModeElecCameraInfo(AMapNaviTrafficFacilityInfo[] aMapNaviTrafficFacilityInfos) {
+
+            }
+
+            @Override
+            public void updateAimlessModeStatistics(AimLessModeStat aimLessModeStat) {
+                String log = "distance=" + aimLessModeStat.getAimlessModeDistance() + ",time=" + aimLessModeStat.getAimlessModeTime();
+                CommonUtil.showSuccessToast(log);
+                LogUtils.d(log);
+                GlobalValue.setTrackMileage(aimLessModeStat.getAimlessModeDistance());
+            }
+
+            @Override
+            public void updateAimlessModeCongestionInfo(AimLessModeCongestionInfo aimLessModeCongestionInfo) {
+
+            }
+        });
+    }
+
+    private void stopMapTrack() {
+        if (null != mAMapNavi) {
+            LogUtils.d("停止智能巡航");
+            mAMapNavi.stopAimlessMode();
         }
     }
 }

@@ -44,6 +44,6 @@ public class GlobalValue {
         long curr = System.currentTimeMillis();
         long diff = curr - lastToLoginTime;
         lastToLoginTime = curr;
-        return diff < 2000;
+        return diff > 2000;
     }
 }
