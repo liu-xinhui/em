@@ -118,15 +118,13 @@ public class LoginActivity extends BaseActivity {
         });
 
         //跳过
-        binding.skip.setOnClickListener(view -> {
-            gotoMain(3);
-        });
+        binding.skip.setOnClickListener(view -> gotoMain(3));
     }
 
     private void gotoMain(int tabIndex) {
+        ActivityUtils.finishAllActivities(true);
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("tabIndex", tabIndex);
         startActivity(intent);
-        ActivityUtils.finishAllActivities(true);
     }
 }

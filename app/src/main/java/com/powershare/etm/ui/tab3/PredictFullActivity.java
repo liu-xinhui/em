@@ -3,6 +3,7 @@ package com.powershare.etm.ui.tab3;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 
 import androidx.lifecycle.ViewModelProviders;
@@ -19,7 +20,6 @@ import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkRouteResult;
 import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.CollectionUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.bumptech.glide.Glide;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.CarModel;
@@ -101,8 +101,7 @@ public class PredictFullActivity extends BaseActivity {
         tripParam = (TripParam) intent.getSerializableExtra("tripParam");
         PredictCharge predictCharge = (PredictCharge) intent.getSerializableExtra("predictCharge");
         DriveRouteResult driveRouteResult = intent.getParcelableExtra("driveRouteResult");
-        LogUtils.d(predictCharge, driveRouteResult);
-        initUi(predictCharge, driveRouteResult);
+        new Handler().postDelayed(() -> initUi(predictCharge, driveRouteResult), 500);
         //this.tracePredict(tripParam);
         //车型点击
         getCarListData();
