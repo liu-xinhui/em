@@ -14,13 +14,14 @@ import com.blankj.utilcode.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
+import lombok.Getter;
 import lombok.Setter;
 
 
 public abstract class BaseFragment extends Fragment {
 
     protected BaseActivity activity;
-    @Setter
+    @Getter
     private boolean dataLoaded = false;
 
     protected abstract View initContentView(LayoutInflater inflater);

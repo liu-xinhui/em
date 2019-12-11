@@ -18,7 +18,6 @@ import com.amap.api.navi.model.AimLessModeStat;
 import com.blankj.utilcode.util.FragmentUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SizeUtils;
-import com.powershare.etm.App;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.Trip;
 import com.powershare.etm.bean.TripSoc;
@@ -26,7 +25,6 @@ import com.powershare.etm.component.MyDialog;
 import com.powershare.etm.databinding.FragmentTrackingBinding;
 import com.powershare.etm.event.RefreshTrackEvent;
 import com.powershare.etm.ui.base.BaseFragment;
-import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.GlobalValue;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.vm.TrackViewModel;
@@ -80,6 +78,7 @@ public class TrackingFragment extends BaseFragment {
                         binding.cancelTrack.setVisibility(View.GONE);
                         binding.finishTrack.setVisibility(View.GONE);
                         binding.goDetail.setVisibility(View.VISIBLE);
+                        binding.notice.setText("追踪结束~");
                         binding.goDetail.setOnClickListener(view -> {
                             Intent intent = new Intent(activity, TrackDetailActivity.class);
                             intent.putExtra("trickId", o.getId());
@@ -133,30 +132,28 @@ public class TrackingFragment extends BaseFragment {
 
     private void startMapTrack() {
         LogUtils.d("开始智能巡航");
+        //CommonUtil.showSuccessToast("开始智能巡航");
         mAMapNavi = AMapNavi.getInstance(activity);
-        mAMapNavi.startAimlessMode(AimLessMode.NONE_DETECTED);
+        mAMapNavi.setUseInnerVoice(false);
+        mAMapNavi.startAimlessMode(AimLessMode.CAMERA_AND_SPECIALROAD_DETECTED);
         mAMapNavi.addAimlessModeListener(new AimlessModeListener() {
             @Override
             public void onUpdateTrafficFacility(AMapNaviTrafficFacilityInfo[] aMapNaviTrafficFacilityInfos) {
-
             }
 
             @Override
             public void onUpdateAimlessModeElecCameraInfo(AMapNaviTrafficFacilityInfo[] aMapNaviTrafficFacilityInfos) {
-
             }
 
             @Override
             public void updateAimlessModeStatistics(AimLessModeStat aimLessModeStat) {
-                String log = "distance=" + aimLessModeStat.getAimlessModeDistance() + ",time=" + aimLessModeStat.getAimlessModeTime();
-                CommonUtil.showSuccessToast(log);
-                LogUtils.d(log);
+                //String log = "distance=" + aimLessModeStat.getAimlessModeDistance() + ",time=" + aimLessModeStat.getAimlessModeTime();
+                //CommonUtil.showSuccessToast(log);
                 GlobalValue.setTrackMileage(aimLessModeStat.getAimlessModeDistance());
             }
 
             @Override
             public void updateAimlessModeCongestionInfo(AimLessModeCongestionInfo aimLessModeCongestionInfo) {
-
             }
         });
     }
@@ -164,6 +161,7 @@ public class TrackingFragment extends BaseFragment {
     private void stopMapTrack() {
         if (null != mAMapNavi) {
             LogUtils.d("停止智能巡航");
+            //CommonUtil.showSuccessToast("停止智能巡航");
             mAMapNavi.stopAimlessMode();
         }
     }

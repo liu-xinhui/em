@@ -2,6 +2,7 @@ package com.powershare.etm.ui.tab3;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.GridLayout;
@@ -108,25 +109,27 @@ public class PredictActivity extends BaseActivity {
     protected void onMounted(Bundle savedInstanceState) {
         initTopBar();
         initMap(savedInstanceState);
-        //取值
-        Intent intent = getIntent();
-        tripParam = (TripParam) intent.getSerializableExtra("tripParam");
-        //起始位置
-        Tip startTip = intent.getParcelableExtra("startTip");
-        Tip endTip = intent.getParcelableExtra("endTip");
-        if (tripParam == null || startTip == null || endTip == null) {
-            CommonUtil.showErrorToast("未知错误");
-            return;
-        }
-        binding.trackStartName.setText(startTip.getName());
-        binding.trackStartAddress.setText(startTip.getAddress());
-        binding.trackEndName.setText(endTip.getName());
-        binding.trackEndAddress.setText(endTip.getAddress());
-        //车型点击
-        getCarListData();
-        //温度点击
-        getTemp();
-        this.tracePredict(tripParam);
+        new Handler().postDelayed(() -> {
+            //取值
+            Intent intent = getIntent();
+            tripParam = (TripParam) intent.getSerializableExtra("tripParam");
+            //起始位置
+            Tip startTip = intent.getParcelableExtra("startTip");
+            Tip endTip = intent.getParcelableExtra("endTip");
+            if (tripParam == null || startTip == null || endTip == null) {
+                CommonUtil.showErrorToast("未知错误");
+                return;
+            }
+            binding.trackStartName.setText(startTip.getName());
+            binding.trackStartAddress.setText(startTip.getAddress());
+            binding.trackEndName.setText(endTip.getName());
+            binding.trackEndAddress.setText(endTip.getAddress());
+            //车型点击
+            getCarListData();
+            //温度点击
+            getTemp();
+            this.tracePredict(tripParam);
+        }, 500);
     }
 
     //请求后台

@@ -133,7 +133,6 @@ public class Tab1Fragment extends BaseFragment {
                         binding.pre.setVisibility(View.GONE);
                         binding.next.setVisibility(View.GONE);
                         binding.bannerNav.setVisibility(View.GONE);
-                        getMatchingDegree();
                         break;
                     case 2:
                         binding.progressCar.setVisibility(View.INVISIBLE);
@@ -220,6 +219,7 @@ public class Tab1Fragment extends BaseFragment {
             } else {
                 binding.banner.setBitmapUrls(null);
             }
+            getMatchingDegree();
         }
     }
 
@@ -245,6 +245,9 @@ public class Tab1Fragment extends BaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getLastAndTotalTrack(RefreshTrackEvent event) {
+        if (!isDataLoaded()) {
+            return;
+        }
         trackViewModel.getLastTrip().observe(this, new MyObserver<Trip>() {
             @Override
             public void onSuccess(Trip trip) {
