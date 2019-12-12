@@ -104,10 +104,10 @@ public class StartTrackFragment extends BaseFragment {
         //开启手动追踪
         binding.startTrack.setOnClickListener(view -> startTrack(null));
         binding.recentTrackBg.setOnClickListener(v -> go(TrackListActivity.class));
+        getCarListData();
     }
 
     void initData() {
-        getCarListData();
         getTemp();
         getLastTrack(null);
     }
@@ -197,13 +197,13 @@ public class StartTrackFragment extends BaseFragment {
         if (GlobalValue.isTracking()) {
             return;
         }
-        binding.startTrack.showLoading();
         //车型
         CarModel carModel = (CarModel) binding.banner.getTag();
         if (carModel == null) {
             CommonUtil.showErrorToast("未选择车型");
             return;
         }
+        binding.startTrack.showLoading();
         //电量
         int powerProgress = binding.carModelPowerBar.getProgress();
         int power = 10;

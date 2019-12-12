@@ -75,18 +75,22 @@ public class TrackingFragment extends BaseFragment {
                     .setSureListener(sureBtn -> trackViewModel.stopTrack(isThan1Km ? "false" : "true").observe(TrackingFragment.this, new MyObserver<Trip>() {
                         @Override
                         public void onSuccess(Trip o) {
-                            EventBus.getDefault().post(new RefreshTrackEvent());
-                            trackViewModel.stopAddTrack();
-                            binding.cancelTrack.setVisibility(View.GONE);
-                            binding.finishTrack.setVisibility(View.GONE);
-                            binding.goDetail.setVisibility(View.VISIBLE);
-                            binding.notice.setText("追踪结束~");
-                            binding.goDetail.setOnClickListener(view -> {
-                                Intent intent = new Intent(activity, TrackDetailActivity.class);
-                                intent.putExtra("trickId", o.getId());
-                                startActivity(intent);
-                                new Handler().postDelayed(() -> FragmentUtils.remove(TrackingFragment.this), 1000);
-                            });
+                            if (isThan1Km) {
+                                EventBus.getDefault().post(new RefreshTrackEvent());
+                                trackViewModel.stopAddTrack();
+                                binding.cancelTrack.setVisibility(View.GONE);
+                                binding.finishTrack.setVisibility(View.GONE);
+                                binding.goDetail.setVisibility(View.VISIBLE);
+                                binding.notice.setText("追踪结束~");
+                                binding.goDetail.setOnClickListener(view -> {
+                                    Intent intent = new Intent(activity, TrackDetailActivity.class);
+                                    intent.putExtra("trickId", o.getId());
+                                    startActivity(intent);
+                                    new Handler().postDelayed(() -> FragmentUtils.remove(TrackingFragment.this), 1000);
+                                });
+                            } else {
+                                FragmentUtils.remove(TrackingFragment.this);
+                            }
                         }
                     })).create().show();
         });
