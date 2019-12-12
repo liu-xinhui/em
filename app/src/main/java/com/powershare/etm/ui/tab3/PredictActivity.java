@@ -148,7 +148,7 @@ public class PredictActivity extends BaseActivity {
                 String powerValueEnd = predictCharge.getDestSoc() + "%";
                 binding.powerValueEnd.setText(powerValueEnd);
                 //
-                String powerConsumption = "行程消耗" + (predictCharge.getStartSoc() - predictCharge.getDestSoc()) + "%电量";
+                String powerConsumption = "行程消耗" + AMapUtil.formatDouble(predictCharge.getEnergy()) + "kwh电量";
                 binding.powerConsumption.setText(powerConsumption);
                 //提示
                 if (CollectionUtils.isEmpty(predictCharge.getChargeLocationList())) {

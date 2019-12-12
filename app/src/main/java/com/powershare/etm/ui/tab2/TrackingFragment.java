@@ -67,26 +67,29 @@ public class TrackingFragment extends BaseFragment {
                         FragmentUtils.remove(TrackingFragment.this);
                     }
                 })).create().show());
-        binding.finishTrack.setOnClickListener(view -> new MyDialog.Builder(activity)
-                .setContent(GlobalValue.getTrackMileage() < 1000 ? "此次行程未满1KM，是否结束追踪？" : "是否结束追踪？")
-                .setSureText("结束追踪")
-                .setSureListener(sureBtn -> trackViewModel.stopTrack("false").observe(TrackingFragment.this, new MyObserver<Trip>() {
-                    @Override
-                    public void onSuccess(Trip o) {
-                        EventBus.getDefault().post(new RefreshTrackEvent());
-                        trackViewModel.stopAddTrack();
-                        binding.cancelTrack.setVisibility(View.GONE);
-                        binding.finishTrack.setVisibility(View.GONE);
-                        binding.goDetail.setVisibility(View.VISIBLE);
-                        binding.notice.setText("追踪结束~");
-                        binding.goDetail.setOnClickListener(view -> {
-                            Intent intent = new Intent(activity, TrackDetailActivity.class);
-                            intent.putExtra("trickId", o.getId());
-                            startActivity(intent);
-                            new Handler().postDelayed(() -> FragmentUtils.remove(TrackingFragment.this), 1000);
-                        });
-                    }
-                })).create().show());
+        binding.finishTrack.setOnClickListener(view -> {
+            boolean isThan1Km = GlobalValue.getTrackMileage() >= 1000;
+            new MyDialog.Builder(activity)
+                    .setContent(isThan1Km ? "是否结束追踪？" : "此次行程未满1KM，将不会被记录。是否结束追踪？")
+                    .setSureText("结束追踪")
+                    .setSureListener(sureBtn -> trackViewModel.stopTrack(isThan1Km ? "false" : "true").observe(TrackingFragment.this, new MyObserver<Trip>() {
+                        @Override
+                        public void onSuccess(Trip o) {
+                            EventBus.getDefault().post(new RefreshTrackEvent());
+                            trackViewModel.stopAddTrack();
+                            binding.cancelTrack.setVisibility(View.GONE);
+                            binding.finishTrack.setVisibility(View.GONE);
+                            binding.goDetail.setVisibility(View.VISIBLE);
+                            binding.notice.setText("追踪结束~");
+                            binding.goDetail.setOnClickListener(view -> {
+                                Intent intent = new Intent(activity, TrackDetailActivity.class);
+                                intent.putExtra("trickId", o.getId());
+                                startActivity(intent);
+                                new Handler().postDelayed(() -> FragmentUtils.remove(TrackingFragment.this), 1000);
+                            });
+                        }
+                    })).create().show();
+        });
         initGrid(new TripSoc());
         trackViewModel.getTripSoc().observe(this, tripSoc -> {
             binding.progress.setProgress(tripSoc.getSoc());

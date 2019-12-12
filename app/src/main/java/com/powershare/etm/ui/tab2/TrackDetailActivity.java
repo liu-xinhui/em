@@ -119,7 +119,7 @@ public class TrackDetailActivity extends BaseActivity {
                 String powerValueEnd = trip.getDestSoc() + "%";
                 binding.powerValueEnd.setText(powerValueEnd);
                 //
-                String powerConsumption = "行程消耗" + (trip.getStartSoc() - trip.getDestSoc()) + "%电量";
+                String powerConsumption = "行程消耗" + AMapUtil.formatDouble(trip.getEnergy()) + "kwh电量";
                 binding.powerConsumption.setText(powerConsumption);
                 //提示
                 if (CollectionUtils.isEmpty(trip.getChargePoints())) {
