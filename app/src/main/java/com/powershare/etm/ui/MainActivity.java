@@ -7,8 +7,6 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.blankj.utilcode.constant.PermissionConstants;
-import com.blankj.utilcode.util.NotificationUtils;
-import com.blankj.utilcode.util.PermissionUtils;
 import com.powershare.etm.R;
 import com.powershare.etm.adapter.MyPagerAdapter;
 import com.powershare.etm.component.MyDialog;
@@ -19,7 +17,6 @@ import com.powershare.etm.ui.tab1.Tab1Fragment;
 import com.powershare.etm.ui.tab2.Tab2Fragment;
 import com.powershare.etm.ui.tab3.Tab3Fragment;
 import com.powershare.etm.ui.tab4.Tab4Fragment;
-import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.LocationUtils;
 import com.powershare.etm.util.PermissionHelper;
 import com.qmuiteam.qmui.widget.QMUITabSegment;
@@ -31,7 +28,6 @@ public class MainActivity extends BaseActivity {
     private ViewPager mViewPager;
     private QMUITabSegment mTabSegment;
     private QMUITopBarLayout mTopBar;
-    private Tab2Fragment fragment2;
 
     @Override
     protected View initContentView() {
@@ -75,7 +71,7 @@ public class MainActivity extends BaseActivity {
     private void initPagers(int currentTab) {
         ArrayList<Fragment> viewList = new ArrayList<>();
         viewList.add(Tab1Fragment.newInstance());
-        viewList.add(fragment2 = Tab2Fragment.newInstance());
+        viewList.add(Tab2Fragment.newInstance());
         viewList.add(Tab3Fragment.newInstance());
         viewList.add(Tab4Fragment.newInstance());
         mViewPager.setOffscreenPageLimit(4);

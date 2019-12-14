@@ -86,7 +86,6 @@ public class LoginActivity extends BaseActivity {
             loginViewModel.sendCode(mobile).observe(this, new MyObserver<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    CommonUtil.showSuccessToast("发送成功");
                     loginViewModel.countDown();
                 }
 

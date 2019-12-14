@@ -1,8 +1,12 @@
 package com.powershare.etm.util;
 
+import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.androidadvance.topsnackbar.TSnackbar;
+import com.blankj.utilcode.util.ActivityUtils;
+import com.blankj.utilcode.util.ColorUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.google.gson.JsonParseException;
@@ -41,17 +45,23 @@ public class CommonUtil {
         return msg;
     }
 
-    public static void showSuccessToast(String msg) {
-        View view = ToastUtils.showCustomShort(R.layout.view_toast_success);
-        TextView tv = view.findViewById(R.id.textView);
-        tv.setText(msg);
+    public static void showErrorToast(String msg) {
+        try {
+            TSnackbar snackBar = TSnackbar.make(ActivityUtils.getTopActivity().findViewById(android.R.id.content), msg, TSnackbar.LENGTH_LONG);
+            View snackBarView = snackBar.getView();
+            snackBarView.setBackgroundColor(ColorUtils.getColor(R.color.colorAccent));
+            TextView textView = snackBarView.findViewById(com.androidadvance.topsnackbar.R.id.snackbar_text);
+            textView.setTextColor(ColorUtils.string2Int("#2E2E2E"));
+            textView.setGravity(Gravity.CENTER_HORIZONTAL);
+            snackBar.show();
+        } catch (Exception e) {
+            ToastUtils.setGravity(Gravity.FILL_HORIZONTAL | Gravity.TOP, 0, 0);
+            View view = ToastUtils.showCustomShort(R.layout.view_toast);
+            TextView tv = view.findViewById(R.id.textView);
+            tv.setText(msg);
+        }
     }
 
-    public static void showErrorToast(String msg) {
-        View view = ToastUtils.showCustomShort(R.layout.view_toast_error);
-        TextView tv = view.findViewById(R.id.textView);
-        tv.setText(msg);
-    }
 
     /**
      * 类似String.format

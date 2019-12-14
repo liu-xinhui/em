@@ -7,12 +7,10 @@
         android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#67C23A"
+        android:background="@color/colorAccent"
         android:gravity="center"
-        android:padding="6dp"
-        android:paddingStart="15dp"
-        android:paddingEnd="15dp"
+        android:padding="13dp"
         android:text="成功"
-        android:textColor="@color/white"
+        android:textColor="#2E2E2E"
         android:textSize="15dp" />
 </FrameLayout>
