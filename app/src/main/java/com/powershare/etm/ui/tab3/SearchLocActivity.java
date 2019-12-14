@@ -12,11 +12,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.amap.api.services.help.Inputtips;
 import com.amap.api.services.help.InputtipsQuery;
 import com.amap.api.services.help.Tip;
+import com.blankj.utilcode.util.LogUtils;
 import com.powershare.etm.R;
 import com.powershare.etm.databinding.ActivitySearchLocBinding;
 import com.powershare.etm.ui.base.BaseActivity;
 import com.powershare.etm.util.SearchLocHistoryHelper;
 import com.qmuiteam.qmui.widget.QMUITopBarLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import me.jingbin.library.adapter.BaseByViewHolder;
 import me.jingbin.library.adapter.BaseRecyclerAdapter;
@@ -26,7 +30,6 @@ public class SearchLocActivity extends BaseActivity {
     private QMUITopBarLayout mTopBar;
     private BaseRecyclerAdapter<Tip> adapter;
     private boolean searchTextEmpty = true;
-    private SearchLocHistoryHelper historyHelper = new SearchLocHistoryHelper();
     private int type;
 
     @Override
@@ -69,7 +72,6 @@ public class SearchLocActivity extends BaseActivity {
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.setOnItemClickListener((v, position) -> {
             Tip item = adapter.getData().get(position);
-            historyHelper.addOneHistory(item);
             Intent i = new Intent();
             i.putExtra("type", type);
             i.putExtra("result", item);
@@ -80,9 +82,9 @@ public class SearchLocActivity extends BaseActivity {
     }
 
     private void setHistory() {
-        String count = historyHelper.getList().size() + "条";
+        String count = SearchLocHistoryHelper.getInstance().getList().size() + "条";
         binding.historyCount.setText(count);
-        adapter.setNewData(historyHelper.getList());
+        adapter.setNewData(SearchLocHistoryHelper.getInstance().getList());
     }
 
     private void initMap() {
@@ -109,7 +111,13 @@ public class SearchLocActivity extends BaseActivity {
                     Inputtips inputTips = new Inputtips(SearchLocActivity.this, inputQuery);
                     inputTips.setInputtipsListener((list, code) -> {
                         if (code == 1000 && !searchTextEmpty) {
-                            adapter.setNewData(list);
+                            List<Tip> newList = new ArrayList<>();
+                            for (Tip tip : list) {
+                                if (tip.getPoint() != null) {
+                                    newList.add(tip);
+                                }
+                            }
+                            adapter.setNewData(newList);
                         }
                     });
                     inputTips.requestInputtipsAsyn();

@@ -27,7 +27,7 @@ public class AMapViewModel extends ViewModel {
                     liveData.setValue(localWeatherLiveResult.getLiveResult().getTemperature());
                 } else {
                     liveData.setValue("none");
-                    CommonUtil.showErrorToast("获取温度失败");
+                    //CommonUtil.showErrorToast("获取温度失败");
                 }
             }
 

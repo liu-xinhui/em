@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.help.Tip;
+import com.blankj.utilcode.util.LogUtils;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.bean.TripParam;
@@ -18,6 +19,7 @@ import com.powershare.etm.databinding.FragmentTab3Binding;
 import com.powershare.etm.ui.base.BaseFragment;
 import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.MyObserver;
+import com.powershare.etm.util.SearchLocHistoryHelper;
 import com.powershare.etm.vm.AMapViewModel;
 import com.powershare.etm.vm.CarViewModel;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
@@ -107,10 +109,10 @@ public class Tab3Fragment extends BaseFragment {
                     tip.setName(location.getPoiName());
                     tip.setAddress(location.getAddress());
                     tip.setPostion(point);
-                    calcRoute(tip);
+                    calcRoute(tip, false);
                 });
             } else {
-                calcRoute(startTip);
+                calcRoute(startTip, true);
             }
         });
     }
@@ -188,12 +190,16 @@ public class Tab3Fragment extends BaseFragment {
         }
     }
 
-    private void calcRoute(Tip startTip) {
+    private void calcRoute(Tip startTip, boolean save) {
+        if (save) {
+            SearchLocHistoryHelper.getInstance().addOneHistory(startTip);
+        }
         Tip endTip = (Tip) binding.recentTrackEndText.getTag();
         if (endTip == null) {
             CommonUtil.showErrorToast("请输入终点");
             return;
         }
+        SearchLocHistoryHelper.getInstance().addOneHistory(endTip);
         //车型
         CarModel carModel = (CarModel) binding.banner.getTag();
         if (carModel == null) {

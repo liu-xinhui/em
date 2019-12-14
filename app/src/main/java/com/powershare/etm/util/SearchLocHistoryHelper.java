@@ -16,6 +16,11 @@ public class SearchLocHistoryHelper {
     private static final SPUtils SP_UTILS = SPUtils.getInstance();
     private List<Tip> list;
     private Gson gson = new Gson();
+    private static SearchLocHistoryHelper helper = new SearchLocHistoryHelper();
+
+    public static SearchLocHistoryHelper getInstance() {
+        return helper;
+    }
 
     public SearchLocHistoryHelper() {
         list = getHistories();
@@ -31,7 +36,7 @@ public class SearchLocHistoryHelper {
                     iterator.remove();
                 }
             }
-            if (list.size() >= 20) {
+            if (list.size() >= 5) {
                 list.remove(list.size() - 1);
             }
             list.add(0, address);
