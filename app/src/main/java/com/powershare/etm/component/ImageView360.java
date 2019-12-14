@@ -112,7 +112,7 @@ public class ImageView360 extends AppCompatImageView {
                 Glide.with(mContext)
                         .load(urls[0])
                         .skipMemoryCache(true)
-                        .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                        //.diskCacheStrategy(DiskCacheStrategy.RESOURCE)
                         .into(this);
             }
         } else {
@@ -210,6 +210,7 @@ public class ImageView360 extends AppCompatImageView {
             new Thread(() -> {
                 for (int i = 0; i < urls.length; i++) {
                     String url = urls[i];
+                    System.out.println(url);
                     if (!isDownloadThreadRun) {
                         break;
                     }

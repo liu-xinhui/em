@@ -89,7 +89,7 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:singleLine="true"
-            android:text="请输入起点"
+            android:text="我的位置"
             app:layout_constraintBottom_toBottomOf="@id/recent_track_start"
             app:layout_constraintLeft_toRightOf="@id/recent_track_start"
             app:layout_constraintRight_toRightOf="@id/recent_track_bg2"
@@ -370,7 +370,7 @@
             app:layout_constraintEnd_toEndOf="@id/temp_bg"
             app:layout_constraintStart_toStartOf="@id/temp_bg" />
 
-        <com.noober.background.view.BLButton
+        <com.powershare.etm.component.LoadingButton
             android:id="@+id/calc_route"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

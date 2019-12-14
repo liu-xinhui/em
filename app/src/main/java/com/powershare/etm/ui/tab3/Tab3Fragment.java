@@ -8,6 +8,7 @@ import android.widget.SeekBar;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.help.Tip;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.CarModel;
@@ -97,64 +98,20 @@ public class Tab3Fragment extends BaseFragment {
         //计算路线
         binding.calcRoute.setOnClickListener(view -> {
             Tip startTip = (Tip) binding.recentTrackStartText.getTag();
-            if (startTip == null) {
-                CommonUtil.showErrorToast("请输入起点");
-                return;
+            if (startTip == null || binding.recentTrackStartText.getText().equals("我的位置")) {
+                binding.calcRoute.showLoading();
+                mapViewModel.currentLoc().observe(activity, location -> {
+                    binding.calcRoute.hideLoading();
+                    LatLonPoint point = new LatLonPoint(location.getLatitude(), location.getLongitude());
+                    Tip tip = new Tip();
+                    tip.setName(location.getPoiName());
+                    tip.setAddress(location.getAddress());
+                    tip.setPostion(point);
+                    calcRoute(tip);
+                });
+            } else {
+                calcRoute(startTip);
             }
-            Tip endTip = (Tip) binding.recentTrackEndText.getTag();
-            if (endTip == null) {
-                CommonUtil.showErrorToast("请输入终点");
-                return;
-            }
-            //车型
-            CarModel carModel = (CarModel) binding.banner.getTag();
-            if (carModel == null) {
-                CommonUtil.showErrorToast("未选择车型");
-                return;
-            }
-            //电量
-            int powerProgress = binding.carModelPowerBar.getProgress();
-            int power = 10;
-            switch (powerProgress) {
-                case 0:
-                    power = 10;
-                    break;
-                case 25:
-                    power = 15;
-                    break;
-                case 50:
-                    power = 20;
-                    break;
-                case 75:
-                    power = 25;
-                    break;
-                case 100:
-                    power = 30;
-                    break;
-            }
-            //温度
-            String temp = binding.tempValue.getText().toString();
-            //构造参数
-            TripParam param = new TripParam();
-            param.setCarModelId(carModel.getId());
-            param.setTemperature(Integer.parseInt(temp));
-            param.setWarningLevel(power);
-
-            TripPoint startPoint = new TripPoint();
-            startPoint.setLatitude(startTip.getPoint().getLatitude());
-            startPoint.setLongitude(startTip.getPoint().getLongitude());
-            param.setStartPoint(startPoint);
-
-            TripPoint endPoint = new TripPoint();
-            endPoint.setLatitude(endTip.getPoint().getLatitude());
-            endPoint.setLongitude(endTip.getPoint().getLongitude());
-            param.setDestPoint(endPoint);
-
-            Intent intent = new Intent(activity, PredictActivity.class);
-            intent.putExtra("tripParam", param);
-            intent.putExtra("startTip", startTip);
-            intent.putExtra("endTip", endTip);
-            startActivity(intent);
         });
     }
 
@@ -229,5 +186,62 @@ public class Tab3Fragment extends BaseFragment {
         } else {
             binding.banner.setBitmapUrls(null);
         }
+    }
+
+    private void calcRoute(Tip startTip) {
+        Tip endTip = (Tip) binding.recentTrackEndText.getTag();
+        if (endTip == null) {
+            CommonUtil.showErrorToast("请输入终点");
+            return;
+        }
+        //车型
+        CarModel carModel = (CarModel) binding.banner.getTag();
+        if (carModel == null) {
+            CommonUtil.showErrorToast("未选择车型");
+            return;
+        }
+        //电量
+        int powerProgress = binding.carModelPowerBar.getProgress();
+        int power = 10;
+        switch (powerProgress) {
+            case 0:
+                power = 10;
+                break;
+            case 25:
+                power = 15;
+                break;
+            case 50:
+                power = 20;
+                break;
+            case 75:
+                power = 25;
+                break;
+            case 100:
+                power = 30;
+                break;
+        }
+        //温度
+        String temp = binding.tempValue.getText().toString();
+        //构造参数
+        TripParam param = new TripParam();
+        param.setCarModelId(carModel.getId());
+        param.setTemperature(Integer.parseInt(temp));
+        param.setWarningLevel(power);
+
+        TripPoint startPoint = new TripPoint();
+        startPoint.setLatitude(startTip.getPoint().getLatitude());
+        startPoint.setLongitude(startTip.getPoint().getLongitude());
+        param.setStartPoint(startPoint);
+
+        TripPoint endPoint = new TripPoint();
+        endPoint.setLatitude(endTip.getPoint().getLatitude());
+        endPoint.setLongitude(endTip.getPoint().getLongitude());
+        param.setDestPoint(endPoint);
+
+        Intent intent = new Intent(activity, PredictActivity.class);
+        intent.putExtra("tripParam", param);
+        intent.putExtra("startTip", startTip);
+        intent.putExtra("endTip", endTip);
+        startActivity(intent);
     }
 }

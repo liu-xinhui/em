@@ -196,22 +196,30 @@
 
             <TextView
                 android:id="@+id/track_start_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="7dp"
+                android:layout_marginEnd="10dp"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:text="---"
                 android:textColor="#E1FBFC"
                 app:layout_constraintBottom_toBottomOf="@id/track_start"
                 app:layout_constraintLeft_toRightOf="@id/track_start"
+                app:layout_constraintRight_toRightOf="@id/track_bg"
                 app:layout_constraintTop_toTopOf="@id/track_start"
                 app:layout_constraintVertical_bias="0.8" />
 
             <TextView
                 android:id="@+id/track_start_address"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:text="---"
                 app:layout_constraintLeft_toLeftOf="@+id/track_start_name"
+                app:layout_constraintRight_toRightOf="@id/track_bg"
                 app:layout_constraintTop_toBottomOf="@+id/track_start_name" />
 
             <ImageView
@@ -226,23 +234,31 @@
 
             <TextView
                 android:id="@+id/track_end_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="7dp"
+                android:layout_marginEnd="10dp"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:text="---"
                 android:textColor="#E1FBFC"
                 app:layout_constraintBottom_toBottomOf="@id/track_end"
                 app:layout_constraintLeft_toRightOf="@id/track_end"
+                app:layout_constraintRight_toRightOf="@id/track_bg"
                 app:layout_constraintTop_toTopOf="@id/track_end"
                 app:layout_constraintVertical_bias="0.9" />
 
             <TextView
                 android:id="@+id/track_end_address"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:text="---"
                 app:layout_constraintLeft_toLeftOf="@id/track_end_name"
+                app:layout_constraintRight_toRightOf="@id/track_bg"
                 app:layout_constraintTop_toBottomOf="@id/track_end_name" />
 
             <com.noober.background.view.BLView
