@@ -18,7 +18,6 @@ import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.vm.TrackViewModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import me.jingbin.library.adapter.BaseByViewHolder;
@@ -91,7 +90,7 @@ public class TrackListActivity extends BaseActivity {
                 if (page == 1) {
                     currentPage = 1;
                     if (CollectionUtils.isEmpty(trips)) {
-                        CommonUtil.showErrorToast("无行程记录");
+                        CommonUtil.showToast("无行程记录");
                     } else {
                         adapter.setNewData(trips);
                     }

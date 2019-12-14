@@ -128,14 +128,14 @@ public class PredictFullActivity extends BaseActivity {
                                 Uri uri = Uri.parse("amapuri://route/plan/?dlat=" + destLat + "&dlon=" + destLng + "&dname=" + destName + "&dev=0&t=0");
                                 startActivity(new Intent(Intent.ACTION_VIEW, uri));
                             } else {
-                                CommonUtil.showErrorToast("未安装" + gaode);
+                                CommonUtil.showToast("未安装" + gaode);
                             }
                         } else {
                             if (AppUtils.isAppInstalled("com.baidu.BaiduMap")) {
                                 Uri uri = Uri.parse("baidumap://map/direction?destination=latlng:" + destLat + "," + destLng + "|name:" + destName + "&mode=driving&coord_type=gcj02");
                                 startActivity(new Intent(Intent.ACTION_VIEW, uri));
                             } else {
-                                CommonUtil.showErrorToast("未安装" + baidu);
+                                CommonUtil.showToast("未安装" + baidu);
                             }
                         }
                     }).build().show();
@@ -204,7 +204,7 @@ public class PredictFullActivity extends BaseActivity {
                 if (code == 1000) {
                     initUi(predictCharge, driveRouteResult);
                 } else {
-                    CommonUtil.showErrorToast("出错");
+                    CommonUtil.showToast("出错");
                 }
             }
 
@@ -251,10 +251,10 @@ public class PredictFullActivity extends BaseActivity {
                 drivingRouteOverlay.addToMap();
                 drivingRouteOverlay.zoomToSpan();
             } else if (driveRouteResult.getPaths() == null) {
-                CommonUtil.showErrorToast("无结果");
+                CommonUtil.showToast("无结果");
             }
         } else {
-            CommonUtil.showErrorToast("无结果");
+            CommonUtil.showToast("无结果");
         }
     }
 

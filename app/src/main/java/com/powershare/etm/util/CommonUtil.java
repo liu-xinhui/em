@@ -45,7 +45,7 @@ public class CommonUtil {
         return msg;
     }
 
-    public static void showErrorToast(String msg) {
+    public static void showToast(String msg) {
         try {
             TSnackbar snackBar = TSnackbar.make(ActivityUtils.getTopActivity().findViewById(android.R.id.content), msg, TSnackbar.LENGTH_LONG);
             View snackBarView = snackBar.getView();

@@ -100,7 +100,7 @@ public class Tab3Fragment extends BaseFragment {
         binding.calcRoute.setOnClickListener(view -> {
             Tip endTip = (Tip) binding.recentTrackEndText.getTag();
             if (endTip == null) {
-                CommonUtil.showErrorToast("请输入终点");
+                CommonUtil.showToast("请输入终点");
                 return;
             }
             Tip startTip = (Tip) binding.recentTrackStartText.getTag();
@@ -202,7 +202,7 @@ public class Tab3Fragment extends BaseFragment {
         //车型
         CarModel carModel = (CarModel) binding.banner.getTag();
         if (carModel == null) {
-            CommonUtil.showErrorToast("未选择车型");
+            CommonUtil.showToast("未选择车型");
             return;
         }
         //电量

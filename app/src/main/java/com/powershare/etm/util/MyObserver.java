@@ -11,7 +11,7 @@ public abstract class MyObserver<T> implements Observer<ApiResult<T>> {
     }
 
     public void onError(Throwable e) {
-        CommonUtil.showErrorToast(CommonUtil.getExceptionMsg(e));
+        CommonUtil.showToast(CommonUtil.getExceptionMsg(e));
     }
 
     public abstract void onSuccess(T t);

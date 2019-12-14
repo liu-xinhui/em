@@ -117,7 +117,7 @@ public class PredictActivity extends BaseActivity {
             Tip startTip = intent.getParcelableExtra("startTip");
             Tip endTip = intent.getParcelableExtra("endTip");
             if (tripParam == null || startTip == null || endTip == null) {
-                CommonUtil.showErrorToast("未知错误");
+                CommonUtil.showToast("未知错误");
                 return;
             }
             binding.trackStartName.setText(startTip.getName());
@@ -183,7 +183,7 @@ public class PredictActivity extends BaseActivity {
                 if (code == 1000) {
                     initUi(predictCharge, driveRouteResult);
                 } else {
-                    CommonUtil.showErrorToast("出错");
+                    CommonUtil.showToast("出错");
                 }
             }
 
@@ -269,10 +269,10 @@ public class PredictActivity extends BaseActivity {
                     binding.infoContainer.addView(view, param);
                 }
             } else if (driveRouteResult.getPaths() == null) {
-                CommonUtil.showErrorToast("无结果");
+                CommonUtil.showToast("无结果");
             }
         } else {
-            CommonUtil.showErrorToast("无结果");
+            CommonUtil.showToast("无结果");
         }
     }
 

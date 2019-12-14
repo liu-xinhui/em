@@ -92,7 +92,7 @@ public class TrackDetailActivity extends BaseActivity {
         Intent intent = getIntent();
         String trickId = intent.getStringExtra("trickId");
         if (trickId == null) {
-            CommonUtil.showErrorToast("未知错误");
+            CommonUtil.showToast("未知错误");
             return;
         }
         new Handler().postDelayed(() -> {

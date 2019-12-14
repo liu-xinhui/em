@@ -24,6 +24,7 @@ import com.powershare.etm.component.MyDialog;
 import com.powershare.etm.databinding.FragmentTrackingBinding;
 import com.powershare.etm.event.RefreshTrackEvent;
 import com.powershare.etm.ui.base.BaseFragment;
+import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.GlobalValue;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.vm.TrackViewModel;
@@ -75,6 +76,7 @@ public class TrackingFragment extends BaseFragment {
                         @Override
                         public void onSuccess(Trip o) {
                             if (isThan1Km) {
+                                CommonUtil.showToast("行程记录成功");
                                 EventBus.getDefault().post(new RefreshTrackEvent());
                                 trackViewModel.stopAddTrack();
                                 binding.cancelTrack.setVisibility(View.GONE);

@@ -206,7 +206,7 @@ public class StartTrackFragment extends BaseFragment {
         //车型
         CarModel carModel = (CarModel) binding.banner.getTag();
         if (carModel == null) {
-            CommonUtil.showErrorToast("未选择车型");
+            CommonUtil.showToast("未选择车型");
             return;
         }
         binding.startTrack.showLoading();
@@ -239,7 +239,7 @@ public class StartTrackFragment extends BaseFragment {
         //当前位置
         mapViewModel.currentLoc().observe(this, aMapLocation -> {
             if (aMapLocation.getErrorCode() != 0) {
-                CommonUtil.showErrorToast("定位失败");
+                CommonUtil.showToast("定位失败");
                 binding.startTrack.hideLoading();
                 return;
             }

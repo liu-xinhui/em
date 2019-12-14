@@ -20,7 +20,6 @@ import com.blankj.utilcode.util.FileIOUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.ImageCache;
 
@@ -80,7 +79,7 @@ public class ImageView360 extends AppCompatImageView {
                         changeImage(currentImageIndex + 1);
                     }
                 } else {
-                    CommonUtil.showErrorToast("全景图片加载中，请稍后");
+                    CommonUtil.showToast("全景图片加载中，请稍后");
                 }
                 return super.onScroll(e1, e2, distanceX, distanceY);
             }
