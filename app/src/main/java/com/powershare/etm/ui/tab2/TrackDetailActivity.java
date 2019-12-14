@@ -1,7 +1,9 @@
 package com.powershare.etm.ui.tab2;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.GridLayout;
@@ -36,22 +38,16 @@ public class TrackDetailActivity extends BaseActivity {
     private TrackViewModel trackViewModel;
     private AMap aMap;
 
+    public static void go(Activity activity, String trickId) {
+        Intent intent = new Intent(activity, TrackDetailActivity.class);
+        intent.putExtra("trickId", trickId);
+        activity.startActivity(intent);
+    }
+
     @Override
     protected View initContentView() {
         binding = ActivityTrackDetailBinding.inflate(getLayoutInflater());
         return binding.getRoot();
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding.map.onCreate(savedInstanceState);
-        aMap = binding.map.getMap();
-        UiSettings uiSettings = aMap.getUiSettings();
-        uiSettings.setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
-        uiSettings.setZoomControlsEnabled(false);
-        uiSettings.setRotateGesturesEnabled(false);
-        binding.mapContainer.setScrollView(binding.scrollView);
     }
 
     @Override
@@ -90,7 +86,7 @@ public class TrackDetailActivity extends BaseActivity {
     }
 
     @Override
-    protected void onMounted() {
+    protected void onMounted(Bundle savedInstanceState) {
         initTopBar();
         //取值
         Intent intent = getIntent();
@@ -99,7 +95,16 @@ public class TrackDetailActivity extends BaseActivity {
             CommonUtil.showErrorToast("未知错误");
             return;
         }
-        traceGet(trickId);
+        new Handler().postDelayed(() -> {
+            binding.map.onCreate(savedInstanceState);
+            aMap = binding.map.getMap();
+            UiSettings uiSettings = aMap.getUiSettings();
+            uiSettings.setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
+            uiSettings.setZoomControlsEnabled(false);
+            uiSettings.setRotateGesturesEnabled(false);
+            binding.mapContainer.setScrollView(binding.scrollView);
+            traceGet(trickId);
+        }, 100);
     }
 
     //请求后台

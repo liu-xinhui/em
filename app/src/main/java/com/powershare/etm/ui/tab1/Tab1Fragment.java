@@ -17,6 +17,7 @@ import com.powershare.etm.event.RefreshTrackEvent;
 import com.powershare.etm.event.StartTrackEvent;
 import com.powershare.etm.ui.MainActivity;
 import com.powershare.etm.ui.base.BaseFragment;
+import com.powershare.etm.ui.tab2.TrackDetailActivity;
 import com.powershare.etm.ui.tab2.TrackListActivity;
 import com.powershare.etm.util.AMapUtil;
 import com.powershare.etm.util.CommonUtil;
@@ -162,7 +163,12 @@ public class Tab1Fragment extends BaseFragment {
 
             }
         });
-        binding.recentTrackBg.setOnClickListener(v -> go(TrackListActivity.class));
+        binding.recentTrackBg.setOnClickListener(v -> {
+            String trickId = (String) v.getTag();
+            if (trickId != null) {
+                TrackDetailActivity.go(activity, trickId);
+            }
+        });
         binding.countTrackBg.setOnClickListener(v -> go(TrackListActivity.class));
     }
 
@@ -254,6 +260,7 @@ public class Tab1Fragment extends BaseFragment {
                 if (trip != null) {
                     binding.recentTrackStartText.setText(trip.getStartAddress());
                     binding.recentTrackEndText.setText(trip.getDestAddress());
+                    binding.recentTrackBg.setTag(trip.getId());
                 } else {
                     binding.recentTrackStartText.setText("您最近暂无行程");
                     binding.recentTrackEndText.setText("您最近暂无行程");

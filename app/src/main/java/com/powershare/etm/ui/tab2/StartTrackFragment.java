@@ -103,7 +103,12 @@ public class StartTrackFragment extends BaseFragment {
         binding.tempSelect.setOnClickListener(tempSelect);
         //开启手动追踪
         binding.startTrack.setOnClickListener(view -> startTrack(null));
-        binding.recentTrackBg.setOnClickListener(v -> go(TrackListActivity.class));
+        binding.recentTrackBg.setOnClickListener(v -> {
+            String trickId = (String) v.getTag();
+            if (trickId != null) {
+                TrackDetailActivity.go(activity, trickId);
+            }
+        });
         getCarListData();
     }
 
@@ -130,6 +135,7 @@ public class StartTrackFragment extends BaseFragment {
                     binding.recentTrackEndText.setText(trip.getDestAddress());
                     binding.mileageBgValue.setText(AMapUtil.formatDouble(trip.getMileage()));
                     binding.powerBgValue.setText(AMapUtil.formatDouble(trip.getStartSoc() - trip.getDestSoc()));
+                    binding.recentTrackBg.setTag(trip.getId());
                 } else {
                     binding.recentTrackGroup.setVisibility(View.GONE);
                     binding.trackEmptyWrapper.setVisibility(View.VISIBLE);

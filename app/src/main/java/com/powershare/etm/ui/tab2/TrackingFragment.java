@@ -1,6 +1,5 @@
 package com.powershare.etm.ui.tab2;
 
-import android.content.Intent;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,9 +82,7 @@ public class TrackingFragment extends BaseFragment {
                                 binding.goDetail.setVisibility(View.VISIBLE);
                                 binding.notice.setText("追踪结束~");
                                 binding.goDetail.setOnClickListener(view -> {
-                                    Intent intent = new Intent(activity, TrackDetailActivity.class);
-                                    intent.putExtra("trickId", o.getId());
-                                    startActivity(intent);
+                                    TrackDetailActivity.go(activity, o.getId());
                                     new Handler().postDelayed(() -> FragmentUtils.remove(TrackingFragment.this), 1000);
                                 });
                             } else {
