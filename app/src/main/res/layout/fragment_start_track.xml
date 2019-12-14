@@ -26,7 +26,8 @@
         <View
             android:id="@+id/recent_track_bg"
             android:layout_width="match_parent"
-            android:layout_height="200dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="45dp"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -55,7 +56,8 @@
             android:id="@+id/recent_track_arrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:paddingStart="5dp"
             android:src="@mipmap/go"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -65,7 +67,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="1dp"
-            android:layout_marginEnd="5dp"
+            android:padding="10dp"
+            android:paddingEnd="0dp"
             android:text="历史行程记录"
             app:layout_constraintRight_toLeftOf="@id/recent_track_arrow"
             app:layout_constraintTop_toTopOf="@id/recent_track_arrow" />

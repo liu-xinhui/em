@@ -109,6 +109,10 @@ public class StartTrackFragment extends BaseFragment {
                 TrackDetailActivity.go(activity, trickId);
             }
         });
+        //跳转到历史行程记录
+        View.OnClickListener goHistoryListener = v -> go(TrackListActivity.class);
+        binding.recentTrackArrow.setOnClickListener(goHistoryListener);
+        binding.recentTrackHistory.setOnClickListener(goHistoryListener);
         getCarListData();
     }
 

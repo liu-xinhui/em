@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.GridLayout;
 import android.widget.TextView;
 
@@ -16,6 +17,7 @@ import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.UiSettings;
 import com.blankj.utilcode.util.CollectionUtils;
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.Trip;
@@ -105,6 +107,16 @@ public class TrackDetailActivity extends BaseActivity {
             binding.mapContainer.setScrollView(binding.scrollView);
             traceGet(trickId);
         }, 100);
+        binding.fullScreen.setOnClickListener(v -> {
+            int height = SizeUtils.dp2px(260);
+            ViewGroup.LayoutParams layoutParams = binding.mapContainer.getLayoutParams();
+            if (layoutParams.height == height) {
+                layoutParams.height = ScreenUtils.getAppScreenHeight() - SizeUtils.dp2px(94);
+            } else {
+                layoutParams.height = height;
+            }
+            binding.mapContainer.setLayoutParams(layoutParams);
+        });
     }
 
     //请求后台

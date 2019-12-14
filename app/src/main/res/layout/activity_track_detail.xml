@@ -43,7 +43,6 @@
                 android:layout_height="45dp"
                 android:padding="10dp"
                 android:src="@mipmap/full_screen"
-                android:visibility="gone"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@id/map_container" />
 
