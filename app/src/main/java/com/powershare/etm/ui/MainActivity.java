@@ -1,9 +1,13 @@
 package com.powershare.etm.ui;
 
+import android.annotation.SuppressLint;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.ViewPager;
 
 import com.blankj.utilcode.constant.PermissionConstants;
@@ -12,6 +16,7 @@ import com.powershare.etm.adapter.MyPagerAdapter;
 import com.powershare.etm.component.MyDialog;
 import com.powershare.etm.databinding.ActivityMainBinding;
 import com.powershare.etm.ui.base.BaseActivity;
+import com.powershare.etm.vm.LoginViewModel;
 import com.powershare.etm.ui.setting.SettingActivity;
 import com.powershare.etm.ui.tab1.Tab1Fragment;
 import com.powershare.etm.ui.tab2.Tab2Fragment;
@@ -28,6 +33,7 @@ public class MainActivity extends BaseActivity {
     private ViewPager mViewPager;
     private QMUITabSegment mTabSegment;
     private QMUITopBarLayout mTopBar;
+    private LoginViewModel loginViewModel;
 
     @Override
     protected View initContentView() {
@@ -39,16 +45,27 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    protected void createViewModel() {
+        loginViewModel = ViewModelProviders.of(this).get(LoginViewModel.class);
+    }
+
+    @Override
     protected void onMounted() {
         initTopBar();
         initPermissions();
 
-        int currentTab = 3;
+        int currentTab = 0;
         if (getIntent() != null) {
-            currentTab = getIntent().getIntExtra("tabIndex", 3);
+            currentTab = getIntent().getIntExtra("tabIndex", 0);
         }
         initPagers(currentTab);
         initTabs();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loginViewModel.checkLogin();
     }
 
     private void initTopBar() {
@@ -79,6 +96,7 @@ public class MainActivity extends BaseActivity {
         mViewPager.setCurrentItem(currentTab);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initTabs() {
         mTabSegment.setDefaultNormalColor(ContextCompat.getColor(this, R.color.grayA6));
         mTabSegment.setDefaultSelectedColor(ContextCompat.getColor(this, R.color.colorAccent));
@@ -108,6 +126,17 @@ public class MainActivity extends BaseActivity {
                 .addTab(tab4);
         mTabSegment.notifyDataChanged();
         mTabSegment.setupWithViewPager(mViewPager, false);
+        //
+        ViewGroup viewGroup = (ViewGroup) mTabSegment.getChildAt(0);
+        View.OnTouchListener onTouchListener = (view, motionEvent) -> {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN && !loginViewModel.isLogin()) {
+                go(LoginActivity.class);
+                return true;
+            }
+            return false;
+        };
+        viewGroup.getChildAt(0).setOnTouchListener(onTouchListener);
+        viewGroup.getChildAt(1).setOnTouchListener(onTouchListener);
     }
 
     public void selectTab(int tabIndex) {

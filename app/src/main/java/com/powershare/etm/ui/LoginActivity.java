@@ -1,4 +1,4 @@
-package com.powershare.etm.ui.login;
+package com.powershare.etm.ui;
 
 import android.content.Intent;
 import android.text.Editable;
@@ -13,11 +13,11 @@ import com.blankj.utilcode.util.RegexUtils;
 import com.blankj.utilcode.util.StringUtils;
 import com.powershare.etm.bean.User;
 import com.powershare.etm.databinding.ActivityLoginBinding;
-import com.powershare.etm.ui.MainActivity;
 import com.powershare.etm.ui.base.BaseActivity;
 import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.util.UserCache;
+import com.powershare.etm.vm.LoginViewModel;
 
 public class LoginActivity extends BaseActivity {
 

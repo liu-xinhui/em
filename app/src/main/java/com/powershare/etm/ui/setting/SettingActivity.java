@@ -6,8 +6,9 @@ import android.view.View;
 import com.blankj.utilcode.util.ActivityUtils;
 import com.powershare.etm.component.MyDialog;
 import com.powershare.etm.databinding.ActivitySettingBinding;
+import com.powershare.etm.http.ApiManager;
 import com.powershare.etm.ui.base.BaseActivity;
-import com.powershare.etm.ui.login.LoginActivity;
+import com.powershare.etm.ui.LoginActivity;
 import com.powershare.etm.util.UserCache;
 import com.qmuiteam.qmui.widget.QMUITopBarLayout;
 
@@ -34,6 +35,7 @@ public class SettingActivity extends BaseActivity {
                         .setContent("确定退出登录？")
                         .setSureListener(sureBtn -> {
                             UserCache.clear();
+                            ApiManager.INSTANCE.clearToken();
                             go(LoginActivity.class);
                             ActivityUtils.finishAllActivities(true);
                         }).create().show();

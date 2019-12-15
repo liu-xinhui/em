@@ -9,17 +9,10 @@ import androidx.lifecycle.MediatorLiveData;
 
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.navi.AMapNavi;
-import com.amap.api.navi.AimlessModeListener;
-import com.amap.api.navi.enums.AimLessMode;
-import com.amap.api.navi.model.AMapNaviTrafficFacilityInfo;
-import com.amap.api.navi.model.AimLessModeCongestionInfo;
-import com.amap.api.navi.model.AimLessModeStat;
 import com.blankj.utilcode.util.LogUtils;
-import com.blankj.utilcode.util.NotificationUtils;
 import com.powershare.etm.App;
-import com.powershare.etm.R;
 import com.powershare.etm.bean.ApiResult;
+import com.powershare.etm.bean.ChargeWarn;
 import com.powershare.etm.bean.TotalTrip;
 import com.powershare.etm.bean.Trip;
 import com.powershare.etm.bean.TripParam;
@@ -27,7 +20,6 @@ import com.powershare.etm.bean.TripPoint;
 import com.powershare.etm.bean.TripSoc;
 import com.powershare.etm.http.ApiManager;
 import com.powershare.etm.http.ApiService;
-import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.GlobalValue;
 import com.powershare.etm.util.MyObserver;
 
@@ -36,8 +28,8 @@ import java.util.List;
 public class TrackViewModel extends AndroidViewModel {
     private ApiService apiService = ApiManager.INSTANCE.getService();
     private MediatorLiveData<TripSoc> tripSoc;
+    private MediatorLiveData<ChargeWarn> chargeWarn;
     private AMapLocationClient mLocationClient;
-    private AMapNavi mAMapNavi;
 
     public TrackViewModel(@NonNull Application application) {
         super(application);
@@ -45,6 +37,10 @@ public class TrackViewModel extends AndroidViewModel {
 
     public MediatorLiveData<TripSoc> getTripSoc() {
         return tripSoc = new MediatorLiveData<>();
+    }
+
+    public MediatorLiveData<ChargeWarn> getChargeWarn() {
+        return chargeWarn = new MediatorLiveData<>();
     }
 
     public LiveData<ApiResult<TripSoc>> startTrack(TripParam tripParam) {
@@ -61,6 +57,10 @@ public class TrackViewModel extends AndroidViewModel {
 
     public LiveData<ApiResult<Trip>> traceGet(String trackId) {
         return apiService.traceGet(trackId);
+    }
+
+    public LiveData<ApiResult<TripSoc>> charge(TripPoint tripPoint) {
+        return apiService.charge(tripPoint);
     }
 
     public LiveData<ApiResult<Trip>> getLastTrip() {
@@ -81,7 +81,7 @@ public class TrackViewModel extends AndroidViewModel {
         option.setOnceLocation(false);
         option.setLocationCacheEnable(false);
         // 每5秒定位一次
-        option.setInterval(10 * 1000);
+        option.setInterval(5 * 1000);
         // 地址信息
         option.setNeedAddress(true);
         mLocationClient.setLocationOption(option);
@@ -104,13 +104,7 @@ public class TrackViewModel extends AndroidViewModel {
                             && tripSocApiResult.getSoc() <= tripParam.getWarningLevel()
                             && !tripParam.isWarned()) {
                         GlobalValue.getTripParam().setWarned(true);
-                        NotificationUtils.notify(1, param -> {
-                            param.setSmallIcon(R.mipmap.ic_launcher)
-                                    .setContentTitle("充电提醒")
-                                    .setContentText("当前剩余电量为" + tripSocApiResult.getSoc() + "%，请前往站点进行充电")
-                                    .setAutoCancel(true);
-                            return null;
-                        });
+                        chargeWarn.setValue(new ChargeWarn(tripPoint, tripSocApiResult));
                     }
                 }
             });

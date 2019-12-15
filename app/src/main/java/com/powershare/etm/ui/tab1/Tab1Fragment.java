@@ -275,7 +275,6 @@ public class Tab1Fragment extends BaseFragment {
                 binding.mileageBgValue.setText(AMapUtil.formatDouble(totalTrip.getTotalMileage()));
                 binding.timeLongBgValue.setText(AMapUtil.formatDouble(totalTrip.getTotalDuration()));
                 binding.powerBgValue.setText(AMapUtil.formatDouble(totalTrip.getTotalEnergy()));
-                getMatchingDegree();
             }
         });
     }

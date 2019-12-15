@@ -45,10 +45,8 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        LogUtils.d("onResume-" + this.getClass().getName());
         if (!dataLoaded) {
             dataLoaded = true;
-            LogUtils.d("loadData-" + this.getClass().getName());
             loadData();
         }
     }

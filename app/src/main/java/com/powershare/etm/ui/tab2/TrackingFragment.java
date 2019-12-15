@@ -1,5 +1,6 @@
 package com.powershare.etm.ui.tab2;
 
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +17,11 @@ import com.amap.api.navi.model.AimLessModeCongestionInfo;
 import com.amap.api.navi.model.AimLessModeStat;
 import com.blankj.utilcode.util.FragmentUtils;
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.NotificationUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.Trip;
+import com.powershare.etm.bean.TripPoint;
 import com.powershare.etm.bean.TripSoc;
 import com.powershare.etm.component.MyDialog;
 import com.powershare.etm.databinding.FragmentTrackingBinding;
@@ -101,6 +104,7 @@ public class TrackingFragment extends BaseFragment {
         });
         trackViewModel.startAddTrack();
         startMapTrack();
+        chargeWarn();
     }
 
     @Override
@@ -170,5 +174,53 @@ public class TrackingFragment extends BaseFragment {
             //CommonUtil.showSuccessToast("停止智能巡航");
             mAMapNavi.stopAimlessMode();
         }
+    }
+
+    private void chargeWarn() {
+        trackViewModel.getChargeWarn().observe(this, chargeWarn -> {
+            final boolean[] isCharge = {false};
+            NotificationUtils.notify(1, param -> {
+                param.setSmallIcon(R.mipmap.ic_launcher)
+                        .setContentTitle("充电提醒")
+                        .setContentText("当前剩余电量低于" + chargeWarn.getTripSoc().getSoc() + "%，请前往站点进行充电")
+                        .setAutoCancel(true);
+                return null;
+            });
+            MyDialog myDialog = new MyDialog.Builder(activity)
+                    .setContent("您好，当前剩余电量低于" + chargeWarn.getTripSoc().getSoc() + "%， 请前往站点进行充电")
+                    .setCancelText("忽略")
+                    .setSureText("我要充电")
+                    .setSureListener(v -> {
+                        if (!isCharge[0]) {
+                            charge(chargeWarn.getTripPoint());
+                            isCharge[0] = true;
+                        }
+                    })
+                    .create();
+            myDialog.show();
+            new CountDownTimer(3000, 1000) {
+                public void onTick(long millisUntilFinished) {
+                    int second = (int) (millisUntilFinished / 1000);
+                    String text = "我要充电(" + second + ")";
+                    myDialog.getSureButton().setText(text);
+                }
+
+                public void onFinish() {
+                    myDialog.dismiss();
+                    if (!isCharge[0]) {
+                        charge(chargeWarn.getTripPoint());
+                        isCharge[0] = true;
+                    }
+                }
+            }.start();
+        });
+    }
+
+    private void charge(TripPoint tripPoint) {
+        trackViewModel.charge(tripPoint).observe(this, new MyObserver<TripSoc>() {
+            @Override
+            public void onSuccess(TripSoc tripSoc) {
+            }
+        });
     }
 }

@@ -26,7 +26,6 @@ public class CarViewModel extends ViewModel {
             liveData.observeForever(new MyObserver<List<CarModel>>() {
                 @Override
                 public void onSuccess(List<CarModel> result) {
-                    LogUtils.d("---------------------------------" + result.size());
                     DataCache.INSTANCE.setCarModels(result);
                 }
             });

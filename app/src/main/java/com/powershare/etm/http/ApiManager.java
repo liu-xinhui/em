@@ -85,6 +85,10 @@ public enum ApiManager {
         this.apiService = retrofit.create(ApiService.class);
     }
 
+    public void clearToken() {
+        token = null;
+    }
+
     public ApiService getService() {
         return this.apiService;
     }

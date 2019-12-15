@@ -209,7 +209,6 @@ public class ImageView360 extends AppCompatImageView {
             new Thread(() -> {
                 for (int i = 0; i < urls.length; i++) {
                     String url = urls[i];
-                    System.out.println(url);
                     if (!isDownloadThreadRun) {
                         break;
                     }

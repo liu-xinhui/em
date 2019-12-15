@@ -11,7 +11,9 @@ public abstract class MyObserver<T> implements Observer<ApiResult<T>> {
     }
 
     public void onError(Throwable e) {
-        CommonUtil.showToast(CommonUtil.getExceptionMsg(e));
+        if (!(e instanceof NoLoginException)) {
+            CommonUtil.showToast(CommonUtil.getExceptionMsg(e));
+        }
     }
 
     public abstract void onSuccess(T t);

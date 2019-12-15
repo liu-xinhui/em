@@ -15,6 +15,7 @@ public class MyDialog extends AlertDialog {
 
     private Context mContext;
     private Builder builder;
+    private Button btnSure;
 
     private MyDialog(Context context, Builder builder) {
         super(context, R.style.CustomDialog);
@@ -29,10 +30,13 @@ public class MyDialog extends AlertDialog {
         View view = LayoutInflater.from(mContext).inflate(R.layout.view_dialog, null);
         setContentView(view);
         TextView content = view.findViewById(R.id.content);
-        Button btnSure = view.findViewById(R.id.sure);
+        btnSure = view.findViewById(R.id.sure);
         Button btnCancel = view.findViewById(R.id.cancel);
         if (builder.contentText != null) {
             content.setText(builder.contentText);
+        }
+        if (builder.cancelText != null) {
+            btnCancel.setText(builder.cancelText);
         }
         if (builder.sureText != null) {
             btnSure.setText(builder.sureText);
@@ -47,8 +51,13 @@ public class MyDialog extends AlertDialog {
         btnCancel.setOnClickListener(v -> cancel());
     }
 
+    public Button getSureButton() {
+        return btnSure;
+    }
+
     public static class Builder {
         private Context mContext;
+        private String cancelText;
         private String sureText;
         private String contentText;
         private View.OnClickListener sureListener;
@@ -59,6 +68,11 @@ public class MyDialog extends AlertDialog {
 
         public Builder setSureText(String text) {
             sureText = text;
+            return this;
+        }
+
+        public Builder setCancelText(String text) {
+            cancelText = text;
             return this;
         }
 

@@ -16,11 +16,16 @@ import com.powershare.etm.bean.User;
 
 import java.util.List;
 
+import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface ApiService {
+    //最近一次行程详情，使用此接口判断是否登录
+    @POST("trip/getLastTrip")
+    Call<ApiResult<Void>> checkLogin();
+
     //登录
     @POST("usc/login")
     LiveData<ApiResult<User>> login(@Query("mobile") CharSequence mobile, @Query("code") CharSequence code);
@@ -52,6 +57,10 @@ public interface ApiService {
     //行程追踪打点
     @POST("trip/trace")
     LiveData<ApiResult<TripSoc>> pushTrack(@Body TripPoint tripPoint);
+
+    //行程追踪充电
+    @POST("trip/charge")
+    LiveData<ApiResult<TripSoc>> charge(@Body TripPoint tripPoint);
 
     //行程列表
     @POST("trip/query")
