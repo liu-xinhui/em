@@ -122,17 +122,13 @@
             app:layout_constraintTop_toTopOf="@id/recent_track_end"
             app:layout_constraintVertical_bias="0.36" />
 
-        <com.noober.background.view.BLView
+        <ImageView
             android:id="@+id/BLView"
-            android:layout_width="3dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
             android:layout_marginTop="2dp"
-            app:bl_stroke_color="@color/textD3"
-            app:bl_stroke_dashGap="2dp"
-            app:bl_stroke_dashWidth="2dp"
-            app:bl_stroke_position="left"
-            app:bl_stroke_width="1dp"
+            android:src="@mipmap/arrow"
             app:layout_constraintLeft_toLeftOf="@id/recent_track_start"
             app:layout_constraintTop_toBottomOf="@id/recent_track_start" />
 

@@ -60,7 +60,8 @@ public class TrackingFragment extends BaseFragment {
 
     @Override
     protected void onMounted() {
-        binding.progress.setProgressColor(0xBBF44B57, 0xBBF44B57, 0xBB00F4FF, 0xBB00F4FF, 0xBB9523C5, 0xBB9523C5, 0xBBF44B57);
+        //binding.progress.setProgressColor(0xBBF44B57, 0xBBF44B57, 0xBB00F4FF, 0xBB00F4FF, 0xBB9523C5, 0xBB9523C5, 0xBBF44B57);
+        binding.progress.setProgressColor(0xBB00F4FF, 0xBB00F4FF, 0xBBF44B57, 0xBBF44B57, 0xBBF44B57, 0xBB9523C5, 0xBB9523C5, 0xBB00F4FF, 0xBB00F4FF);
         binding.progress.setProgress(0);
         binding.cancelTrack.setOnClickListener(view -> new MyDialog.Builder(activity)
                 .setContent("确定结束追踪并放弃记录吗？")
