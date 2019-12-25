@@ -19,7 +19,7 @@
             android:layout_height="140dp"
             android:layout_marginTop="16dp"
             app:bl_corners_radius="5dp"
-            app:bl_solid_color="@color/backgroundLite"
+            app:bl_solid_color="@color/transparent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.noober.background.view.BLView
@@ -28,7 +28,7 @@
             android:layout_height="80dp"
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="20dp"
-            app:bl_solid_color="@color/black"
+            app:bl_solid_color="#2E2E2E"
             app:layout_constraintBottom_toBottomOf="@id/recent_track_bg"
             app:layout_constraintLeft_toLeftOf="@id/recent_track_bg"
             app:layout_constraintRight_toRightOf="@id/recent_track_bg"
@@ -39,7 +39,7 @@
             android:layout_width="0dp"
             android:layout_height="3dp"
             android:layout_marginStart="37dp"
-            app:bl_stroke_color="@color/backgroundLite"
+            app:bl_stroke_color="@color/gray4"
             app:bl_stroke_position="top"
             app:bl_stroke_width="1dp"
             app:layout_constraintBottom_toBottomOf="@id/recent_track_bg2"
@@ -132,14 +132,21 @@
             app:layout_constraintLeft_toLeftOf="@id/recent_track_start"
             app:layout_constraintTop_toBottomOf="@id/recent_track_start" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="5dp"
+            android:background="@color/gray3"
+            app:layout_constraintBottom_toTopOf="@id/car_model_bg" />
+
         <!--车型框框-->
         <com.noober.background.view.BLView
             android:id="@+id/car_model_bg"
             android:layout_width="match_parent"
             android:layout_height="450dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             app:bl_corners_radius="5dp"
-            app:bl_solid_color="@color/backgroundLite"
+            app:bl_solid_color="@color/transparent"
             app:layout_constraintTop_toBottomOf="@+id/recent_track_bg" />
 
         <com.noober.background.view.BLView
@@ -225,8 +232,8 @@
             android:layout_marginTop="13dp"
             android:paddingTop="5dp"
             android:paddingBottom="25dp"
-            android:progressBackgroundTint="@color/backgroundLite"
-            android:progressTint="@color/backgroundLite"
+            android:progressBackgroundTint="@color/transparent"
+            android:progressTint="@color/transparent"
             android:thumb="@mipmap/power"
             app:layout_constraintLeft_toLeftOf="@id/car_model_bg"
             app:layout_constraintRight_toRightOf="@id/car_model_bg"
@@ -246,6 +253,7 @@
             app:layout_constraintTop_toBottomOf="@id/car_title_arrow" />
 
         <TextView
+            android:id="@+id/power_tip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15dp"
@@ -256,6 +264,13 @@
             app:layout_constraintEnd_toEndOf="@id/car_model_bg"
             app:layout_constraintStart_toStartOf="@id/car_model_bg" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="25dp"
+            android:background="@color/gray3"
+            app:layout_constraintTop_toBottomOf="@id/power_tip" />
+
         <!--温度框框-->
         <com.noober.background.view.BLView
             android:id="@+id/temp_bg"
@@ -263,7 +278,7 @@
             android:layout_height="190dp"
             android:layout_marginTop="20dp"
             app:bl_corners_radius="5dp"
-            app:bl_solid_color="@color/backgroundLite"
+            app:bl_solid_color="@color/transparent"
             app:layout_constraintTop_toBottomOf="@+id/car_model_bg" />
 
         <com.noober.background.view.BLView

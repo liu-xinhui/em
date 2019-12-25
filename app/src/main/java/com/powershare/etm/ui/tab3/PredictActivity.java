@@ -147,6 +147,11 @@ public class PredictActivity extends BaseActivity {
                 //
                 String powerValueEnd = predictCharge.getDestSoc() + "%";
                 binding.powerValueEnd.setText(powerValueEnd);
+                if (predictCharge.getDestSoc() >= 30) {
+                    binding.powerEnd.setImageResource(R.mipmap.power_white);
+                } else {
+                    binding.powerEnd.setImageResource(R.mipmap.power_end);
+                }
                 //
                 String powerConsumption = "行程消耗" + AMapUtil.formatDouble(predictCharge.getEnergy()) + "kwh电量";
                 binding.powerConsumption.setText(powerConsumption);

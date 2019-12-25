@@ -53,7 +53,7 @@
                 android:paddingVertical="10dp"
                 android:paddingStart="5dp"
                 android:paddingEnd="10dp"
-                android:src="@mipmap/tab_temperature"
+                android:src="@mipmap/tab_temperature2"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/map_container"
                 app:layout_constraintRight_toRightOf="parent" />
@@ -65,7 +65,7 @@
                 android:paddingVertical="10dp"
                 android:paddingStart="10dp"
                 android:paddingEnd="5dp"
-                android:src="@mipmap/tab_car"
+                android:src="@mipmap/tab_car2"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@id/map_container"
                 app:layout_constraintRight_toLeftOf="@id/temp" />
@@ -80,7 +80,7 @@
                 android:text="~"
                 android:textColor="@color/colorAccent"
                 app:bl_corners_radius="20dp"
-                app:bl_solid_color="@color/black"
+                app:bl_solid_color="#2E2E2E"
                 app:layout_constraintTop_toBottomOf="@id/map_container" />
 
             <ImageView

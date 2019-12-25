@@ -135,6 +135,11 @@ public class TrackDetailActivity extends BaseActivity {
                 //
                 String powerValueEnd = trip.getDestSoc() + "%";
                 binding.powerValueEnd.setText(powerValueEnd);
+                if (trip.getDestSoc() >= 30) {
+                    binding.powerEnd.setImageResource(R.mipmap.power_white);
+                } else {
+                    binding.powerEnd.setImageResource(R.mipmap.power_end);
+                }
                 //
                 String powerConsumption = "行程消耗" + AMapUtil.formatDouble(trip.getEnergy()) + "kwh电量";
                 binding.powerConsumption.setText(powerConsumption);

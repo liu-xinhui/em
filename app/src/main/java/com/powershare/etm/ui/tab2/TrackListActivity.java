@@ -2,6 +2,7 @@ package com.powershare.etm.ui.tab2;
 
 import android.content.Intent;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -62,6 +63,14 @@ public class TrackListActivity extends BaseActivity {
                 holder.setText(R.id.date, TimeUtils.millis2String(trip.getStartTimestamp(), "yyyy.MM.dd   HH:mm:ss"));
                 holder.setText(R.id.start_soc, trip.getStartSoc() + "%");
                 holder.setText(R.id.end_soc, trip.getDestSoc() + "%");
+
+                ImageView endImg = (ImageView) holder.getView(R.id.end_img);
+                if (trip.getDestSoc() >= 30) {
+                    endImg.setImageResource(R.mipmap.history_end_white);
+                } else {
+                    endImg.setImageResource(R.mipmap.history_end);
+                }
+
                 holder.setText(R.id.mileage, AMapUtil.formatDouble(trip.getMileage()) + "KM");
                 holder.setText(R.id.power, AMapUtil.formatDouble(trip.getStartSoc() - trip.getDestSoc()) + "%");
             }
