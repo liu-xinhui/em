@@ -1,8 +1,10 @@
 package com.powershare.etm.ui;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.powershare.etm.databinding.ActivitySplashBinding;
 import com.powershare.etm.ui.base.BaseActivity;
 import com.powershare.etm.util.UserCache;

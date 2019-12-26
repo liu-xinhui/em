@@ -129,7 +129,7 @@ public class MainActivity extends BaseActivity {
         //
         ViewGroup viewGroup = (ViewGroup) mTabSegment.getChildAt(0);
         View.OnTouchListener onTouchListener = (view, motionEvent) -> {
-            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN && !loginViewModel.isLogin()) {
+            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN && !LoginViewModel.isLogin()) {
                 go(LoginActivity.class);
                 return true;
             }

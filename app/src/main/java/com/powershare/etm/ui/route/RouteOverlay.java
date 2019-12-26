@@ -86,7 +86,7 @@ public class RouteOverlay {
      * @since V2.1.0
      */
     protected BitmapDescriptor getStartBitmapDescriptor() {
-        return BitmapDescriptorFactory.fromResource(R.mipmap.start);
+        return BitmapDescriptorFactory.fromResource(R.mipmap.map_start);
     }
 
     /**
@@ -96,7 +96,7 @@ public class RouteOverlay {
      * @since V2.1.0
      */
     protected BitmapDescriptor getEndBitmapDescriptor() {
-        return BitmapDescriptorFactory.fromResource(R.mipmap.end);
+        return BitmapDescriptorFactory.fromResource(R.mipmap.map_end);
     }
 
     protected BitmapDescriptor getDriveBitmapDescriptor() {

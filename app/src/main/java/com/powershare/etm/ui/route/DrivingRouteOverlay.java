@@ -15,6 +15,7 @@ import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.route.DrivePath;
 import com.amap.api.services.route.DriveStep;
 import com.amap.api.services.route.TMC;
+import com.blankj.utilcode.util.SizeUtils;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.Charge;
 import com.powershare.etm.util.AMapUtil;
@@ -36,7 +37,7 @@ public class DrivingRouteOverlay extends RouteOverlay {
     private PolylineOptions mPolylineOptionscolor;
     private Context mContext;
     private boolean isColorfulline = true;
-    private float mWidth = 13;
+    private float mWidth = SizeUtils.dp2px(8);
     private List<LatLng> mLatLngsOfPath;
 
     public void setIsColorfulline(boolean iscolorfulline) {

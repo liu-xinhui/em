@@ -46,8 +46,7 @@
 
         <activity
             android:name=".ui.SplashActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTask">
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -62,7 +61,9 @@
         <activity android:name=".ui.tab3.PredictActivity" />
         <activity android:name=".ui.tab3.PredictFullActivity" />
         <activity android:name=".ui.tab2.TrackDetailActivity" />
-        <activity android:name=".ui.MainActivity" />
+        <activity
+            android:name=".ui.MainActivity"
+            android:launchMode="singleTask" />
     </application>
 
 </manifest>
