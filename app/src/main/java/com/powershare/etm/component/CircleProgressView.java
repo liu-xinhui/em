@@ -61,7 +61,7 @@ public class CircleProgressView extends View {
     /**
      * 圆正常颜色
      */
-    private int mNormalColor = 0xFFC8C8C8;
+    private int mNormalColor = 0xFF6C6C6C;
     /**
      * 进度颜色
      */
@@ -245,8 +245,8 @@ public class CircleProgressView extends View {
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(mStrokeWidth);
-        mPaint.setShadowLayer(30, 0, 0, Color.RED);
-        mPaint.setMaskFilter(new BlurMaskFilter(30f, BlurMaskFilter.Blur.SOLID));
+        //mPaint.setShadowLayer(30, 0, 0, Color.RED);
+        //mPaint.setMaskFilter(new BlurMaskFilter(30f, BlurMaskFilter.Blur.SOLID));
         mTextPaint = new TextPaint();
 
         mTotalTickCount = (int) (mSweepAngle / (mTickSplitAngle + mBlockAngle));
@@ -306,12 +306,12 @@ public class CircleProgressView extends View {
     private RectF rectF;
 
     private void drawArc(Canvas canvas) {
-        /*mPaint.reset();
+        mPaint.reset();
         mPaint.setAntiAlias(true);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(mStrokeWidth);
-        mPaint.setShadowLayer(30,0,0, Color.RED);
-        mPaint.setMaskFilter(new BlurMaskFilter(30f, BlurMaskFilter.Blur.SOLID));*/
+        //mPaint.setShadowLayer(30,0,0, Color.RED);
+        mPaint.setMaskFilter(new BlurMaskFilter(30f, BlurMaskFilter.Blur.SOLID));
 
         if (isShowTick) {//是否显示外边框刻度
             if (rectF == null) {
@@ -361,65 +361,6 @@ public class CircleProgressView extends View {
             }
 
         }
-        if (isShowCircle) {
-            mPaint.setShader(null);
-            mPaint.setStrokeCap(Paint.Cap.ROUND);
-            mPaint.setColor(mNormalColor);
-
-            //进度圆半径
-            float circleRadius = isShowTick ? mRadius - mCirclePadding - mStrokeWidth : mRadius;
-            float diameter = circleRadius * 2;
-            float startX = mCircleCenterX - circleRadius;
-            float startY = mCircleCenterY - circleRadius;
-            RectF rectF1 = new RectF(startX, startY, startX + diameter, startY + diameter);
-
-            //绘制底层弧形
-            canvas.drawArc(rectF1, mStartAngle, mSweepAngle, false, mPaint);
-
-            //着色器不为空则设置着色器，反之用纯色
-            if (isShader && mShader != null) {
-                mPaint.setShader(mShader);
-            } else {
-                mPaint.setColor(mProgressColor);
-            }
-
-            if (isTurn) {
-                //绘制当前进度弧形
-                canvas.drawArc(rectF1, mStartAngle + mSweepAngle * getRatio(), mSweepAngle * getRatio(), false, mPaint);
-            } else {
-                //绘制当前进度弧形
-                canvas.drawArc(rectF1, mStartAngle, mSweepAngle * getRatio(), false, mPaint);
-            }
-        }
-    }
-
-    /**
-     * 绘制中间的文本
-     */
-    private void drawText(Canvas canvas) {
-        if (!isShowLabel) {
-            return;
-        }
-        mTextPaint.reset();
-        mTextPaint.setAntiAlias(true);
-        mTextPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        mTextPaint.setTextSize(mLabelTextSize);
-        mTextPaint.setColor(mLabelTextColor);
-        mTextPaint.setTextAlign(Paint.Align.CENTER);
-
-        Paint.FontMetrics fontMetrics = mTextPaint.getFontMetrics();
-        // 计算文字高度 
-        float fontHeight = fontMetrics.bottom - fontMetrics.top;
-        // 计算文字baseline 
-        float textBaseY = getHeight() - (getHeight() - fontHeight) / 2 - fontMetrics.bottom;
-
-        int textX = getWidth() / 2;
-        if (isShowPercentText) {//是否显示百分比
-            canvas.drawText(mProgressPercent + "%", textX, textBaseY, mTextPaint);
-        } else if (!TextUtils.isEmpty(mLabelText)) {//显示自定义文本
-            canvas.drawText(mLabelText, textX, textBaseY, mTextPaint);
-        }
-
     }
 
     /**

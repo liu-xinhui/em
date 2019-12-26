@@ -65,9 +65,6 @@ public class Tab1Fragment extends BaseFragment {
 
     @Override
     protected void onMounted() {
-        binding.progressCar.setProgressColor(0xBB00F4FF, 0xBB9523C5, 0xBBF44B57, 0xBB9523C5, 0xBB00F4FF);
-        binding.progressCar.setShowCircle(false);
-        binding.progressCar.showAnimation(100, 500);
         initTabs();
         initProgressTemperature();
         initPreNext();
@@ -134,6 +131,7 @@ public class Tab1Fragment extends BaseFragment {
                         binding.pre.setVisibility(View.GONE);
                         binding.next.setVisibility(View.GONE);
                         binding.bannerNav.setVisibility(View.GONE);
+                        getMatchingDegree();
                         break;
                     case 2:
                         binding.progressCar.setVisibility(View.INVISIBLE);
@@ -301,10 +299,15 @@ public class Tab1Fragment extends BaseFragment {
                     binding.trackCount.setText(degree);
                     binding.carFit.setVisibility(View.VISIBLE);
                     binding.carFit.setText(String.format("契合度%s", degree));
+                    binding.progressCar.setProgressColor(matchingDegree.getDegree() > 90 ? 0xFF00F4FF : 0xFFD3D3D3);
+                    binding.progressCar.showAnimation(matchingDegree.getDegree(), 0);
                 }
             });
         } else {
             binding.trackCount.setText(String.valueOf(mTotalTrip.getTotalTimes()));
+
+            binding.progressCar.setProgressColor(0xBB00F4FF, 0xBB9523C5, 0xBBF44B57, 0xBB9523C5, 0xBB00F4FF);
+            binding.progressCar.showAnimation(100, 0);
         }
     }
 }

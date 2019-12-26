@@ -86,28 +86,30 @@ public class TrackViewModel extends AndroidViewModel {
         option.setNeedAddress(true);
         mLocationClient.setLocationOption(option);
         mLocationClient.setLocationListener(aMapLocation -> {
-            LogUtils.d("位置上传");
-            TripPoint tripPoint = new TripPoint();
-            tripPoint.setTimestamp(System.currentTimeMillis());
-            tripPoint.setLatitude(aMapLocation.getLatitude());
-            tripPoint.setLongitude(aMapLocation.getLongitude());
-            tripPoint.setSpeed(aMapLocation.getSpeed());
-            tripPoint.setMileage(GlobalValue.getTrackMileage() / 1000.0);
-            tripPoint.setAddress(aMapLocation.getAddress());
-            tripPoint.setAg(aMapLocation.getBearing());
-            apiService.pushTrack(tripPoint).observeForever(new MyObserver<TripSoc>() {
-                @Override
-                public void onSuccess(TripSoc tripSocApiResult) {
-                    tripSoc.setValue(tripSocApiResult);
-                    TripParam tripParam = GlobalValue.getTripParam();
-                    if (tripParam != null
-                            && tripSocApiResult.getSoc() <= tripParam.getWarningLevel()
-                            && !tripParam.isWarned()) {
-                        GlobalValue.getTripParam().setWarned(true);
-                        chargeWarn.setValue(new ChargeWarn(tripPoint, tripSocApiResult));
+            if (aMapLocation.getErrorCode() == 0) {
+                LogUtils.d("位置上传");
+                TripPoint tripPoint = new TripPoint();
+                tripPoint.setTimestamp(System.currentTimeMillis());
+                tripPoint.setLatitude(aMapLocation.getLatitude());
+                tripPoint.setLongitude(aMapLocation.getLongitude());
+                tripPoint.setSpeed(aMapLocation.getSpeed());
+                tripPoint.setMileage(GlobalValue.getTrackMileage() / 1000.0);
+                tripPoint.setAddress(aMapLocation.getAddress());
+                tripPoint.setAg(aMapLocation.getBearing());
+                apiService.pushTrack(tripPoint).observeForever(new MyObserver<TripSoc>() {
+                    @Override
+                    public void onSuccess(TripSoc tripSocApiResult) {
+                        tripSoc.setValue(tripSocApiResult);
+                        TripParam tripParam = GlobalValue.getTripParam();
+                        if (tripParam != null
+                                && tripSocApiResult.getSoc() <= tripParam.getWarningLevel()
+                                && !tripParam.isWarned()) {
+                            GlobalValue.getTripParam().setWarned(true);
+                            chargeWarn.setValue(new ChargeWarn(tripPoint, tripSocApiResult));
+                        }
                     }
-                }
-            });
+                });
+            }
         });
         mLocationClient.startLocation();
         App.getInstance().startKeepAlive();
