@@ -55,7 +55,7 @@ public class CarDetailActivity extends BaseActivity {
         items.add(AMapUtil.formatDouble(currentCar.getMaxSoeKm()) + ",km,续航里程");
         items.add(AMapUtil.formatDouble(currentCar.getCafc()) + ",kwh/100km,能量消耗");
         items.add(AMapUtil.formatDouble(currentCar.getMaxSpeed()) + ",km/h,最高时速");
-        items.add(AMapUtil.formatDouble(currentCar.getAccTime()) + ",h,快充时间");
+        items.add(Double.valueOf(currentCar.getAccTime()).intValue() + ",min,快充时间");
         items.add(AMapUtil.formatDouble(currentCar.getChargeTimeKm100()) + ",h,慢充时间");
         items.add(AMapUtil.formatDouble(currentCar.getMaxSoeKwh()) + ",kWh,电池容量");
 

@@ -39,7 +39,7 @@
             android:text="记录进行中~"
             android:textColor="@color/colorAccent"
             app:bl_corners_radius="20dp"
-            app:bl_solid_color="@color/black"
+            app:bl_solid_color="#2E2E2E"
             app:layout_constraintTop_toBottomOf="@id/progress" />
 
         <GridLayout
