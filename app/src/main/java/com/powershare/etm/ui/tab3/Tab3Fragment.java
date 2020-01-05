@@ -10,6 +10,9 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.help.Tip;
+import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
+import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
+import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.bean.TripParam;
@@ -24,7 +27,9 @@ import com.powershare.etm.vm.CarViewModel;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Tab3Fragment extends BaseFragment {
 
@@ -84,18 +89,34 @@ public class Tab3Fragment extends BaseFragment {
                 }
             }
         });
-        binding.tempCurrent.setOnClickListener(view -> getTemp());
-        View.OnClickListener tempSelect = view -> {
-            QMUIBottomSheet.BottomListSheetBuilder builder = new QMUIBottomSheet.BottomListSheetBuilder(activity);
-            for (int i = -20; i <= 50; i++) {
-                builder.addItem(i + "℃");
+
+        List<String> items = new ArrayList<>();
+        Map<String, Integer> tempMap = new HashMap<>();
+        int index = 0;
+        for (int i = -20; i <= 50; i++) {
+            items.add(i + "℃");
+            tempMap.put(i + "", index);
+            index++;
+        }
+        OptionsPickerView<String> tempOptions = new OptionsPickerBuilder(activity, new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int option2, int options3, View v) {
+                binding.tempValue.setText(items.get(options1).replace("℃", ""));
             }
-            builder.setOnSheetItemClickListener((dialog, itemView, position, tag) -> {
-                dialog.dismiss();
-                binding.tempValue.setText(tag.replace("℃", ""));
-            }).build().show();
+        }).build();
+        tempOptions.setPicker(items);
+
+        View.OnClickListener tempSelect = view -> {
+            String currTempStr = binding.tempValue.getText().toString();
+            Integer value = tempMap.get(currTempStr);
+            if (value != null) {
+                tempOptions.setSelectOptions(value);
+            }
+            tempOptions.show();
         };
+
         binding.tempSelect.setOnClickListener(tempSelect);
+        binding.tempCurrent.setOnClickListener(view -> getTemp());
         //计算路线
         binding.calcRoute.setOnClickListener(view -> {
             Tip endTip = (Tip) binding.recentTrackEndText.getTag();

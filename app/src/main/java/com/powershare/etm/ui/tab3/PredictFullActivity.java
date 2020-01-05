@@ -18,6 +18,9 @@ import com.amap.api.services.route.DriveRouteResult;
 import com.amap.api.services.route.RideRouteResult;
 import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkRouteResult;
+import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
+import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
+import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.CollectionUtils;
 import com.bumptech.glide.Glide;
@@ -38,7 +41,9 @@ import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.amap.api.services.route.RouteSearch.DRIVING_SINGLE_DEFAULT;
 
@@ -297,18 +302,30 @@ public class PredictFullActivity extends BaseActivity {
     }
 
     private void getTemp() {
+        List<String> items = new ArrayList<>();
+        Map<String, Integer> tempMap = new HashMap<>();
+        int index = 0;
+        for (int i = -20; i <= 50; i++) {
+            items.add(i + "℃");
+            tempMap.put(i + "", index);
+            index++;
+        }
+        OptionsPickerView<String> tempOptions = new OptionsPickerBuilder(this, (options1, option2, options3, v) -> {
+            int temp = Integer.parseInt(items.get(options1).replace("℃", ""));
+            tripParam.setTemperature(temp);
+            tracePredict(tripParam);
+        }).build();
+        tempOptions.setPicker(items);
+
         View.OnClickListener tempSelect = view -> {
-            QMUIBottomSheet.BottomListSheetBuilder builder = new QMUIBottomSheet.BottomListSheetBuilder(this);
-            for (int i = -20; i <= 50; i++) {
-                builder.addItem(i + "℃");
+            String currTempStr =  tripParam.getTemperature()+"";
+            Integer value = tempMap.get(currTempStr);
+            if (value != null) {
+                tempOptions.setSelectOptions(value);
             }
-            builder.setOnSheetItemClickListener((dialog, itemView, position, tag) -> {
-                dialog.dismiss();
-                int temp = Integer.parseInt(tag.replace("℃", ""));
-                tripParam.setTemperature(temp);
-                this.tracePredict(tripParam);
-            }).build().show();
+            tempOptions.show();
         };
+
         binding.temp.setOnClickListener(tempSelect);
     }
 

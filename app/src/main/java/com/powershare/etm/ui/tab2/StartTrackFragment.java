@@ -7,6 +7,9 @@ import android.widget.SeekBar;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
+import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
+import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.blankj.utilcode.util.FragmentUtils;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.CarModel;
@@ -31,7 +34,9 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StartTrackFragment extends BaseFragment {
     private FragmentStartTrackBinding binding;
@@ -87,20 +92,33 @@ public class StartTrackFragment extends BaseFragment {
             }
         });
         //温度
-        binding.tempCurrent.setOnClickListener(view -> getTemp());
-        View.OnClickListener tempSelect = view -> {
-            QMUIBottomSheet.BottomListSheetBuilder builder = new QMUIBottomSheet.BottomListSheetBuilder(activity);
-            for (int i = -20; i <= 50; i++) {
-                builder.addItem(i + "℃");
+        List<String> items = new ArrayList<>();
+        Map<String, Integer> tempMap = new HashMap<>();
+        int index = 0;
+        for (int i = -20; i <= 50; i++) {
+            items.add(i + "℃");
+            tempMap.put(i + "", index);
+            index++;
+        }
+        OptionsPickerView<String> tempOptions = new OptionsPickerBuilder(activity, new OnOptionsSelectListener() {
+            @Override
+            public void onOptionsSelect(int options1, int option2, int options3, View v) {
+                binding.tempValue.setText(items.get(options1).replace("℃", ""));
             }
-            builder.setOnSheetItemClickListener((dialog, itemView, position, tag) -> {
-                dialog.dismiss();
-                String temp = tag.replace("℃", "");
-                binding.tempValue.setText(temp);
-                GlobalValue.setCurrentTemp(Integer.parseInt(temp));
-            }).build().show();
+        }).build();
+        tempOptions.setPicker(items);
+
+        View.OnClickListener tempSelect = view -> {
+            String currTempStr = binding.tempValue.getText().toString();
+            Integer value = tempMap.get(currTempStr);
+            if (value != null) {
+                tempOptions.setSelectOptions(value);
+            }
+            tempOptions.show();
         };
+
         binding.tempSelect.setOnClickListener(tempSelect);
+        binding.tempCurrent.setOnClickListener(view -> getTemp());
         //开启手动追踪
         binding.startTrack.setOnClickListener(view -> startTrack(null));
         binding.recentTrackBg.setOnClickListener(v -> {
