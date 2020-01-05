@@ -180,7 +180,7 @@ public class DragCircleProgressView extends View {
         canvas.drawCircle(endX, endY, bgWidth2, progressPaint);
 
         //绘制进度条
-        progressPaint.setColor(Color.parseColor("#3574F3"));
+        progressPaint.setColor(Color.parseColor("#D3D3D3"));
         progressPaint.setStrokeWidth(STROKE_WIDTH);
         progressPaint.setStyle(Paint.Style.STROKE);//设置空心
         canvas.drawArc(circleRectF, start, sweep1, false, progressPaint);
