@@ -106,4 +106,8 @@ dependencies {
     //https://github.com/AndreiD/TSnackBar
     implementation 'com.androidadvance:topsnackbar:1.1.1'
     implementation 'com.contrarywind:Android-PickerView:4.1.9'
+
+    //https://bugly.qq.com/docs/user-guide/instruction-manual-android/?v=20180709165613
+    //noinspection GradleDependency
+    implementation 'com.tencent.bugly:crashreport:latest.release'
 }

@@ -1,6 +1,7 @@
 package com.powershare.etm.util;
 
 
+import com.amap.api.services.route.DriveRouteResult;
 import com.powershare.etm.bean.TripParam;
 
 import lombok.Getter;
@@ -29,6 +30,10 @@ public class GlobalValue {
     @Getter
     @Setter
     private static int currentCarIndex;
+
+    @Getter
+    @Setter
+    private static DriveRouteResult driveRouteResult;
 
     public static void setTracking(boolean tracking) {
         GlobalValue.tracking = tracking;

@@ -2,9 +2,11 @@ package com.powershare.etm;
 
 import android.app.Application;
 
+import com.amap.api.services.route.DriveRouteResult;
 import com.blankj.utilcode.util.LogUtils;
 import com.gyf.cactus.Cactus;
 import com.gyf.cactus.callback.CactusCallback;
+import com.tencent.bugly.crashreport.CrashReport;
 
 public class App extends Application {
 
@@ -18,6 +20,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         app = this;
+        CrashReport.initCrashReport(this, "8dc11f29a0", BuildConfig.DEBUG);
     }
 
     public void startKeepAlive() {

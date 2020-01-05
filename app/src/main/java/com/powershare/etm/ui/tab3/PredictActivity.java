@@ -35,6 +35,7 @@ import com.powershare.etm.ui.base.BaseActivity;
 import com.powershare.etm.ui.route.DrivingRouteOverlay;
 import com.powershare.etm.util.AMapUtil;
 import com.powershare.etm.util.CommonUtil;
+import com.powershare.etm.util.GlobalValue;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.vm.CarViewModel;
 import com.powershare.etm.vm.PredictViewModel;
@@ -246,7 +247,8 @@ public class PredictActivity extends BaseActivity {
                     Intent goIntent = new Intent(PredictActivity.this, PredictFullActivity.class);
                     goIntent.putExtra("tripParam", tripParam);
                     goIntent.putExtra("predictCharge", predictCharge);
-                    goIntent.putExtra("driveRouteResult", driveRouteResult);
+                    GlobalValue.setDriveRouteResult(driveRouteResult);
+                    //goIntent.putExtra("driveRouteResult", driveRouteResult);
                     startActivity(goIntent);
                 });
                 //

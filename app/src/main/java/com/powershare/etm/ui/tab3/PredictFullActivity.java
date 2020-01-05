@@ -19,7 +19,6 @@ import com.amap.api.services.route.RideRouteResult;
 import com.amap.api.services.route.RouteSearch;
 import com.amap.api.services.route.WalkRouteResult;
 import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
-import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.CollectionUtils;
@@ -33,6 +32,7 @@ import com.powershare.etm.databinding.ActivityPredictFullBinding;
 import com.powershare.etm.ui.base.BaseActivity;
 import com.powershare.etm.ui.route.DrivingRouteOverlay;
 import com.powershare.etm.util.CommonUtil;
+import com.powershare.etm.util.GlobalValue;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.vm.CarViewModel;
 import com.powershare.etm.vm.PredictViewModel;
@@ -105,7 +105,8 @@ public class PredictFullActivity extends BaseActivity {
         Intent intent = getIntent();
         tripParam = (TripParam) intent.getSerializableExtra("tripParam");
         PredictCharge predictCharge = (PredictCharge) intent.getSerializableExtra("predictCharge");
-        DriveRouteResult driveRouteResult = intent.getParcelableExtra("driveRouteResult");
+        //DriveRouteResult driveRouteResult = intent.getParcelableExtra("driveRouteResult");
+        DriveRouteResult driveRouteResult = GlobalValue.getDriveRouteResult();
         new Handler().postDelayed(() -> initUi(predictCharge, driveRouteResult), 500);
         //this.tracePredict(tripParam);
         //车型点击
@@ -318,7 +319,7 @@ public class PredictFullActivity extends BaseActivity {
         tempOptions.setPicker(items);
 
         View.OnClickListener tempSelect = view -> {
-            String currTempStr =  tripParam.getTemperature()+"";
+            String currTempStr = tripParam.getTemperature() + "";
             Integer value = tempMap.get(currTempStr);
             if (value != null) {
                 tempOptions.setSelectOptions(value);
