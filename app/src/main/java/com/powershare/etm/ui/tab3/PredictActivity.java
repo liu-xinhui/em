@@ -70,7 +70,16 @@ public class PredictActivity extends BaseActivity {
         uiSettings.setZoomControlsEnabled(false);
         uiSettings.setRotateGesturesEnabled(false);
         binding.mapContainer.setScrollView(binding.scrollView);
-        aMap.setOnMarkerClickListener(marker -> true);
+        aMap.setOnMarkerClickListener(marker -> {
+            Object obj = marker.getObject();
+            if (obj instanceof Charge) {
+                Charge charge = (Charge) marker.getObject();
+                marker.setTitle(charge.getName());
+                marker.setSnippet("地址：" + charge.getAddress());
+                marker.showInfoWindow();
+            }
+            return true;
+        });
     }
 
     @Override
@@ -340,7 +349,7 @@ public class PredictActivity extends BaseActivity {
         tempOptions.setPicker(items);
 
         View.OnClickListener tempSelect = view -> {
-            String currTempStr =  tripParam.getTemperature()+"";
+            String currTempStr = tripParam.getTemperature() + "";
             Integer value = tempMap.get(currTempStr);
             if (value != null) {
                 tempOptions.setSelectOptions(value);
