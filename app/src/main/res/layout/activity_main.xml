@@ -22,7 +22,7 @@
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="@dimen/home_tab_height"
-        android:background="#484848"
+        android:background="@color/transparent"
         android:paddingHorizontal="3dp"
         android:paddingTop="3dp"
         android:textSize="13dp"

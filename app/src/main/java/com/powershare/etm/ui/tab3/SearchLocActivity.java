@@ -100,12 +100,10 @@ public class SearchLocActivity extends BaseActivity {
                 if (TextUtils.isEmpty(charSequence)) {
                     searchTextEmpty = true;
                     binding.historyTitle.setVisibility(View.VISIBLE);
-                    binding.historyDivider.setVisibility(View.VISIBLE);
                     setHistory();
                 } else {
                     searchTextEmpty = false;
                     binding.historyTitle.setVisibility(View.GONE);
-                    binding.historyDivider.setVisibility(View.GONE);
                     InputtipsQuery inputQuery = new InputtipsQuery(charSequence.toString(), "上海");
                     inputQuery.setCityLimit(false);//限制在当前城市
                     Inputtips inputTips = new Inputtips(SearchLocActivity.this, inputQuery);

@@ -9,7 +9,7 @@
     android:layout_marginVertical="7dp"
     android:padding="15dp"
     app:bl_corners_radius="5dp"
-    app:bl_solid_color="@color/backgroundLite">
+    app:bl_solid_color="#2E2E2E">
 
     <TextView
         android:id="@+id/date"

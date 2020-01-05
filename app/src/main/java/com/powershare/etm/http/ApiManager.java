@@ -29,7 +29,7 @@ public enum ApiManager {
     private ApiService apiService;
     private String token;
 
-    public static final String BASE_URL = "http://renrentax.com:8080/etm/";
+    public static final String BASE_URL = "http://47.102.37.98:9090/etm/";
 
     ApiManager() {
         //开启Log

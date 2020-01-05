@@ -19,7 +19,7 @@
         android:layout_height="52dp"
         android:layout_marginBottom="13dp"
         android:gravity="center_vertical"
-        app:bl_solid_color="@color/backgroundLite">
+        app:bl_solid_color="@color/transparent">
 
         <com.noober.background.view.BLEditText
             android:id="@+id/search_bar"
@@ -39,7 +39,7 @@
             android:singleLine="true"
             android:textSize="14dp"
             app:bl_corners_radius="30dp"
-            app:bl_solid_color="@color/background" />
+            app:bl_solid_color="#2E2E2E" />
 
         <TextView
             android:id="@+id/cancel"
@@ -57,8 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:gravity="center_vertical"
-        android:paddingHorizontal="15dp"
-        app:bl_solid_color="@color/backgroundLite">
+        android:paddingHorizontal="15dp">
 
         <com.noober.background.view.BLView
             android:layout_width="4dp"
@@ -84,17 +83,10 @@
             android:textSize="14dp" />
     </com.noober.background.view.BLLinearLayout>
 
-    <View
-        android:id="@+id/history_divider"
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/gray6" />
-
     <me.jingbin.library.ByRecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/backgroundLite"
         tools:layoutManager="LinearLayoutManager"
         tools:listitem="@layout/item_search_loc" />
 </LinearLayout>
