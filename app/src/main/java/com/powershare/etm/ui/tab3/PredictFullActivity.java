@@ -106,6 +106,13 @@ public class PredictFullActivity extends BaseActivity {
         tripParam = (TripParam) intent.getSerializableExtra("tripParam");
         PredictCharge predictCharge = (PredictCharge) intent.getSerializableExtra("predictCharge");
         //DriveRouteResult driveRouteResult = intent.getParcelableExtra("driveRouteResult");
+
+        //
+        Charge charge = (Charge) intent.getSerializableExtra("charge");
+        if (charge != null) {
+            showCharge(charge);
+        }
+
         DriveRouteResult driveRouteResult = GlobalValue.getDriveRouteResult();
         new Handler().postDelayed(() -> initUi(predictCharge, driveRouteResult), 500);
         //this.tracePredict(tripParam);
@@ -159,20 +166,23 @@ public class PredictFullActivity extends BaseActivity {
             Object obj = marker.getObject();
             if (obj instanceof Charge) {
                 Charge charge = (Charge) marker.getObject();
-                binding.name.setText(charge.getName());
-                binding.address.setText(charge.getAddress());
-                binding.price.setText(charge.getPrice());
-                Glide.with(PredictFullActivity.this)
-                        .load(charge.getLogoUrl())
-                        .error(R.mipmap.charging_station)
-                        .placeholder(R.mipmap.charging_station)
-                        .into(binding.icon);
-                setChargeVisibility(true);
+                showCharge(charge);
             }
             return true;
         });
     }
 
+    private void showCharge(Charge charge) {
+        binding.name.setText(charge.getName());
+        binding.address.setText(charge.getAddress());
+        binding.price.setText(charge.getPrice());
+        Glide.with(PredictFullActivity.this)
+                .load(charge.getLogoUrl())
+                .error(R.mipmap.charging_station)
+                .placeholder(R.mipmap.charging_station)
+                .into(binding.icon);
+        setChargeVisibility(true);
+    }
 
     //请求后台
     private void tracePredict(TripParam tripParam) {

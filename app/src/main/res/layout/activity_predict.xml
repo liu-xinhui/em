@@ -173,8 +173,19 @@
                 android:layout_height="136dp"
                 android:layout_marginTop="30dp"
                 app:bl_corners_radius="5dp"
-                app:bl_solid_color="@color/backgroundLite"
                 app:layout_constraintTop_toBottomOf="@+id/remain_power_tip" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray3"
+                app:layout_constraintBottom_toTopOf="@id/track_bg" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray3"
+                app:layout_constraintBottom_toBottomOf="@id/track_bg" />
 
             <ImageView
                 android:id="@+id/track_start"

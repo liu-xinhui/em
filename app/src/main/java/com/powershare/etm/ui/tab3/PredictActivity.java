@@ -71,16 +71,6 @@ public class PredictActivity extends BaseActivity {
         uiSettings.setZoomControlsEnabled(false);
         uiSettings.setRotateGesturesEnabled(false);
         binding.mapContainer.setScrollView(binding.scrollView);
-        aMap.setOnMarkerClickListener(marker -> {
-            Object obj = marker.getObject();
-            if (obj instanceof Charge) {
-                Charge charge = (Charge) marker.getObject();
-                marker.setTitle(charge.getName());
-                marker.setSnippet("地址：" + charge.getAddress());
-                marker.showInfoWindow();
-            }
-            return true;
-        });
     }
 
     @Override
@@ -237,6 +227,20 @@ public class PredictActivity extends BaseActivity {
     }
 
     private void initUi(PredictCharge predictCharge, DriveRouteResult driveRouteResult) {
+        aMap.setOnMarkerClickListener(marker -> {
+            Object obj = marker.getObject();
+            if (obj instanceof Charge) {
+                Charge charge = (Charge) obj;
+                Intent goIntent = new Intent(PredictActivity.this, PredictFullActivity.class);
+                goIntent.putExtra("tripParam", tripParam);
+                goIntent.putExtra("predictCharge", predictCharge);
+                goIntent.putExtra("charge", charge);
+                GlobalValue.setDriveRouteResult(driveRouteResult);
+                //goIntent.putExtra("driveRouteResult", driveRouteResult);
+                startActivity(goIntent);
+            }
+            return true;
+        });
         //地图
         aMap.clear();
         if (driveRouteResult != null && driveRouteResult.getPaths() != null) {
