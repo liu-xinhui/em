@@ -23,8 +23,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/home_tab_height"
         android:background="@color/transparent"
-        android:paddingHorizontal="3dp"
-        android:paddingTop="3dp"
         android:textSize="13dp"
         app:qmui_tab_icon_position="top" />
 

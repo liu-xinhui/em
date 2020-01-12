@@ -25,4 +25,9 @@ public class Charge implements Serializable {
     private String price;
 
     private String logoUrl;
+
+    private int dcTotalAvailableNum;
+    private int dcTotalNum;
+    private int acTotalAvailableNum;
+    private int acTotalNum;
 }

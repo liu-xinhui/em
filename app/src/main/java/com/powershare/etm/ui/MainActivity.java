@@ -91,6 +91,7 @@ public class MainActivity extends BaseActivity {
         viewList.add(Tab2Fragment.newInstance());
         viewList.add(Tab3Fragment.newInstance());
         viewList.add(Tab4Fragment.newInstance());
+        viewList.add(Tab4Fragment.newInstance());
         mViewPager.setOffscreenPageLimit(4);
         mViewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), viewList));
         mViewPager.setCurrentItem(currentTab);
@@ -115,6 +116,11 @@ public class MainActivity extends BaseActivity {
                 ContextCompat.getDrawable(this, R.mipmap.tab3_active),
                 getText(R.string.title_tab3), false
         );
+        QMUITabSegment.Tab tabMap = new QMUITabSegment.Tab(
+                ContextCompat.getDrawable(this, R.mipmap.tab_map),
+                ContextCompat.getDrawable(this, R.mipmap.tab_map_active),
+                getText(R.string.title_tab_map), false
+        );
         QMUITabSegment.Tab tab4 = new QMUITabSegment.Tab(
                 ContextCompat.getDrawable(this, R.mipmap.tab4),
                 ContextCompat.getDrawable(this, R.mipmap.tab4_active),
@@ -123,6 +129,7 @@ public class MainActivity extends BaseActivity {
         mTabSegment.addTab(tab1)
                 .addTab(tab2)
                 .addTab(tab3)
+                .addTab(tabMap)
                 .addTab(tab4);
         mTabSegment.notifyDataChanged();
         mTabSegment.setupWithViewPager(mViewPager, false);
