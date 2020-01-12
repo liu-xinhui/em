@@ -12,7 +12,9 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.blankj.utilcode.util.LogUtils;
 import com.powershare.etm.App;
 import com.powershare.etm.bean.ApiResult;
+import com.powershare.etm.bean.Charge;
 import com.powershare.etm.bean.ChargeWarn;
+import com.powershare.etm.bean.SimpleLocation;
 import com.powershare.etm.bean.TotalTrip;
 import com.powershare.etm.bean.Trip;
 import com.powershare.etm.bean.TripParam;
@@ -69,6 +71,14 @@ public class TrackViewModel extends AndroidViewModel {
 
     public LiveData<ApiResult<TotalTrip>> getTotalTrip() {
         return apiService.getTotalTrip();
+    }
+
+    public LiveData<ApiResult<List<SimpleLocation>>> traceRadius(double centerLatitude, double centerLongitude, float mapLevel, float radius) {
+        return apiService.traceRadius(centerLatitude, centerLongitude, (int) mapLevel, radius);
+    }
+
+    public LiveData<ApiResult<Charge>> getCharge(String chargeId) {
+        return apiService.getCharge(chargeId);
     }
 
     //开始追踪

@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.amap.api.services.help.Inputtips;
 import com.amap.api.services.help.InputtipsQuery;
 import com.amap.api.services.help.Tip;
-import com.blankj.utilcode.util.LogUtils;
 import com.powershare.etm.R;
 import com.powershare.etm.databinding.ActivitySearchLocBinding;
 import com.powershare.etm.ui.base.BaseActivity;
@@ -57,7 +56,6 @@ public class SearchLocActivity extends BaseActivity {
     }
 
     private void initList() {
-        //车辆列表recyclerView
         adapter = new BaseRecyclerAdapter<Tip>(R.layout.item_search_loc) {
             @Override
             protected void bindView(BaseByViewHolder holder, Tip item, int position) {
@@ -111,7 +109,7 @@ public class SearchLocActivity extends BaseActivity {
                         if (code == 1000 && !searchTextEmpty) {
                             List<Tip> newList = new ArrayList<>();
                             for (Tip tip : list) {
-                                if (tip.getPoint() != null) {
+                                if (tip.getPoiID() != null && tip.getPoint() != null) {
                                     newList.add(tip);
                                 }
                             }

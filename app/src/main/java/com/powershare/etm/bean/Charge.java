@@ -1,5 +1,7 @@
 package com.powershare.etm.bean;
 
+import android.text.TextUtils;
+
 import java.io.Serializable;
 
 import lombok.Data;

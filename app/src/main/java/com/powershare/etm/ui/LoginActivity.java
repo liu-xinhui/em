@@ -117,7 +117,7 @@ public class LoginActivity extends BaseActivity {
         });
 
         //跳过
-        binding.skip.setOnClickListener(view -> gotoMain(3));
+        binding.skip.setOnClickListener(view -> gotoMain(4));
     }
 
     private void gotoMain(int tabIndex) {

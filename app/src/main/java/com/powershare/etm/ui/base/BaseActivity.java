@@ -15,6 +15,8 @@ import com.qmuiteam.qmui.util.QMUIKeyboardHelper;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.qmuiteam.qmui.widget.dialog.QMUITipDialog;
 
+import org.greenrobot.eventbus.EventBus;
+
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -30,6 +32,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         QMUIStatusBarHelper.setStatusBarDarkMode(this);
         setContentView(initContentView());
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        if (useEventBus()) {
+            EventBus.getDefault().register(this);
+        }
         createViewModel();
         onMounted(savedInstanceState);
         onMounted();
@@ -78,6 +83,18 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void hideLoading() {
         if (loadingDialog != null) {
             loadingDialog.dismiss();
+        }
+    }
+
+    protected boolean useEventBus() {
+        return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (useEventBus()) {
+            EventBus.getDefault().unregister(this);
         }
     }
 }

@@ -176,8 +176,10 @@ public class PredictFullActivity extends BaseActivity {
         binding.name.setText(charge.getName());
         binding.address.setText(charge.getAddress());
         binding.price.setText(charge.getPrice());
-        binding.fastCount.setText(charge.getDcTotalAvailableNum() + "/" + charge.getDcTotalNum());
-        binding.slowCount.setText(charge.getAcTotalAvailableNum() + "/" + charge.getAcTotalNum());
+        String fastCount = charge.getDcTotalAvailableNum() + "/" + charge.getDcTotalNum();
+        binding.fastCount.setText(fastCount);
+        String slowCount = charge.getAcTotalAvailableNum() + "/" + charge.getAcTotalNum();
+        binding.slowCount.setText(slowCount);
         Glide.with(PredictFullActivity.this)
                 .load(charge.getLogoUrl())
                 .error(R.mipmap.charging_station)

@@ -16,6 +16,7 @@ import com.powershare.etm.adapter.MyPagerAdapter;
 import com.powershare.etm.component.MyDialog;
 import com.powershare.etm.databinding.ActivityMainBinding;
 import com.powershare.etm.ui.base.BaseActivity;
+import com.powershare.etm.ui.tabmap.TabMapFragment;
 import com.powershare.etm.vm.LoginViewModel;
 import com.powershare.etm.ui.setting.SettingActivity;
 import com.powershare.etm.ui.tab1.Tab1Fragment;
@@ -90,7 +91,7 @@ public class MainActivity extends BaseActivity {
         viewList.add(Tab1Fragment.newInstance());
         viewList.add(Tab2Fragment.newInstance());
         viewList.add(Tab3Fragment.newInstance());
-        viewList.add(Tab4Fragment.newInstance());
+        viewList.add(TabMapFragment.newInstance());
         viewList.add(Tab4Fragment.newInstance());
         mViewPager.setOffscreenPageLimit(4);
         mViewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager(), viewList));

@@ -5,8 +5,10 @@ import androidx.lifecycle.LiveData;
 
 import com.powershare.etm.bean.ApiResult;
 import com.powershare.etm.bean.CarModel;
+import com.powershare.etm.bean.Charge;
 import com.powershare.etm.bean.MatchingDegree;
 import com.powershare.etm.bean.PredictCharge;
+import com.powershare.etm.bean.SimpleLocation;
 import com.powershare.etm.bean.TotalTrip;
 import com.powershare.etm.bean.Trip;
 import com.powershare.etm.bean.TripParam;
@@ -77,4 +79,12 @@ public interface ApiService {
     //获取行程累计信息
     @POST("trip/getTotalTrip")
     LiveData<ApiResult<TotalTrip>> getTotalTrip();
+
+    //获取指定坐标指定半径范围内的所有充电站
+    @POST("trip/radius")
+    LiveData<ApiResult<List<SimpleLocation>>> traceRadius(@Query("centerLatitude") double centerLatitude, @Query("centerLongitude") double centerLongitude, @Query("mapLevel") int mapLevel, @Query("radius") float radius);
+
+    //充电站详情
+    @POST("trip/getLocation")
+    LiveData<ApiResult<Charge>> getCharge(@Query("id") String chargeId);
 }

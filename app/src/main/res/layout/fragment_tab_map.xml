@@ -1,71 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
-    android:orientation="vertical"
-    android:paddingHorizontal="15dp"
-    android:paddingBottom="20dp">
+    android:orientation="vertical">
 
-    <com.qmuiteam.qmui.widget.QMUITopBarLayout
-        android:id="@+id/topBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/map_container"
+    <com.amap.api.maps.TextureMapView
+        android:id="@+id/map"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        app:cardCornerRadius="6dp"
-        app:cardElevation="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:background="@color/white"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <com.amap.api.maps.MapView
-            android:id="@+id/map"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+    <com.noober.background.view.BLTextView
+        android:id="@+id/search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="20dp"
+        android:text="请输入地址"
+        android:textColor="@color/gray7"
+        android:textSize="14dp"
+        app:bl_corners_radius="30dp"
+        app:bl_solid_color="@color/white"
+        app:bl_stroke_color="@color/grayC"
+        app:bl_stroke_width="1px"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/full_screen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:src="@mipmap/full_screen" />
-
-        <ImageView
-            android:id="@+id/temp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:src="@mipmap/tab_temperature2" />
-
-        <ImageView
-            android:id="@+id/car"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end|bottom"
-            android:layout_marginEnd="60dp"
-            android:src="@mipmap/tab_car2" />
-
-    </androidx.cardview.widget.CardView>
+    <com.noober.background.view.BLTextView
+        android:id="@+id/tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="3dp"
+        android:text="加载中"
+        android:textColor="@color/gray7"
+        android:textSize="12dp"
+        android:visibility="gone"
+        app:bl_corners_radius="30dp"
+        app:bl_solid_color="@color/white"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_bar" />
 
     <com.noober.background.view.BLConstraintLayout
         android:id="@+id/charge_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="20dp"
         android:padding="15dp"
-        app:bl_corners_radius="5dp"
-        app:bl_solid_color="#2E2E2E">
+        android:visibility="visible"
+        app:bl_solid_color="#2E2E2E"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <ImageView
             android:id="@+id/icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginTop="2dp"
             android:src="@mipmap/charging_station"
             app:layout_constraintTop_toTopOf="parent" />
@@ -171,17 +165,30 @@
             android:textSize="12dp"
             app:layout_constraintBaseline_toBaselineOf="@id/price"
             app:layout_constraintRight_toLeftOf="@id/fast_count" />
+
+        <com.noober.background.view.BLButton
+            android:id="@+id/nav"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="15dp"
+            android:text="导航"
+            android:textColor="#fff"
+            app:bl_corners_radius="4dp"
+            app:bl_pressed_drawable="#00f4ff"
+            app:bl_stroke_color="#00f4ff"
+            app:bl_stroke_width="1dp"
+            app:bl_unPressed_drawable="#0d9fa6"
+            app:layout_constraintTop_toBottomOf="@id/price" />
+
+        <TextView
+            android:id="@+id/nav_tip"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="#2E2E2E"
+            android:gravity="center"
+            android:text="加载中"
+            app:layout_constraintBottom_toTopOf="@id/nav"
+            app:layout_constraintTop_toTopOf="parent" />
     </com.noober.background.view.BLConstraintLayout>
 
-    <com.noober.background.view.BLButton
-        android:id="@+id/nav"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:text="导航"
-        android:textColor="#fff"
-        app:bl_corners_radius="4dp"
-        app:bl_pressed_drawable="#00f4ff"
-        app:bl_stroke_color="#00f4ff"
-        app:bl_stroke_width="1dp"
-        app:bl_unPressed_drawable="#0d9fa6" />
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
