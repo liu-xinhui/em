@@ -181,17 +181,6 @@ public class TrackingFragment extends BaseFragment {
     }
 
     private void chargeWarn() {
-        MyDialog myDialog2 = new MyDialog.Builder(activity)
-                .setContent("您好，当前剩余电量低于%， 请前往站点进行充电")
-                .setCancelText("忽略")
-                .setSureText("我要充电")
-                .setSureListener(v -> {
-                    MainActivity mainActivity = (MainActivity) activity;
-                    mainActivity.selectTab(3);
-                    EventBus.getDefault().post(new ToChargeEvent());
-                })
-                .create();
-        myDialog2.show();
         trackViewModel.getChargeWarn().observe(this, chargeWarn -> {
             final boolean[] isCharge = {false};
             NotificationUtils.notify(1, param -> {

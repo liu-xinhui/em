@@ -11,9 +11,11 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
+import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
@@ -34,6 +36,7 @@ import com.powershare.etm.ui.base.BaseFragment;
 import com.powershare.etm.ui.tab3.SearchLocActivity;
 import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.MyObserver;
+import com.powershare.etm.vm.AMapViewModel;
 import com.powershare.etm.vm.TrackViewModel;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 
@@ -49,6 +52,7 @@ public class TabMapFragment extends BaseFragment {
 
     private FragmentTabMapBinding binding;
     private TrackViewModel trackViewModel;
+    private AMapViewModel aMapViewModel;
     private AMap aMap;
 
     public static TabMapFragment newInstance() {
@@ -64,6 +68,7 @@ public class TabMapFragment extends BaseFragment {
     @Override
     protected void createViewModel() {
         trackViewModel = ViewModelProviders.of(activity).get(TrackViewModel.class);
+        aMapViewModel = ViewModelProviders.of(activity).get(AMapViewModel.class);
     }
 
     @Override
@@ -104,6 +109,10 @@ public class TabMapFragment extends BaseFragment {
                         }
                     }).build().show();
         });
+        binding.currentPosition.setOnClickListener(view -> aMapViewModel.currentLoc().observe(this, aMapLocation -> {
+            LatLng latLng = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
+            aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+        }));
     }
 
     @Override
@@ -111,16 +120,9 @@ public class TabMapFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         binding.map.onCreate(savedInstanceState);
         aMap = binding.map.getMap();
-        MyLocationStyle myLocationStyle = new MyLocationStyle();
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);//定位一次，且将视角移动到地图中心点。
-        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.position)));
-        aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
-        //aMap.getUiSettings().setMyLocationButtonEnabled(true);//设置默认定位按钮是否显示，非必需设置。
-        aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
-
-        CameraUpdate mCameraUpdate = CameraUpdateFactory.zoomTo(8);
-        aMap.moveCamera(mCameraUpdate);
-
+        UiSettings uiSettings = aMap.getUiSettings();
+        uiSettings.setZoomPosition(AMapOptions.ZOOM_POSITION_RIGHT_CENTER);
+        uiSettings.setZoomControlsEnabled(false);
         aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
@@ -138,17 +140,27 @@ public class TabMapFragment extends BaseFragment {
         });
 
         // 定义 Marker 点击事件监听
-        AMap.OnMarkerClickListener markerClickListener = new AMap.OnMarkerClickListener() {
-            // marker 对象被点击时回调的接口
-            // 返回 true 则表示接口已响应事件，否则返回false
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                String chargeId = (String) marker.getObject();
-                getCharge(chargeId);
-                return true;
-            }
+        // marker 对象被点击时回调的接口
+        // 返回 true 则表示接口已响应事件，否则返回false
+        AMap.OnMarkerClickListener markerClickListener = marker -> {
+            String chargeId = (String) marker.getObject();
+            getCharge(chargeId);
+            return true;
         };
         aMap.setOnMarkerClickListener(markerClickListener);
+    }
+
+    @Override
+    protected void loadData() {
+        MyLocationStyle myLocationStyle = new MyLocationStyle();
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);//定位一次，且将视角移动到地图中心点。
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.position)));
+        aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
+        //aMap.getUiSettings().setMyLocationButtonEnabled(true);//设置默认定位按钮是否显示，非必需设置。
+        aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
+
+        CameraUpdate mCameraUpdate = CameraUpdateFactory.zoomTo(8);
+        aMap.animateCamera(mCameraUpdate);
     }
 
     @Override
@@ -262,7 +274,9 @@ public class TabMapFragment extends BaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onToChargeEvent(ToChargeEvent event) {
-        CameraUpdate mCameraUpdate = CameraUpdateFactory.zoomTo(14);
-        aMap.moveCamera(mCameraUpdate);
+        aMapViewModel.currentLoc().observe(this, aMapLocation -> {
+            LatLng latLng = new LatLng(aMapLocation.getLatitude(), aMapLocation.getLongitude());
+            aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 14));
+        });
     }
 }

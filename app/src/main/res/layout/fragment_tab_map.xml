@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="15dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:bl_solid_color="#2E2E2E"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -191,4 +191,16 @@
             app:layout_constraintTop_toTopOf="parent" />
     </com.noober.background.view.BLConstraintLayout>
 
+    <com.noober.background.view.BLImageView
+        android:id="@+id/current_position"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="15dp"
+        android:padding="8dp"
+        android:src="@mipmap/current_position"
+        app:bl_solid_color="#DDffffff"
+        app:bl_stroke_color="@color/grayC"
+        app:bl_stroke_width="1px"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
