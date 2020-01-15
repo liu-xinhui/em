@@ -126,7 +126,7 @@ public class TabMapFragment extends BaseFragment {
         aMap.setOnCameraChangeListener(new AMap.OnCameraChangeListener() {
             @Override
             public void onCameraChange(CameraPosition cameraPosition) {
-
+                binding.chargeInfo.setVisibility(View.GONE);
             }
 
             @Override
@@ -216,7 +216,6 @@ public class TabMapFragment extends BaseFragment {
     }
 
     private void getChargeList(LatLng centerPoint, float mapLevel, float radius) {
-        binding.chargeInfo.setVisibility(View.GONE);
         binding.tip.setVisibility(View.VISIBLE);
         trackViewModel.traceRadius(centerPoint.latitude, centerPoint.longitude, mapLevel, radius).observe(this, new MyObserver<List<SimpleLocation>>() {
             @Override
