@@ -289,7 +289,7 @@ public class Tab1Fragment extends BaseFragment {
         if (mTotalTrip == null) {
             return;
         }
-        if (mTotalTrip.getTotalTimes() >= 20) {
+        if (mTotalTrip.getTotalTimes() >= 5) {
             binding.trackCountNeed.setText("该车与您的匹配度");
             CarModel currentCar = carModelList.get(currentCarIndex);
             carViewModel.getMatchingDegree(currentCar.getId()).observe(Tab1Fragment.this, new MyObserver<MatchingDegree>() {
