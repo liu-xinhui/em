@@ -11,12 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.blankj.utilcode.util.CollectionUtils;
 import com.blankj.utilcode.util.TimeUtils;
 import com.powershare.etm.R;
+import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.bean.Trip;
 import com.powershare.etm.databinding.ActivityTrackListBinding;
 import com.powershare.etm.ui.base.BaseActivity;
 import com.powershare.etm.util.AMapUtil;
 import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.MyObserver;
+import com.powershare.etm.vm.CarViewModel;
 import com.powershare.etm.vm.TrackViewModel;
 
 import java.util.List;
@@ -27,8 +29,10 @@ import me.jingbin.library.adapter.BaseRecyclerAdapter;
 public class TrackListActivity extends BaseActivity {
     private ActivityTrackListBinding binding;
     private TrackViewModel trackViewModel;
+    private CarViewModel carViewModel;
     private BaseRecyclerAdapter<Trip> adapter;
     private int currentPage = 1;
+    private List<CarModel> mCarModels;
 
     @Override
     protected View initContentView() {
@@ -39,18 +43,42 @@ public class TrackListActivity extends BaseActivity {
     @Override
     protected void createViewModel() {
         trackViewModel = ViewModelProviders.of(this).get(TrackViewModel.class);
+        carViewModel = ViewModelProviders.of(this).get(CarViewModel.class);
     }
 
     @Override
     protected void onMounted() {
         initTopBar();
         initListView();
+        getCarListData();
     }
 
     private void initTopBar() {
         binding.topBar.setTitle("历史行程记录");
         binding.topBar.setBackgroundAlpha(1);
         binding.topBar.addLeftBackImageButton().setOnClickListener(v -> finish());
+    }
+
+    private void getCarListData() {
+        //车辆列表数据
+        carViewModel.carList(false).observe(this, new MyObserver<List<CarModel>>() {
+
+            @Override
+            public void onSuccess(List<CarModel> carModels) {
+                mCarModels = carModels;
+            }
+        });
+    }
+
+    private String getCarModelName(String carModelId) {
+        if (mCarModels != null) {
+            for (CarModel mCarModel : mCarModels) {
+                if (mCarModel.getId().equals(carModelId)) {
+                    return mCarModel.getName();
+                }
+            }
+        }
+        return "";
     }
 
     private void initListView() {
@@ -70,9 +98,10 @@ public class TrackListActivity extends BaseActivity {
                 } else {
                     endImg.setImageResource(R.mipmap.history_end);
                 }
-
                 holder.setText(R.id.mileage, AMapUtil.formatDouble(trip.getMileage()) + "KM");
-                holder.setText(R.id.power, AMapUtil.formatDouble(trip.getStartSoc() - trip.getDestSoc()) + "%");
+                holder.setText(R.id.power, AMapUtil.formatDouble(trip.getEnergy()) + "kwh");
+                holder.setText(R.id.temp, trip.getTemperature() + "℃");
+                holder.setText(R.id.carModel, getCarModelName(trip.getCarModelId()));
             }
         };
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
