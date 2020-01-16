@@ -120,7 +120,7 @@
             app:layout_constraintLeft_toRightOf="@id/recent_track_end"
             app:layout_constraintRight_toRightOf="@id/recent_track_bg2"
             app:layout_constraintTop_toTopOf="@id/recent_track_end"
-            app:layout_constraintVertical_bias="0.36" />
+            app:layout_constraintVertical_bias="0.32" />
 
         <ImageView
             android:id="@+id/BLView"

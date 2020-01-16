@@ -6,8 +6,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.amap.api.maps.AMap;
@@ -23,11 +25,14 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.maps.model.VisibleRegion;
+import com.amap.api.maps.model.animation.Animation;
+import com.amap.api.maps.model.animation.ScaleAnimation;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.help.Tip;
 import com.blankj.utilcode.util.AppUtils;
 import com.bumptech.glide.Glide;
 import com.powershare.etm.R;
+import com.powershare.etm.bean.ApiResult;
 import com.powershare.etm.bean.Charge;
 import com.powershare.etm.bean.SimpleLocation;
 import com.powershare.etm.databinding.FragmentTabMapBinding;
@@ -54,6 +59,7 @@ public class TabMapFragment extends BaseFragment {
     private TrackViewModel trackViewModel;
     private AMapViewModel aMapViewModel;
     private AMap aMap;
+    private LiveData<ApiResult<List<SimpleLocation>>> chargeLiveData;
 
     public static TabMapFragment newInstance() {
         return new TabMapFragment();
@@ -216,8 +222,12 @@ public class TabMapFragment extends BaseFragment {
     }
 
     private void getChargeList(LatLng centerPoint, float mapLevel, float radius) {
+        if (chargeLiveData != null) {
+            chargeLiveData.removeObservers(this);
+        }
         binding.tip.setVisibility(View.VISIBLE);
-        trackViewModel.traceRadius(centerPoint.latitude, centerPoint.longitude, mapLevel, radius).observe(this, new MyObserver<List<SimpleLocation>>() {
+        chargeLiveData = trackViewModel.traceRadius(centerPoint.latitude, centerPoint.longitude, mapLevel, radius);
+        chargeLiveData.observe(this, new MyObserver<List<SimpleLocation>>() {
             @Override
             public void onSuccess(List<SimpleLocation> result) {
                 aMap.clear(true);
@@ -228,6 +238,13 @@ public class TabMapFragment extends BaseFragment {
                             .icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), item.getType() == TYPE_NORMAL ? R.mipmap.charge_no_use : R.mipmap.charge_use)));
                     final Marker marker = aMap.addMarker(options);
                     marker.setObject(item.getId());
+
+                    Animation animation = new ScaleAnimation(0, 1, 0, 1);
+                    animation.setDuration(200);
+                    animation.setInterpolator(new LinearInterpolator());
+
+                    marker.setAnimation(animation);
+                    marker.startAnimation();
                 }
             }
 

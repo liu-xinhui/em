@@ -40,4 +40,14 @@ public class CarViewModel extends ViewModel {
     public LiveData<ApiResult<MatchingDegree>> getMatchingDegree(String carId) {
         return apiService.getMatchingDegree(carId);
     }
+
+    public static int findCarIndex(List<CarModel> carModels, String carModelId) {
+        for (int i = 0; i < carModels.size(); i++) {
+            CarModel carModel = carModels.get(i);
+            if (carModel.getId().equals(carModelId)) {
+                return i;
+            }
+        }
+        return 0;
+    }
 }

@@ -1,5 +1,7 @@
 package com.powershare.etm.bean;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 
 import lombok.Data;
@@ -42,5 +44,11 @@ public class CarModel implements Serializable {
 
     //图片ID集合
     private String[] photoIds = new String[0];
+
+    @NotNull
+    @Override
+    public String toString() {
+        return name;
+    }
 }
 

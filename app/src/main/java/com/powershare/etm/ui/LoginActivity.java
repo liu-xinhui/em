@@ -2,6 +2,7 @@ package com.powershare.etm.ui;
 
 import android.content.Intent;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 
@@ -36,14 +37,24 @@ public class LoginActivity extends BaseActivity {
         //登录
         binding.login.setOnClickListener(view -> {
             CharSequence mobile = binding.mobile.getText();
+            if (TextUtils.isEmpty(mobile)) {
+                CommonUtil.showToast("请输入手机号");
+                binding.mobile.requestFocus();
+                return;
+            }
             if (!RegexUtils.isMobileSimple(mobile)) {
-                binding.mobile.setError("手机号格式不正确");
+                CommonUtil.showToast("手机号格式不正确");
                 binding.mobile.requestFocus();
                 return;
             }
             CharSequence code = binding.code.getText();
+            if (TextUtils.isEmpty(code)) {
+                CommonUtil.showToast("请输入验证码");
+                binding.code.requestFocus();
+                return;
+            }
             if (StringUtils.length(code) < 6) {
-                binding.code.setError("验证码长度6位");
+                CommonUtil.showToast("验证码长度为6位");
                 binding.code.requestFocus();
                 return;
             }

@@ -39,7 +39,6 @@ import com.powershare.etm.util.GlobalValue;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.vm.CarViewModel;
 import com.powershare.etm.vm.PredictViewModel;
-import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -302,12 +301,13 @@ public class PredictActivity extends BaseActivity {
 
     private void getCarListData() {
         List<CarModel> mCarModels = new ArrayList<>();
-        QMUIBottomSheet.BottomListSheetBuilder builder = new QMUIBottomSheet.BottomListSheetBuilder(this)
-                .setOnSheetItemClickListener((dialog, itemView, position, tag) -> {
-                    dialog.dismiss();
-                    tripParam.setCarModelId(mCarModels.get(position).getId());
-                    this.tracePredict(tripParam);
-                });
+
+        OptionsPickerView<CarModel> carOptions = new OptionsPickerBuilder(this, (options1, option2, options3, v) -> {
+            CarModel carModel = mCarModels.get(options1);
+            tripParam.setCarModelId(carModel.getId());
+            tracePredict(tripParam);
+        }).build();
+
         binding.car.setOnClickListener(view -> {
             if (mCarModels.size() == 0) {
                 //车辆列表数据
@@ -321,10 +321,9 @@ public class PredictActivity extends BaseActivity {
                     public void onSuccess(List<CarModel> carModels) {
                         mCarModels.clear();
                         mCarModels.addAll(carModels);
-                        for (CarModel carModel : carModels) {
-                            builder.addItem(carModel.getName());
-                        }
-                        builder.build().show();
+                        carOptions.setPicker(mCarModels);
+                        carOptions.setSelectOptions(CarViewModel.findCarIndex(mCarModels, tripParam.getCarModelId()));
+                        carOptions.show();
                     }
 
                     @Override
@@ -333,7 +332,8 @@ public class PredictActivity extends BaseActivity {
                     }
                 });
             } else {
-                builder.build().show();
+                carOptions.setSelectOptions(CarViewModel.findCarIndex(mCarModels, tripParam.getCarModelId()));
+                carOptions.show();
             }
         });
     }

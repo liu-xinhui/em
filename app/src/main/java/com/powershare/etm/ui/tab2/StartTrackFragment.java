@@ -167,13 +167,16 @@ public class StartTrackFragment extends BaseFragment {
     }
 
     private void getCarListData() {
-        QMUIBottomSheet.BottomListSheetBuilder builder = new QMUIBottomSheet.BottomListSheetBuilder(activity)
-                .setOnSheetItemClickListener((dialog, itemView, position, tag) -> {
-                    dialog.dismiss();
-                    setCurrentCar(position);
-                });
-        binding.carModelSelect.setOnClickListener(view -> builder.build().show());
-        //车辆列表数据
+        OptionsPickerView<CarModel> carOptions = new OptionsPickerBuilder(activity, (options1, option2, options3, v) -> {
+            setCurrentCar(options1);
+        }).build();
+
+        binding.carModelSelect.setOnClickListener(view -> {
+            CarModel currentCar = (CarModel) binding.banner.getTag();
+            carOptions.setSelectOptions(CarViewModel.findCarIndex(mCarModels, currentCar.getId()));
+            carOptions.show();
+        });
+
         carViewModel.carList(false).observe(this, new MyObserver<List<CarModel>>() {
             @Override
             public void onSuccess(List<CarModel> carModels) {
@@ -182,9 +185,7 @@ public class StartTrackFragment extends BaseFragment {
                 if (carModels.size() > 0) {
                     setCurrentCar(0);
                 }
-                for (CarModel carModel : carModels) {
-                    builder.addItem(carModel.getName());
-                }
+                carOptions.setPicker(mCarModels);
             }
         });
     }
