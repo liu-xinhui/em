@@ -126,11 +126,15 @@ public class PredictFullActivity extends BaseActivity {
         });
         //导航点击
         binding.nav.setOnClickListener(view -> {
+            Charge currentCharge = (Charge) binding.nav.getTag();
+            if (currentCharge == null) {
+                return;
+            }
             String gaode = "高德地图";
             String baidu = "百度地图";
-            double destLat = tripParam.getDestPoint().getLatitude();
-            double destLng = tripParam.getDestPoint().getLongitude();
-            String destName = "充电桩";
+            double destLat = currentCharge.getLatitude();
+            double destLng = currentCharge.getLongitude();
+            String destName = currentCharge.getName();
             new QMUIBottomSheet.BottomListSheetBuilder(this)
                     .addItem(gaode)
                     .addItem(baidu)
@@ -186,6 +190,7 @@ public class PredictFullActivity extends BaseActivity {
                 .placeholder(R.mipmap.charging_station)
                 .into(binding.icon);
         setChargeVisibility(true);
+        binding.nav.setTag(charge);
     }
 
     //请求后台

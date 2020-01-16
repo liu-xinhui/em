@@ -2,6 +2,7 @@ package com.powershare.etm.util;
 
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.services.core.LatLonPoint;
+import com.blankj.utilcode.util.LogUtils;
 import com.powershare.etm.bean.TripPoint;
 
 import java.text.DecimalFormat;
@@ -47,12 +48,19 @@ public class AMapUtil {
     }
 
     public static String formatFloat(float src) {
-        DecimalFormat numF = new DecimalFormat("##0.#");
+        DecimalFormat numF = new DecimalFormat("#.##");
         return numF.format(src);
     }
 
     public static String formatDouble(double src) {
-        DecimalFormat numF = new DecimalFormat("##0.#");
+        DecimalFormat numF = new DecimalFormat("#.##");
+        LogUtils.d(src,numF.format(src));
+        return numF.format(src);
+    }
+
+    public static String formatDoubleTime(double src) {
+        DecimalFormat numF = new DecimalFormat("#.#####");
+        LogUtils.d(src,numF.format(src));
         return numF.format(src);
     }
 }

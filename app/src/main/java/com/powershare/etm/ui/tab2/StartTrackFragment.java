@@ -1,5 +1,6 @@
 package com.powershare.etm.ui.tab2;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.SeekBar;
@@ -11,6 +12,7 @@ import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.blankj.utilcode.util.FragmentUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.bean.Trip;
@@ -28,7 +30,6 @@ import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.vm.AMapViewModel;
 import com.powershare.etm.vm.CarViewModel;
 import com.powershare.etm.vm.TrackViewModel;
-import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -262,17 +263,30 @@ public class StartTrackFragment extends BaseFragment {
         //当前位置
         mapViewModel.currentLoc().observe(this, aMapLocation -> {
             if (aMapLocation.getErrorCode() != 0) {
-                CommonUtil.showToast("定位失败");
+                CommonUtil.showToast("定位失败,请重试");
                 binding.startTrack.hideLoading();
                 return;
             }
+
+            String address = aMapLocation.getAddress();
+            if (TextUtils.isEmpty(address)) {
+                address = aMapLocation.getCity() + aMapLocation.getDistrict();
+                if (!TextUtils.isEmpty(aMapLocation.getPoiName())) {
+                    address = address + aMapLocation.getPoiName();
+                } else if (!TextUtils.isEmpty(aMapLocation.getDescription())) {
+                    address = address + aMapLocation.getDescription();
+                } else if (!TextUtils.isEmpty(aMapLocation.getStreet())) {
+                    address = address + aMapLocation.getStreet() + aMapLocation.getStreetNum();
+                }
+            }
+
             TripPoint startPoint = new TripPoint();
             startPoint.setTimestamp(System.currentTimeMillis());
             startPoint.setLatitude(aMapLocation.getLatitude());
             startPoint.setLongitude(aMapLocation.getLongitude());
             startPoint.setSpeed(aMapLocation.getSpeed());
             startPoint.setMileage(0);
-            startPoint.setAddress(aMapLocation.getAddress());
+            startPoint.setAddress(address);
             startPoint.setAg(aMapLocation.getBearing());
             param.setStartPoint(startPoint);
             trackViewModel.startTrack(param).observe(StartTrackFragment.this, new MyObserver<TripSoc>() {
