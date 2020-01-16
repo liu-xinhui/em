@@ -57,10 +57,4 @@ public class AMapUtil {
         LogUtils.d(src,numF.format(src));
         return numF.format(src);
     }
-
-    public static String formatDoubleTime(double src) {
-        DecimalFormat numF = new DecimalFormat("#.#####");
-        LogUtils.d(src,numF.format(src));
-        return numF.format(src);
-    }
 }

@@ -153,7 +153,7 @@ public class TrackDetailActivity extends BaseActivity {
 
                 List<String> items = new ArrayList<>();
                 String distance = AMapUtil.formatDouble(trip.getMileage());
-                String hour = AMapUtil.formatDoubleTime(trip.getDuration());
+                String hour = AMapUtil.formatDouble(trip.getDuration());
                 items.add(distance + ",km,总里程");
                 items.add(AMapUtil.formatDouble(trip.getEnergy()) + ",kwh,消耗电量");
                 items.add(hour + ",H,行驶时间");
