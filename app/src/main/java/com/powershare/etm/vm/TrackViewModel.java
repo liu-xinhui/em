@@ -111,6 +111,9 @@ public class TrackViewModel extends AndroidViewModel {
                     public void onSuccess(TripSoc tripSocApiResult) {
                         tripSoc.setValue(tripSocApiResult);
                         TripParam tripParam = GlobalValue.getTripParam();
+                        if (tripSocApiResult.getSoc() > 30) {
+                            GlobalValue.getTripParam().setWarned(false);
+                        }
                         if (tripParam != null
                                 && tripSocApiResult.getSoc() <= tripParam.getWarningLevel()
                                 && !tripParam.isWarned()) {

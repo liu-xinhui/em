@@ -27,7 +27,6 @@ import com.powershare.etm.component.MyDialog;
 import com.powershare.etm.databinding.FragmentTrackingBinding;
 import com.powershare.etm.event.RefreshTrackEvent;
 import com.powershare.etm.event.ToChargeEvent;
-import com.powershare.etm.event.StartTrackEvent;
 import com.powershare.etm.ui.MainActivity;
 import com.powershare.etm.ui.base.BaseFragment;
 import com.powershare.etm.util.CommonUtil;
@@ -103,7 +102,14 @@ public class TrackingFragment extends BaseFragment {
         initGrid(new TripSoc());
         trackViewModel.getTripSoc().observe(this, tripSoc -> {
             binding.progress.setProgress(tripSoc.getSoc());
-            LogUtils.d("update", tripSoc.getSoc());
+            if (tripSoc.getChargeTimes() > 0) {
+                binding.notice.setVisibility(View.VISIBLE);
+                String notice = "您已完成充电" + tripSoc.getChargeTimes() + "次";
+                binding.notice.setText(notice);
+            } else {
+                binding.notice.setVisibility(View.GONE);
+            }
+            LogUtils.json("update", tripSoc);
             initGrid(tripSoc);
         });
         trackViewModel.startAddTrack();
