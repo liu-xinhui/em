@@ -29,6 +29,7 @@ import com.powershare.etm.event.RefreshTrackEvent;
 import com.powershare.etm.event.ToChargeEvent;
 import com.powershare.etm.ui.MainActivity;
 import com.powershare.etm.ui.base.BaseFragment;
+import com.powershare.etm.util.AMapUtil;
 import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.GlobalValue;
 import com.powershare.etm.util.MyObserver;
@@ -128,8 +129,8 @@ public class TrackingFragment extends BaseFragment {
         List<String> items = new ArrayList<>();
         items.add(GlobalValue.getTrackMileageKm() + ",km,总里程");
         items.add(tripSoc.getEnergy() + ",kwh,消耗电量");
-        items.add(tripSoc.getRmbPublich() + ",RMB,充电成本（公共充电）");
-        items.add(tripSoc.getRmbPrivate() + ",RMB,充电成本（私人充电）");
+        items.add(AMapUtil.formatDouble1(tripSoc.getRmbPublich()) + ",RMB,充电成本（公共充电）");
+        items.add(AMapUtil.formatDouble1(tripSoc.getRmbPrivate()) + ",RMB,充电成本（私人充电）");
         binding.infoContainer.removeAllViews();
         for (String item : items) {
             String[] itemArr = item.split(",");

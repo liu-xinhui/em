@@ -57,4 +57,16 @@ public class AMapUtil {
         LogUtils.d(src,numF.format(src));
         return numF.format(src);
     }
+
+    public static String formatDouble1(double src) {
+        DecimalFormat numF = new DecimalFormat("#.0");
+        LogUtils.d(src,numF.format(src));
+        return numF.format(src);
+    }
+
+    public static String formatDouble2(double src) {
+        DecimalFormat numF = new DecimalFormat("#.00");
+        LogUtils.d(src,numF.format(src));
+        return numF.format(src);
+    }
 }

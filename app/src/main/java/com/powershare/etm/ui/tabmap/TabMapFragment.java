@@ -39,6 +39,7 @@ import com.powershare.etm.databinding.FragmentTabMapBinding;
 import com.powershare.etm.event.ToChargeEvent;
 import com.powershare.etm.ui.base.BaseFragment;
 import com.powershare.etm.ui.tab3.SearchLocActivity;
+import com.powershare.etm.util.AMapUtil;
 import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.vm.AMapViewModel;
@@ -264,7 +265,7 @@ public class TabMapFragment extends BaseFragment {
                 binding.nav.setTag(charge);
                 binding.name.setText(charge.getName());
                 binding.address.setText(charge.getAddress());
-                binding.price.setText(charge.getPrice());
+                binding.price.setText(AMapUtil.formatDouble2(charge.getPrice()));
                 String fastCount = charge.getDcTotalAvailableNum() + "/" + charge.getDcTotalNum();
                 binding.fastCount.setText(fastCount);
                 String slowCount = charge.getAcTotalAvailableNum() + "/" + charge.getAcTotalNum();

@@ -31,6 +31,7 @@ import com.powershare.etm.bean.TripParam;
 import com.powershare.etm.databinding.ActivityPredictFullBinding;
 import com.powershare.etm.ui.base.BaseActivity;
 import com.powershare.etm.ui.route.DrivingRouteOverlay;
+import com.powershare.etm.util.AMapUtil;
 import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.GlobalValue;
 import com.powershare.etm.util.MyObserver;
@@ -179,7 +180,7 @@ public class PredictFullActivity extends BaseActivity {
     private void showCharge(Charge charge) {
         binding.name.setText(charge.getName());
         binding.address.setText(charge.getAddress());
-        binding.price.setText(charge.getPrice());
+        binding.price.setText(AMapUtil.formatDouble2(charge.getPrice()));
         String fastCount = charge.getDcTotalAvailableNum() + "/" + charge.getDcTotalNum();
         binding.fastCount.setText(fastCount);
         String slowCount = charge.getAcTotalAvailableNum() + "/" + charge.getAcTotalNum();

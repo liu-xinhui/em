@@ -158,8 +158,8 @@ public class TrackDetailActivity extends BaseActivity {
                 items.add(AMapUtil.formatDouble(trip.getEnergy()) + ",kwh,消耗电量");
                 items.add(hour + ",H,行驶时间");
                 items.add(AMapUtil.formatDouble(trip.getAvSpeed()) + ",KM/H,平均速度");
-                items.add(AMapUtil.formatDouble(trip.getRmbPublich()) + ",RMB,充电成本（公共充电）");
-                items.add(AMapUtil.formatDouble(trip.getRmbPrivate()) + ",RMB,充电成本（私人充电）");
+                items.add(AMapUtil.formatDouble1(trip.getRmbPublich()) + ",RMB,充电成本（公共充电）");
+                items.add(AMapUtil.formatDouble1(trip.getRmbPrivate()) + ",RMB,充电成本（私人充电）");
                 binding.infoContainer.removeAllViews();
                 for (String item : items) {
                     String[] itemArr = item.split(",");

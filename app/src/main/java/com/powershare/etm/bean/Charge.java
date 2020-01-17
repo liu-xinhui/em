@@ -24,7 +24,7 @@ public class Charge implements Serializable {
     private String address;
 
     //电价
-    private String price;
+    private double price;
 
     private String logoUrl;
 
