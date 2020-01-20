@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="2dp"
-        android:text="KM"
+        android:text="km"
         android:textColor="#ffe1fbfc"
         android:textSize="12dp"
         app:layout_constraintBaseline_toBaselineOf="@id/item_title_value"

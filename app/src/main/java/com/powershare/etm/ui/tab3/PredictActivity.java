@@ -156,7 +156,7 @@ public class PredictActivity extends BaseActivity {
                     binding.powerEnd.setImageResource(R.mipmap.power_end);
                 }
                 //
-                String powerConsumption = "行程消耗" + AMapUtil.formatDouble(predictCharge.getEnergy()) + "kwh电量";
+                String powerConsumption = "行程消耗" + AMapUtil.formatDouble(predictCharge.getEnergy()) + "kWh电量";
                 binding.powerConsumption.setText(powerConsumption);
                 //提示
                 if (CollectionUtils.isEmpty(predictCharge.getChargeLocationList())) {
@@ -268,9 +268,9 @@ public class PredictActivity extends BaseActivity {
                 String distance = AMapUtil.mToKm(dis);
                 String hour = AMapUtil.secondToHour(dur);
                 items.add(distance + ",km,总里程");
-                items.add(AMapUtil.formatDouble(predictCharge.getEnergy()) + ",kwh,消耗电量");
-                items.add(hour + ",H,行驶时间");
-                items.add(AMapUtil.speed(distance, hour) + ",KM/H,平均速度");
+                items.add(AMapUtil.formatDouble(predictCharge.getEnergy()) + ",kWh,消耗电量");
+                items.add(hour + ",h,行驶时间");
+                items.add(AMapUtil.speed(distance, hour) + ",km/h,平均速度");
                 items.add(AMapUtil.formatDouble1(predictCharge.getRmbPublich()) + ",RMB,充电成本（公共充电）");
                 items.add(AMapUtil.formatDouble1(predictCharge.getRmbPrivate()) + ",RMB,充电成本（私人充电）");
                 binding.infoContainer.removeAllViews();

@@ -141,7 +141,7 @@ public class TrackDetailActivity extends BaseActivity {
                     binding.powerEnd.setImageResource(R.mipmap.power_end);
                 }
                 //
-                String powerConsumption = "行程消耗" + AMapUtil.formatDouble(trip.getEnergy()) + "kwh电量";
+                String powerConsumption = "行程消耗" + AMapUtil.formatDouble(trip.getEnergy()) + "kWh电量";
                 binding.powerConsumption.setText(powerConsumption);
                 //提示
                 if (CollectionUtils.isEmpty(trip.getChargePoints())) {
@@ -155,9 +155,9 @@ public class TrackDetailActivity extends BaseActivity {
                 String distance = AMapUtil.formatDouble(trip.getMileage());
                 String hour = AMapUtil.formatDouble(trip.getDuration());
                 items.add(distance + ",km,总里程");
-                items.add(AMapUtil.formatDouble(trip.getEnergy()) + ",kwh,消耗电量");
-                items.add(hour + ",H,行驶时间");
-                items.add(AMapUtil.formatDouble(trip.getAvSpeed()) + ",KM/H,平均速度");
+                items.add(AMapUtil.formatDouble(trip.getEnergy()) + ",kWh,消耗电量");
+                items.add(hour + ",h,行驶时间");
+                items.add(AMapUtil.formatDouble(trip.getAvSpeed()) + ",km/h,平均速度");
                 items.add(AMapUtil.formatDouble1(trip.getRmbPublich()) + ",RMB,充电成本（公共充电）");
                 items.add(AMapUtil.formatDouble1(trip.getRmbPrivate()) + ",RMB,充电成本（私人充电）");
                 binding.infoContainer.removeAllViews();

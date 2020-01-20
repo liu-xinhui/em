@@ -48,24 +48,24 @@ public class AMapUtil {
     }
 
     public static String formatFloat(float src) {
-        DecimalFormat numF = new DecimalFormat("#.##");
+        DecimalFormat numF = new DecimalFormat("0.##");
         return numF.format(src);
     }
 
     public static String formatDouble(double src) {
-        DecimalFormat numF = new DecimalFormat("#.##");
+        DecimalFormat numF = new DecimalFormat("0.##");
         LogUtils.d(src,numF.format(src));
         return numF.format(src);
     }
 
     public static String formatDouble1(double src) {
-        DecimalFormat numF = new DecimalFormat("#.0");
+        DecimalFormat numF = new DecimalFormat("0.0");
         LogUtils.d(src,numF.format(src));
         return numF.format(src);
     }
 
     public static String formatDouble2(double src) {
-        DecimalFormat numF = new DecimalFormat("#.00");
+        DecimalFormat numF = new DecimalFormat("0.00");
         LogUtils.d(src,numF.format(src));
         return numF.format(src);
     }

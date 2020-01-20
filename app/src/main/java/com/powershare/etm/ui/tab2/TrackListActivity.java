@@ -98,8 +98,8 @@ public class TrackListActivity extends BaseActivity {
                 } else {
                     endImg.setImageResource(R.mipmap.history_end);
                 }
-                holder.setText(R.id.mileage, AMapUtil.formatDouble(trip.getMileage()) + "KM");
-                holder.setText(R.id.power, AMapUtil.formatDouble(trip.getEnergy()) + "kwh");
+                holder.setText(R.id.mileage, AMapUtil.formatDouble(trip.getMileage()) + "km");
+                holder.setText(R.id.power, AMapUtil.formatDouble(trip.getEnergy()) + "kWh");
                 holder.setText(R.id.temp, trip.getTemperature() + "℃");
                 holder.setText(R.id.carModel, getCarModelName(trip.getCarModelId()));
             }

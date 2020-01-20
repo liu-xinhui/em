@@ -77,7 +77,7 @@ public class TrackingFragment extends BaseFragment {
         binding.finishTrack.setOnClickListener(view -> {
             boolean isThan1Km = GlobalValue.getTrackMileage() >= 1000;
             new MyDialog.Builder(activity)
-                    .setContent(isThan1Km ? "是否结束追踪？" : "此次行程未满1KM，将不会被记录。是否结束追踪？")
+                    .setContent(isThan1Km ? "是否结束追踪？" : "此次行程未满1km，将不会被记录。是否结束追踪？")
                     .setSureText("结束追踪")
                     .setSureListener(sureBtn -> trackViewModel.stopTrack(isThan1Km ? "false" : "true").observe(TrackingFragment.this, new MyObserver<Trip>() {
                         @Override
@@ -128,7 +128,7 @@ public class TrackingFragment extends BaseFragment {
     private void initGrid(TripSoc tripSoc) {
         List<String> items = new ArrayList<>();
         items.add(GlobalValue.getTrackMileageKm() + ",km,总里程");
-        items.add(tripSoc.getEnergy() + ",kwh,消耗电量");
+        items.add(tripSoc.getEnergy() + ",kWh,消耗电量");
         items.add(AMapUtil.formatDouble1(tripSoc.getRmbPublich()) + ",RMB,充电成本（公共充电）");
         items.add(AMapUtil.formatDouble1(tripSoc.getRmbPrivate()) + ",RMB,充电成本（私人充电）");
         binding.infoContainer.removeAllViews();
