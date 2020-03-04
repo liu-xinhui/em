@@ -42,6 +42,7 @@ import com.powershare.etm.ui.tab3.SearchLocActivity;
 import com.powershare.etm.util.AMapUtil;
 import com.powershare.etm.util.CommonUtil;
 import com.powershare.etm.util.MyObserver;
+import com.powershare.etm.util.SearchLocHistoryHelper;
 import com.powershare.etm.vm.AMapViewModel;
 import com.powershare.etm.vm.TrackViewModel;
 import com.qmuiteam.qmui.widget.dialog.QMUIBottomSheet;
@@ -176,6 +177,7 @@ public class TabMapFragment extends BaseFragment {
         if (requestCode == 1 && resultCode == 1 && data != null) {
             Tip item = data.getParcelableExtra("result");
             if (item != null) {
+                SearchLocHistoryHelper.getInstance().addOneHistory(item);
                 binding.searchBar.setText(item.getName());
                 binding.searchBar.setTag(item);
                 LatLonPoint point = item.getPoint();

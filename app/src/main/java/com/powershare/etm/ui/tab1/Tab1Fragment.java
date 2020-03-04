@@ -191,14 +191,20 @@ public class Tab1Fragment extends BaseFragment {
 
     private void initPreNext() {
         binding.pre.setOnClickListener(view -> {
-            if (currentCarIndex != 0) {
+            if (carModelList != null) {
                 currentCarIndex = currentCarIndex - 1;
+                if (currentCarIndex < 0) {
+                    currentCarIndex = carModelList.size() - 1;
+                }
                 setCurrentCar();
             }
         });
         binding.next.setOnClickListener(view -> {
-            if (carModelList != null && currentCarIndex < carModelList.size() - 1) {
+            if (carModelList != null) {
                 currentCarIndex = currentCarIndex + 1;
+                if (currentCarIndex > carModelList.size() - 1) {
+                    currentCarIndex = 0;
+                }
                 setCurrentCar();
             }
         });
