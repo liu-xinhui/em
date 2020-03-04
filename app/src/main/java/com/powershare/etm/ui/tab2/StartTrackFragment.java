@@ -103,7 +103,9 @@ public class StartTrackFragment extends BaseFragment {
         OptionsPickerView<String> tempOptions = new OptionsPickerBuilder(activity, new OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int option2, int options3, View v) {
-                binding.tempValue.setText(items.get(options1).replace("℃", ""));
+                String temp = items.get(options1).replace("℃", "");
+                binding.tempValue.setText(temp);
+                GlobalValue.setCurrentTemp(Integer.parseInt(temp));
             }
         }).build();
         tempOptions.setPicker(items);
