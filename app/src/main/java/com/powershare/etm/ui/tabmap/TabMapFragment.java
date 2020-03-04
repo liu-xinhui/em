@@ -266,9 +266,9 @@ public class TabMapFragment extends BaseFragment {
                 binding.name.setText(charge.getName());
                 binding.address.setText(charge.getAddress());
                 binding.price.setText(AMapUtil.formatDouble2(charge.getPrice()));
-                String fastCount = charge.getDcTotalAvailableNum() + "/" + charge.getDcTotalNum();
+                String fastCount = "" + charge.getDcTotalNum();
                 binding.fastCount.setText(fastCount);
-                String slowCount = charge.getAcTotalAvailableNum() + "/" + charge.getAcTotalNum();
+                String slowCount = "" + charge.getAcTotalNum();
                 binding.slowCount.setText(slowCount);
                 Glide.with(activity)
                         .load(charge.getLogoUrl())

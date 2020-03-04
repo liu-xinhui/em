@@ -12,7 +12,6 @@ import com.bigkoo.pickerview.builder.OptionsPickerBuilder;
 import com.bigkoo.pickerview.listener.OnOptionsSelectListener;
 import com.bigkoo.pickerview.view.OptionsPickerView;
 import com.blankj.utilcode.util.FragmentUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.bean.Trip;

@@ -240,6 +240,7 @@ public class Tab1Fragment extends BaseFragment {
         binding.progressTemperature.setProgress(20 + GlobalValue.getCurrentTemp());
         currentCarIndex = GlobalValue.getCurrentCarIndex();
         setCurrentCar();
+        binding.startTrack.setText(GlobalValue.isTracking() ? "行程记录中" : "开启手动追踪");
     }
 
     @Override
@@ -310,4 +311,5 @@ public class Tab1Fragment extends BaseFragment {
             binding.progressCar.showAnimation(100, 0);
         }
     }
+
 }
