@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
@@ -62,6 +63,7 @@ public class TabMapFragment extends BaseFragment {
     private AMapViewModel aMapViewModel;
     private AMap aMap;
     private LiveData<ApiResult<List<SimpleLocation>>> chargeLiveData;
+    private MarkerOptions currentAddressMarker;
 
     public static TabMapFragment newInstance() {
         return new TabMapFragment();
@@ -152,7 +154,9 @@ public class TabMapFragment extends BaseFragment {
         // 返回 true 则表示接口已响应事件，否则返回false
         AMap.OnMarkerClickListener markerClickListener = marker -> {
             String chargeId = (String) marker.getObject();
-            getCharge(chargeId);
+            if (!TextUtils.isEmpty(chargeId)) {
+                getCharge(chargeId);
+            }
             return true;
         };
         aMap.setOnMarkerClickListener(markerClickListener);
@@ -182,8 +186,14 @@ public class TabMapFragment extends BaseFragment {
                 binding.searchBar.setTag(item);
                 LatLonPoint point = item.getPoint();
                 //参数依次是：视角调整区域的中心点坐标、希望调整到的缩放级别、俯仰角0°~45°（垂直与地图时为0）、偏航角 0~360° (正北方为0)
-                CameraUpdate mCameraUpdate = CameraUpdateFactory.newCameraPosition(new CameraPosition(new LatLng(point.getLatitude(), point.getLongitude()), 14, 0, 0));
+                LatLng latLng = new LatLng(point.getLatitude(), point.getLongitude());
+                CameraUpdate mCameraUpdate = CameraUpdateFactory.newCameraPosition(new CameraPosition(latLng, 14, 0, 0));
                 aMap.animateCamera(mCameraUpdate);
+
+                currentAddressMarker = new MarkerOptions();
+                currentAddressMarker.position(latLng);
+                currentAddressMarker.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.mipmap.address)));
+                aMap.addMarker(currentAddressMarker);
             }
         }
     }
@@ -234,6 +244,9 @@ public class TabMapFragment extends BaseFragment {
             @Override
             public void onSuccess(List<SimpleLocation> result) {
                 aMap.clear(true);
+                if (currentAddressMarker != null) {
+                    aMap.addMarker(currentAddressMarker);
+                }
                 for (SimpleLocation item : result) {
                     LatLng latLng = new LatLng(item.getLatitude(), item.getLongitude());
                     MarkerOptions options = new MarkerOptions()
