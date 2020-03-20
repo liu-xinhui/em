@@ -218,9 +218,9 @@ public class Tab3Fragment extends BaseFragment {
 
     private void calcRoute(Tip startTip, Tip endTip, boolean save) {
         if (save) {
-            SearchLocHistoryHelper.getInstance().addOneHistory(startTip);
+            SearchLocHistoryHelper.getInstance(1).addOneHistory(startTip);
         }
-        SearchLocHistoryHelper.getInstance().addOneHistory(endTip);
+        SearchLocHistoryHelper.getInstance(1).addOneHistory(endTip);
         //车型
         CarModel carModel = (CarModel) binding.banner.getTag();
         if (carModel == null) {

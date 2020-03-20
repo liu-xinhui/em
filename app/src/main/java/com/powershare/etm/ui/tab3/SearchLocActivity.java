@@ -30,6 +30,7 @@ public class SearchLocActivity extends BaseActivity {
     private BaseRecyclerAdapter<Tip> adapter;
     private boolean searchTextEmpty = true;
     private int type;
+    private int module;
 
     @Override
     protected View initContentView() {
@@ -42,6 +43,8 @@ public class SearchLocActivity extends BaseActivity {
     protected void onMounted() {
         initTopBar();
         Intent intent = getIntent();
+        //module 1行程预测，2站点地图
+        module = intent.getIntExtra("module", 1);
         //type=1起点，type=2终点
         type = intent.getIntExtra("type", 1);
         binding.cancel.setOnClickListener(view -> finish());
@@ -80,9 +83,9 @@ public class SearchLocActivity extends BaseActivity {
     }
 
     private void setHistory() {
-        String count = SearchLocHistoryHelper.getInstance().getList().size() + "条";
+        String count = SearchLocHistoryHelper.getInstance(module).getList().size() + "条";
         binding.historyCount.setText(count);
-        adapter.setNewData(SearchLocHistoryHelper.getInstance().getList());
+        adapter.setNewData(SearchLocHistoryHelper.getInstance(module).getList());
     }
 
     private void initMap() {
@@ -101,7 +104,7 @@ public class SearchLocActivity extends BaseActivity {
                 } else {
                     searchTextEmpty = false;
                     binding.historyTitle.setVisibility(View.GONE);
-                    InputtipsQuery inputQuery = new InputtipsQuery(charSequence.toString(), "上海");
+                    InputtipsQuery inputQuery = new InputtipsQuery(charSequence.toString(), null);
                     inputQuery.setCityLimit(false);//限制在当前城市
                     Inputtips inputTips = new Inputtips(SearchLocActivity.this, inputQuery);
                     inputTips.setInputtipsListener((list, code) -> {

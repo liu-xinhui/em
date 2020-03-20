@@ -12,17 +12,24 @@ import java.util.Iterator;
 import java.util.List;
 
 public class SearchLocHistoryHelper {
-    private static final String key = "search_loc_history";
     private static final SPUtils SP_UTILS = SPUtils.getInstance();
+    private String key;
+    private int count;
     private List<Tip> list;
     private Gson gson = new Gson();
-    private static SearchLocHistoryHelper helper = new SearchLocHistoryHelper();
+    private static SearchLocHistoryHelper helper1 = new SearchLocHistoryHelper("search_loc_history", 5);
+    private static SearchLocHistoryHelper helper2 = new SearchLocHistoryHelper("search_map_history", 10);
 
-    public static SearchLocHistoryHelper getInstance() {
-        return helper;
+    /**
+     * @param module 1行程预测，2站点地图
+     */
+    public static SearchLocHistoryHelper getInstance(int module) {
+        return module == 2 ? helper2 : helper1;
     }
 
-    public SearchLocHistoryHelper() {
+    private SearchLocHistoryHelper(String key, int count) {
+        this.key = key;
+        this.count = count;
         list = getHistories();
     }
 
@@ -36,7 +43,7 @@ public class SearchLocHistoryHelper {
                     iterator.remove();
                 }
             }
-            if (list.size() >= 5) {
+            if (list.size() >= count) {
                 list.remove(list.size() - 1);
             }
             list.add(0, address);

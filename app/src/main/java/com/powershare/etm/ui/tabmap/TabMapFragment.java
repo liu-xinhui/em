@@ -86,6 +86,7 @@ public class TabMapFragment extends BaseFragment {
         View.OnClickListener onClickListener = view -> {
             Intent intent = new Intent(activity, SearchLocActivity.class);
             intent.putExtra("type", 1);
+            intent.putExtra("module", 2);
             startActivityForResult(intent, 1);
         };
         binding.searchBar.setOnClickListener(onClickListener);
@@ -181,7 +182,7 @@ public class TabMapFragment extends BaseFragment {
         if (requestCode == 1 && resultCode == 1 && data != null) {
             Tip item = data.getParcelableExtra("result");
             if (item != null) {
-                SearchLocHistoryHelper.getInstance().addOneHistory(item);
+                SearchLocHistoryHelper.getInstance(2).addOneHistory(item);
                 binding.searchBar.setText(item.getName());
                 binding.searchBar.setTag(item);
                 LatLonPoint point = item.getPoint();
