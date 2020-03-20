@@ -1,21 +1,26 @@
 package com.powershare.etm.ui.tab2;
 
 import android.content.Intent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.blankj.utilcode.util.CollectionUtils;
+import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.SizeUtils;
 import com.blankj.utilcode.util.TimeUtils;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.bean.Trip;
 import com.powershare.etm.bean.TripReport;
+import com.powershare.etm.component.ImageView360;
 import com.powershare.etm.databinding.ActivityTrackListBinding;
-import com.powershare.etm.databinding.ViewTrackDetailHeadBinding;
 import com.powershare.etm.ui.base.BaseActivity;
 import com.powershare.etm.util.AMapUtil;
 import com.powershare.etm.util.CommonUtil;
@@ -23,6 +28,7 @@ import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.vm.CarViewModel;
 import com.powershare.etm.vm.TrackViewModel;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import me.jingbin.library.adapter.BaseByViewHolder;
@@ -30,17 +36,16 @@ import me.jingbin.library.adapter.BaseRecyclerAdapter;
 
 public class TrackListActivity extends BaseActivity {
     private ActivityTrackListBinding binding;
-    private ViewTrackDetailHeadBinding headerBinding;
     private TrackViewModel trackViewModel;
     private CarViewModel carViewModel;
     private BaseRecyclerAdapter<Trip> adapter;
     private int currentPage = 1;
     private List<CarModel> mCarModels;
+    private View headView;
 
     @Override
     protected View initContentView() {
         binding = ActivityTrackListBinding.inflate(getLayoutInflater());
-        headerBinding = ViewTrackDetailHeadBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
 
@@ -114,8 +119,12 @@ public class TrackListActivity extends BaseActivity {
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.setOnRefreshListener(() -> getListData(true));
         binding.recyclerView.setOnLoadMoreListener(() -> getListData(false));
-        binding.recyclerView.addHeaderView(headerBinding.getRoot());
+        headView = LayoutInflater.from(this).inflate(R.layout.view_track_detail_head, binding.recyclerView, false);
+        binding.recyclerView.addHeaderView(headView);
         binding.recyclerView.setRefreshing(true);
+
+        View more = headView.findViewById(R.id.more);
+        more.setOnClickListener(view -> go(TrackReportActivity.class));
 
         binding.recyclerView.setOnItemClickListener((v, position) -> {
             Trip trip = adapter.getData().get(position);
@@ -162,8 +171,55 @@ public class TrackListActivity extends BaseActivity {
         trackViewModel.getTripReport().observe(this, new MyObserver<TripReport>() {
             @Override
             public void onSuccess(TripReport report) {
-
+                List<String> items = new ArrayList<>();
+                items.add(AMapUtil.formatDouble(report.getTotalMileage()) + ",km,总里程");
+                items.add(report.getTotalChargeTimes() + ",次,总充电次数");
+                GridLayout infoContainer = headView.findViewById(R.id.info_container);
+                for (String item : items) {
+                    String[] itemArr = item.split(",");
+                    View view = LayoutInflater.from(TrackListActivity.this).inflate(R.layout.item_title_value, null);
+                    TextView value = view.findViewById(R.id.item_title_value);
+                    TextView unit = view.findViewById(R.id.item_title_value_unit);
+                    TextView title = view.findViewById(R.id.item_title);
+                    value.setText(itemArr[0]);
+                    unit.setText(itemArr[1]);
+                    title.setText(itemArr[2]);
+                    GridLayout.LayoutParams param = new GridLayout.LayoutParams();
+                    param.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, GridLayout.FILL, 1);
+                    param.width = 0;
+                    param.height = SizeUtils.dp2px(66);
+                    int margin = SizeUtils.dp2px(8);
+                    param.setMargins(margin, margin, margin, margin);
+                    infoContainer.addView(view, param);
+                }
+                getCar(report.getCarModelId());
             }
         });
+    }
+
+    private void getCar(String carId) {
+        carViewModel.getCar(carId).observe(this, new MyObserver<CarModel>() {
+            @Override
+            public void onSuccess(CarModel result) {
+                LogUtils.json(result);
+                initHeadUi(result);
+            }
+        });
+    }
+
+    private void initHeadUi(CarModel result) {
+        TextView titleTv = headView.findViewById(R.id.car_title);
+        ImageView360 banner = headView.findViewById(R.id.banner);
+        titleTv.setText(result.getName());
+        String[] photoIds = result.getPhotoIds();
+        if (photoIds != null && photoIds.length > 0) {
+            String[] photoUrls = new String[photoIds.length];
+            for (int i = 0; i < photoIds.length; i++) {
+                photoUrls[i] = CommonUtil.getImageUrl(result.getCarModelCode(), photoIds[i]);
+            }
+            banner.setBitmapUrls(photoUrls);
+        } else {
+            banner.setBitmapUrls(null);
+        }
     }
 }

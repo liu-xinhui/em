@@ -3,41 +3,116 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/background"
     android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/more"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="15dp">
+
+        <com.noober.background.view.BLView
+            android:id="@+id/recent_track_icon"
+            android:layout_width="4dp"
+            android:layout_height="13dp"
+            android:layout_marginTop="1dp"
+            app:bl_corners_radius="3dp"
+            app:bl_solid_color="@color/colorAccent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/recent_track_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:text="行程报告"
+            android:textColor="#e1fbfc"
+            android:textSize="14dp" />
+
+        <TextView
+            android:id="@+id/recent_track_history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableEnd="@mipmap/go"
+            android:drawablePadding="10dp"
+            android:text="更多详情" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="15dp">
+
+        <com.noober.background.view.BLTextView
+            android:id="@+id/temp_current"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="3dp"
+            android:text="推荐车型"
+            android:textColor="#fff"
+            app:bl_corners_radius="100dp"
+            app:bl_solid_color="#40585a"
+            app:bl_stroke_color="#00f4ff"
+            app:bl_stroke_width="1dp"
+            app:layout_constraintLeft_toLeftOf="@id/temp_bg"
+            app:layout_constraintRight_toRightOf="@id/temp_bg"
+            app:layout_constraintTop_toBottomOf="@id/temp_unit" />
+
+        <com.noober.background.view.BLTextView
+            android:id="@+id/car_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="7dp"
+            android:text="新科雷嘉 NEW KADJAR"
+            android:textColor="#e1fbfc"
+            android:textSize="18dp" />
+    </LinearLayout>
 
     <com.powershare.etm.component.ImageView360
         android:id="@+id/banner"
         android:layout_width="match_parent"
         android:layout_height="180dp"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="7dp"
-        android:scaleType="fitCenter"
-        app:bl_corners_radius="6dp"
-        app:bl_solid_color="#DEDEDE" />
-
-    <com.noober.background.view.BLTextView
-        android:id="@+id/car_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:padding="15dp"
-        android:text="新科雷嘉 NEW KADJAR"
-        android:textColor="#e1fbfc"
-        android:textSize="14dp"
-        app:bl_corners_bottomLeftRadius="6dp"
-        app:bl_corners_bottomRightRadius="6dp"
-        app:bl_solid_color="@color/black" />
+        android:scaleType="fitCenter" />
 
     <GridLayout
         android:id="@+id/info_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="5dp"
         android:columnCount="2"
         android:orientation="horizontal"
         android:rowCount="3" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:drawableStart="@mipmap/tan"
+        android:drawablePadding="3dp"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="数据来源为近60次行程追踪"
+        android:textColor="#A6A6A6"
+        android:textSize="12dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="15dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:background="@color/gray3" />
 </LinearLayout>

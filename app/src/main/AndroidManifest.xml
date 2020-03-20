@@ -64,6 +64,7 @@
         <activity
             android:name=".ui.MainActivity"
             android:launchMode="singleTask" />
+        <activity android:name=".ui.tab2.TrackReportActivity" />
     </application>
 
 </manifest>

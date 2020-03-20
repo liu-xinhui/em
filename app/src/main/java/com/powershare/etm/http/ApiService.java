@@ -41,6 +41,10 @@ public interface ApiService {
     @POST("carModel/list")
     LiveData<ApiResult<List<CarModel>>> carList();
 
+    //车辆
+    @POST("carModel/get")
+    LiveData<ApiResult<CarModel>> getCar(@Query("id") String carId);
+
     //锲合度
     @POST("carModel/getMatchingDegree")
     LiveData<ApiResult<MatchingDegree>> getMatchingDegree(@Query("id") String carId);
@@ -90,6 +94,6 @@ public interface ApiService {
     LiveData<ApiResult<Charge>> getCharge(@Query("id") String chargeId);
 
     //充电站详情
-    @POST("/trip/getTripReport")
+    @POST("trip/getTripReport")
     LiveData<ApiResult<TripReport>> getTripReport();
 }
