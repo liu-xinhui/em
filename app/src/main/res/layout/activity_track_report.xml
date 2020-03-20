@@ -179,8 +179,8 @@
                     android:layout_height="wrap_content"
                     android:drawableStart="@mipmap/end"
                     android:drawablePadding="3dp"
-                    android:textSize="12dp"
-                    tools:text="最常用目的地" />
+                    android:text="最常用目的地"
+                    android:textSize="12dp" />
 
                 <TextView
                     android:id="@+id/end"
@@ -188,9 +188,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="7dp"
                     android:drawablePadding="3dp"
-                    android:text="上海市嘉定区南翔镇"
                     android:textColor="#E1FBFC"
-                    android:textSize="14dp" />
+                    android:textSize="14dp"
+                    tools:text="上海市嘉定区南翔镇" />
             </LinearLayout>
 
             <TextView

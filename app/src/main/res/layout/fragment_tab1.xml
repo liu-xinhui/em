@@ -19,12 +19,12 @@
             android:id="@+id/car_title"
             android:layout_width="wrap_content"
             android:layout_height="21dp"
-            android:text="新科雷嘉 NEW KADJAR"
             android:textColor="#ffe1fbfc"
             android:textSize="18dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="新科雷嘉 NEW KADJAR" />
 
         <TextView
             android:id="@+id/car_fit"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="契合度--%"
-            android:textColor="#fff44b57"
+            android:textColor="@color/white"
             android:textSize="14dp"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"

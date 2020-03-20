@@ -196,7 +196,6 @@ public class TrackDetailActivity extends BaseActivity {
         if (CollectionUtils.isEmpty(tripPoints)) {
             return;
         }
-        LogUtils.json(tripPoints);
         TrackDetailOverlay trackDetailOverlay = new TrackDetailOverlay(this, aMap, tripPoints, trip.getChargePoints());
         trackDetailOverlay.removeFromMap();
         trackDetailOverlay.addToMap();
