@@ -111,7 +111,7 @@ public class SearchLocActivity extends BaseActivity {
                         if (code == 1000 && !searchTextEmpty) {
                             List<Tip> newList = new ArrayList<>();
                             for (Tip tip : list) {
-                                if (tip.getPoiID() != null && tip.getPoint() != null) {
+                                if (tip.getPoiID() != null && tip.getPoint() != null && !TextUtils.isEmpty(tip.getName())) {
                                     newList.add(tip);
                                 }
                             }

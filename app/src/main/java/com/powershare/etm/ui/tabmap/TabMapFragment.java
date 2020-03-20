@@ -155,6 +155,10 @@ public class TabMapFragment extends BaseFragment {
         // 返回 true 则表示接口已响应事件，否则返回false
         AMap.OnMarkerClickListener markerClickListener = marker -> {
             String chargeId = (String) marker.getObject();
+            if (binding.chargeInfo.getVisibility() != View.GONE) {
+                binding.chargeInfo.setVisibility(View.GONE);
+                return true;
+            }
             if (!TextUtils.isEmpty(chargeId)) {
                 getCharge(chargeId);
             }
