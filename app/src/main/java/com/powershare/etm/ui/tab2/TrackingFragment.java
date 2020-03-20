@@ -75,7 +75,7 @@ public class TrackingFragment extends BaseFragment {
                     }
                 })).create().show());
         binding.finishTrack.setOnClickListener(view -> {
-            boolean isThan1Km = GlobalValue.getTrackMileage() <= 1000;
+            boolean isThan1Km = GlobalValue.getTrackMileage() >= 1000;
             new MyDialog.Builder(activity)
                     .setContent(isThan1Km ? "是否结束追踪？" : "此次行程未满1km，将不会被记录。是否结束追踪？")
                     .setSureText("结束追踪")

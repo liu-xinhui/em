@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,6 @@ import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapOptions;
 import com.amap.api.maps.UiSettings;
 import com.blankj.utilcode.util.CollectionUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.powershare.etm.R;
@@ -93,7 +93,7 @@ public class TrackDetailActivity extends BaseActivity {
         //取值
         Intent intent = getIntent();
         String trickId = intent.getStringExtra("trickId");
-        if (trickId == null) {
+        if (TextUtils.isEmpty(trickId)) {
             CommonUtil.showToast("未知错误");
             return;
         }
