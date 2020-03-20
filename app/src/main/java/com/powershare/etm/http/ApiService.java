@@ -13,6 +13,7 @@ import com.powershare.etm.bean.TotalTrip;
 import com.powershare.etm.bean.Trip;
 import com.powershare.etm.bean.TripParam;
 import com.powershare.etm.bean.TripPoint;
+import com.powershare.etm.bean.TripReport;
 import com.powershare.etm.bean.TripSoc;
 import com.powershare.etm.bean.User;
 
@@ -87,4 +88,8 @@ public interface ApiService {
     //充电站详情
     @POST("trip/getLocation")
     LiveData<ApiResult<Charge>> getCharge(@Query("id") String chargeId);
+
+    //充电站详情
+    @POST("/trip/getTripReport")
+    LiveData<ApiResult<TripReport>> getTripReport();
 }

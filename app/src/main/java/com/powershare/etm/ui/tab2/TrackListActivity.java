@@ -13,7 +13,9 @@ import com.blankj.utilcode.util.TimeUtils;
 import com.powershare.etm.R;
 import com.powershare.etm.bean.CarModel;
 import com.powershare.etm.bean.Trip;
+import com.powershare.etm.bean.TripReport;
 import com.powershare.etm.databinding.ActivityTrackListBinding;
+import com.powershare.etm.databinding.ViewTrackDetailHeadBinding;
 import com.powershare.etm.ui.base.BaseActivity;
 import com.powershare.etm.util.AMapUtil;
 import com.powershare.etm.util.CommonUtil;
@@ -28,6 +30,7 @@ import me.jingbin.library.adapter.BaseRecyclerAdapter;
 
 public class TrackListActivity extends BaseActivity {
     private ActivityTrackListBinding binding;
+    private ViewTrackDetailHeadBinding headerBinding;
     private TrackViewModel trackViewModel;
     private CarViewModel carViewModel;
     private BaseRecyclerAdapter<Trip> adapter;
@@ -37,6 +40,7 @@ public class TrackListActivity extends BaseActivity {
     @Override
     protected View initContentView() {
         binding = ActivityTrackListBinding.inflate(getLayoutInflater());
+        headerBinding = ViewTrackDetailHeadBinding.inflate(getLayoutInflater());
         return binding.getRoot();
     }
 
@@ -110,6 +114,7 @@ public class TrackListActivity extends BaseActivity {
         binding.recyclerView.setAdapter(adapter);
         binding.recyclerView.setOnRefreshListener(() -> getListData(true));
         binding.recyclerView.setOnLoadMoreListener(() -> getListData(false));
+        binding.recyclerView.addHeaderView(headerBinding.getRoot());
         binding.recyclerView.setRefreshing(true);
 
         binding.recyclerView.setOnItemClickListener((v, position) -> {
@@ -118,6 +123,7 @@ public class TrackListActivity extends BaseActivity {
             intent.putExtra("trickId", trip.getId());
             startActivity(intent);
         });
+        getHeadData();
     }
 
     private void getListData(boolean isRefresh) {
@@ -148,6 +154,15 @@ public class TrackListActivity extends BaseActivity {
                 if (isRefresh) {
                     binding.recyclerView.setRefreshing(false);
                 }
+            }
+        });
+    }
+
+    private void getHeadData() {
+        trackViewModel.getTripReport().observe(this, new MyObserver<TripReport>() {
+            @Override
+            public void onSuccess(TripReport report) {
+
             }
         });
     }

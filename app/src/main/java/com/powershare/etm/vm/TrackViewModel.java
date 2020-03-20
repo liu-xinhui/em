@@ -19,6 +19,7 @@ import com.powershare.etm.bean.TotalTrip;
 import com.powershare.etm.bean.Trip;
 import com.powershare.etm.bean.TripParam;
 import com.powershare.etm.bean.TripPoint;
+import com.powershare.etm.bean.TripReport;
 import com.powershare.etm.bean.TripSoc;
 import com.powershare.etm.http.ApiManager;
 import com.powershare.etm.http.ApiService;
@@ -79,6 +80,10 @@ public class TrackViewModel extends AndroidViewModel {
 
     public LiveData<ApiResult<Charge>> getCharge(String chargeId) {
         return apiService.getCharge(chargeId);
+    }
+
+    public LiveData<ApiResult<TripReport>> getTripReport() {
+        return apiService.getTripReport();
     }
 
     //开始追踪

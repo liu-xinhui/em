@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <com.powershare.etm.component.ImageView360
+        android:id="@+id/banner"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="7dp"
+        android:scaleType="fitCenter"
+        app:bl_corners_radius="6dp"
+        app:bl_solid_color="#DEDEDE" />
+
+    <com.noober.background.view.BLTextView
+        android:id="@+id/car_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:padding="15dp"
+        android:text="新科雷嘉 NEW KADJAR"
+        android:textColor="#e1fbfc"
+        android:textSize="14dp"
+        app:bl_corners_bottomLeftRadius="6dp"
+        app:bl_corners_bottomRightRadius="6dp"
+        app:bl_solid_color="@color/black" />
+
+    <GridLayout
+        android:id="@+id/info_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="20dp"
+        android:columnCount="2"
+        android:orientation="horizontal"
+        android:rowCount="3" />
+
+</LinearLayout>
