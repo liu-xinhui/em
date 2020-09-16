@@ -33,19 +33,9 @@ android {
     }
 }
 
-apply plugin: 'maven'
-uploadArchives{
-    repositories.mavenDeployer{
-        // Ubuntu本地仓库路径， Windows 为(url:"file://D://***/***/***/")
-        repository(url:"file://I://testtest")
-        // 唯一标识
-        pom.groupId = "com.jinyx"
-        // 项目名称
-        pom.artifactId = "libraryB"
-        // 版本号
-        pom.version = "1.0"
-    }
-}
+apply plugin: 'com.github.dcendents.android-maven'
+
+group='com.github.lxh'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
