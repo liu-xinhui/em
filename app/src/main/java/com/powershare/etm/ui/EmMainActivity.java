@@ -14,7 +14,7 @@ import com.blankj.utilcode.constant.PermissionConstants;
 import com.powershare.etm.R;
 import com.powershare.etm.adapter.MyPagerAdapter;
 import com.powershare.etm.component.MyDialog;
-import com.powershare.etm.databinding.ActivityMainBinding;
+import com.powershare.etm.databinding.ActivityEmMainBinding;
 import com.powershare.etm.ui.base.BaseActivity;
 import com.powershare.etm.ui.tabmap.TabMapFragment;
 import com.powershare.etm.vm.LoginViewModel;
@@ -30,7 +30,7 @@ import com.qmuiteam.qmui.widget.QMUITopBarLayout;
 
 import java.util.ArrayList;
 
-public class MainActivity extends BaseActivity {
+public class EmMainActivity extends BaseActivity {
     private ViewPager mViewPager;
     private QMUITabSegment mTabSegment;
     private QMUITopBarLayout mTopBar;
@@ -38,7 +38,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected View initContentView() {
-        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
+        ActivityEmMainBinding binding = ActivityEmMainBinding.inflate(getLayoutInflater());
         mTopBar = binding.topBar;
         mViewPager = binding.pager;
         mTabSegment = binding.tabs;

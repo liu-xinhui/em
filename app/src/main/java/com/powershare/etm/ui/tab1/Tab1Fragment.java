@@ -15,7 +15,7 @@ import com.powershare.etm.bean.Trip;
 import com.powershare.etm.databinding.FragmentTab1Binding;
 import com.powershare.etm.event.RefreshTrackEvent;
 import com.powershare.etm.event.StartTrackEvent;
-import com.powershare.etm.ui.MainActivity;
+import com.powershare.etm.ui.EmMainActivity;
 import com.powershare.etm.ui.base.BaseFragment;
 import com.powershare.etm.ui.tab2.TrackDetailActivity;
 import com.powershare.etm.ui.tab2.TrackListActivity;
@@ -69,7 +69,7 @@ public class Tab1Fragment extends BaseFragment {
         initProgressTemperature();
         initPreNext();
         binding.startTrack.setOnClickListener(v -> PermissionHelper.getLocPermission(() -> {
-            MainActivity mainActivity = (MainActivity) activity;
+            EmMainActivity mainActivity = (EmMainActivity) activity;
             mainActivity.selectTab(1);
             EventBus.getDefault().post(new StartTrackEvent());
         }));

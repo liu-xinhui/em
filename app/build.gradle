@@ -1,20 +1,10 @@
-apply plugin: 'com.android.application'
-
+apply plugin: 'com.android.library'
 apply plugin: 'androidx.navigation.safeargs'
 
 android {
-    signingConfigs {
-        release {
-            storeFile file('../hold.jks')
-            storePassword '5595382'
-            keyAlias = 'hold'
-            keyPassword '5595382'
-        }
-    }
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
     defaultConfig {
-        applicationId "com.powershare.etm"
         minSdkVersion 22
         targetSdkVersion 29
         versionCode 24
@@ -28,37 +18,33 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
         }
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
         }
     }
     compileOptions {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
     }
-    viewBinding {
-        enabled = true
-    }
-    applicationVariants.all { variant ->
-        variant.outputs.all { output ->
-            outputFileName = "ElectrifyMe@${variant.versionName}.apk"
-        }
+    buildFeatures {
+        viewBinding = true
     }
 }
 
-//应用 Bugtags 插件
-apply plugin: 'com.bugtags.library.plugin'
-
-//Bugtags 插件配置
-bugtags {
-    //自动上传符号表功能配置，如果需要根据 build varint 配置，请参考帮助中心->符号表->Android 符号表->配置自动上传符号表
-    appKey "439fc09d99d5cafd8d09f5d8f29e35a4"  //这里是你的 appKey
-    appSecret "0883cfca14c84187b792aee23a7bcf31"   //这里是你的 appSecret，管理员在设置页可以查看
-    mappingUploadEnabled true
+apply plugin: 'maven'
+uploadArchives{
+    repositories.mavenDeployer{
+        // Ubuntu本地仓库路径， Windows 为(url:"file://D://***/***/***/")
+        repository(url:"file://I://testtest")
+        // 唯一标识
+        pom.groupId = "com.jinyx"
+        // 项目名称
+        pom.artifactId = "libraryB"
+        // 版本号
+        pom.version = "1.0"
+    }
 }
 
 dependencies {
@@ -106,8 +92,4 @@ dependencies {
     //https://github.com/AndreiD/TSnackBar
     implementation 'com.androidadvance:topsnackbar:1.1.1'
     implementation 'com.contrarywind:Android-PickerView:4.1.9'
-
-    //https://bugly.qq.com/docs/user-guide/instruction-manual-android/?v=20180709165613
-    //noinspection GradleDependency
-    implementation 'com.tencent.bugly:crashreport:latest.release'
 }

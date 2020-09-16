@@ -27,7 +27,7 @@ import com.powershare.etm.component.MyDialog;
 import com.powershare.etm.databinding.FragmentTrackingBinding;
 import com.powershare.etm.event.RefreshTrackEvent;
 import com.powershare.etm.event.ToChargeEvent;
-import com.powershare.etm.ui.MainActivity;
+import com.powershare.etm.ui.EmMainActivity;
 import com.powershare.etm.ui.base.BaseFragment;
 import com.powershare.etm.util.AMapUtil;
 import com.powershare.etm.util.CommonUtil;
@@ -202,7 +202,7 @@ public class TrackingFragment extends BaseFragment {
                     .setCancelText("忽略")
                     .setSureText("我要充电")
                     .setSureListener(v -> {
-                        MainActivity mainActivity = (MainActivity) activity;
+                        EmMainActivity mainActivity = (EmMainActivity) activity;
                         mainActivity.selectTab(3);
                         EventBus.getDefault().post(new ToChargeEvent());
                         if (!isCharge[0]) {

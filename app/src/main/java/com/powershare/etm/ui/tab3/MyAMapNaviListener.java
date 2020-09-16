@@ -202,4 +202,9 @@ public class MyAMapNaviListener implements AMapNaviListener {
     public void onNaviRouteNotify(AMapNaviRouteNotifyData aMapNaviRouteNotifyData) {
 
     }
+
+    @Override
+    public void onGpsSignalWeak(boolean b) {
+
+    }
 }

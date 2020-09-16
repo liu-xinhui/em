@@ -133,7 +133,7 @@ public class LoginActivity extends BaseActivity {
 
     private void gotoMain(int tabIndex) {
         ActivityUtils.finishAllActivities(true);
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, EmMainActivity.class);
         intent.putExtra("tabIndex", tabIndex);
         startActivity(intent);
     }
