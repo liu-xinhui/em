@@ -2,25 +2,18 @@ package com.powershare.etm;
 
 import android.app.Application;
 
+import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.gyf.cactus.Cactus;
 import com.gyf.cactus.callback.CactusCallback;
 
-public class App extends Application {
+public class App {
 
-    private static App app;
-
-    public static App getInstance() {
-        return app;
+    public static Application getInstance() {
+        return ActivityUtils.getTopActivity().getApplication();
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        app = this;
-    }
-
-    public void startKeepAlive() {
+    public static void startKeepAlive() {
         Cactus.getInstance()
                 .isDebug(true)
                 .hideNotification(true)
@@ -36,10 +29,10 @@ public class App extends Application {
                         LogUtils.d("服务关闭");
                     }
                 })
-                .register(this);
+                .register(getInstance());
     }
 
-    public void stopKeepAlive() {
-        Cactus.getInstance().unregister(this);
+    public static void stopKeepAlive() {
+        Cactus.getInstance().unregister(getInstance());
     }
 }

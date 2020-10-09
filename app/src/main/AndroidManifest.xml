@@ -39,19 +39,40 @@
         <!--高德定位-->
         <service android:name="com.amap.api.location.APSService" />
 
-        <activity android:name=".ui.SplashActivity" />
-        <activity android:name=".ui.LoginActivity" />
-        <activity android:name=".ui.setting.SettingActivity" />
-        <activity android:name=".ui.tab2.TrackListActivity" />
-        <activity android:name=".ui.tab4.CarDetailActivity" />
-        <activity android:name=".ui.tab3.SearchLocActivity" />
-        <activity android:name=".ui.tab3.PredictActivity" />
-        <activity android:name=".ui.tab3.PredictFullActivity" />
-        <activity android:name=".ui.tab2.TrackDetailActivity" />
+        <activity
+            android:name=".ui.SplashActivity"
+            android:theme="@style/EmAppTheme" />
+        <activity
+            android:name=".ui.LoginActivity"
+            android:theme="@style/EmAppTheme" />
+        <activity
+            android:name=".ui.setting.SettingActivity"
+            android:theme="@style/EmAppTheme" />
+        <activity
+            android:name=".ui.tab2.TrackListActivity"
+            android:theme="@style/EmAppTheme" />
+        <activity
+            android:name=".ui.tab4.CarDetailActivity"
+            android:theme="@style/EmAppTheme" />
+        <activity
+            android:name=".ui.tab3.SearchLocActivity"
+            android:theme="@style/EmAppTheme" />
+        <activity
+            android:name=".ui.tab3.PredictActivity"
+            android:theme="@style/EmAppTheme" />
+        <activity
+            android:name=".ui.tab3.PredictFullActivity"
+            android:theme="@style/EmAppTheme" />
+        <activity
+            android:name=".ui.tab2.TrackDetailActivity"
+            android:theme="@style/EmAppTheme" />
         <activity
             android:name=".ui.EmMainActivity"
-            android:launchMode="singleTask" />
-        <activity android:name=".ui.tab2.TrackReportActivity" />
+            android:launchMode="singleTask"
+            android:theme="@style/EmAppTheme" />
+        <activity
+            android:name=".ui.tab2.TrackReportActivity"
+            android:theme="@style/EmAppTheme" />
     </application>
 
 </manifest>

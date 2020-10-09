@@ -130,7 +130,7 @@ public class TrackViewModel extends AndroidViewModel {
             }
         });
         mLocationClient.startLocation();
-        App.getInstance().startKeepAlive();
+        App.startKeepAlive();
     }
 
     //停止追踪
@@ -140,7 +140,7 @@ public class TrackViewModel extends AndroidViewModel {
             LogUtils.d("停止位置上传");
             mLocationClient.stopLocation();
         }
-        App.getInstance().stopKeepAlive();
+        App.stopKeepAlive();
     }
 
 }
