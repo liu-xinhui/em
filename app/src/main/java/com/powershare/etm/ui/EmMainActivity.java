@@ -73,6 +73,7 @@ public class EmMainActivity extends BaseActivity {
         mTopBar.setTitle(R.string.app_name);
         mTopBar.setBackgroundAlpha(1);
         mTopBar.addRightImageButton(R.mipmap.setting, View.generateViewId()).setOnClickListener(view -> go(SettingActivity.class));
+        mTopBar.addLeftBackImageButton().setOnClickListener(v -> finish());
     }
 
     private void initPermissions() {
