@@ -20,6 +20,7 @@ import com.powershare.etm.bean.TripPoint;
 import com.powershare.etm.databinding.FragmentTab3Binding;
 import com.powershare.etm.ui.base.BaseFragment;
 import com.powershare.etm.util.CommonUtil;
+import com.powershare.etm.util.GlobalValue;
 import com.powershare.etm.util.MyObserver;
 import com.powershare.etm.util.SearchLocHistoryHelper;
 import com.powershare.etm.vm.AMapViewModel;
@@ -35,6 +36,7 @@ public class Tab3Fragment extends BaseFragment {
     private FragmentTab3Binding binding;
     private CarViewModel carViewModel;
     private AMapViewModel mapViewModel;
+    private final List<CarModel> mCarModels = new ArrayList<>();
 
     public static Tab3Fragment newInstance() {
         return new Tab3Fragment();
@@ -166,10 +168,8 @@ public class Tab3Fragment extends BaseFragment {
     }
 
     private void getCarListData() {
-        List<CarModel> mCarModels = new ArrayList<>();
-
         OptionsPickerView<CarModel> carOptions = new OptionsPickerBuilder(activity, (options1, option2, options3, v) -> {
-            setCurrentCar(mCarModels.get(options1));
+            setCurrentCar(options1);
         }).build();
 
         binding.carModelSelect.setOnClickListener(view -> {
@@ -184,7 +184,7 @@ public class Tab3Fragment extends BaseFragment {
                 mCarModels.clear();
                 mCarModels.addAll(carModels);
                 if (carModels.size() > 0) {
-                    setCurrentCar(carModels.get(0));
+                    setCurrentCar(0);
                 }
                 carOptions.setPicker(mCarModels);
             }
@@ -201,7 +201,21 @@ public class Tab3Fragment extends BaseFragment {
         }));
     }
 
-    private void setCurrentCar(CarModel currentCar) {
+    @Override
+    public void onResume() {
+        super.onResume();
+        String temp = GlobalValue.getCurrentTemp() + "";
+        binding.tempValue.setText(temp);
+        setCurrentCar(GlobalValue.getCurrentCarIndex());
+    }
+
+    private void setCurrentCar(int index) {
+        if (GlobalValue.getCurrentCarIndex() > mCarModels.size() - 1) {
+            return;
+        }
+        GlobalValue.setCurrentCarIndex(index);
+        CarModel currentCar = mCarModels.get(index);
+
         String[] photoIds = currentCar.getPhotoIds();
         binding.banner.setTag(currentCar);
         binding.carModelValue.setText(currentCar.getName());

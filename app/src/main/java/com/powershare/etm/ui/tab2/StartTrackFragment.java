@@ -43,7 +43,7 @@ public class StartTrackFragment extends BaseFragment {
     private TrackViewModel trackViewModel;
     private CarViewModel carViewModel;
     private AMapViewModel mapViewModel;
-    private List<CarModel> mCarModels = new ArrayList<>();
+    private final List<CarModel> mCarModels = new ArrayList<>();
 
     public static StartTrackFragment newInstance() {
         return new StartTrackFragment();
